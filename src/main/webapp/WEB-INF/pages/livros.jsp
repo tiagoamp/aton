@@ -30,7 +30,7 @@
 	  		<form id="formConsultaLivross" class="navbar-form navbar-left" method="POST" action="consultalivro" role="search">
 				<div class="input-group">
 					<span class="input-group-addon" id="basic-addon1">Consulta por ISBN</span> 
-					<input type="text" name="tISBN" class="form-control" placeholder="Digite o isbn do livro" aria-describedby="basic-addon1">				
+					<input type="text" name="tISBN" class="form-control" placeholder="Digite o ISBN do livro" aria-describedby="basic-addon1">				
 				</div>
 				<button type="submit" class="btn btn-default">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar
@@ -38,7 +38,7 @@
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<div class="input-group">
 					<span class="input-group-addon" id="basic-addon1">Consulta por Dados</span> 
-					<input type="text" name="tDados" class="form-control" size="48" placeholder="Digite título ou autor do livro" aria-describedby="basic-addon1">					
+					<input type="text" name="tDados" class="form-control" size="40" placeholder="Digite Título ou Autor do livro" aria-describedby="basic-addon1">					
 				</div>
 				<button type="submit" class="btn btn-default">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar

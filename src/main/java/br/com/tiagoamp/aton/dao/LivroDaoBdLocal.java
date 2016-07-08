@@ -1,5 +1,7 @@
 package br.com.tiagoamp.aton.dao;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -21,6 +24,16 @@ public class LivroDaoBdLocal implements ILivroDAO {
 	Logger logger = Logger.getLogger(LivroDaoBdLocal.class);
 	
 	public LivroDaoBdLocal(){
+		InputStream istream = this.getClass().getResourceAsStream("config.properties");
+		Properties prop = new Properties();
+		try {
+			prop.load(istream);
+			Class.forName("org.sqlite.JDBC");
+		} catch (IOException | ClassNotFoundException e) {
+			logger.error(e);
+		}
+		String bdpath = prop.getProperty("bd_path");
+		URL_DB = "jdbc:sqlite:" + bdpath;
 	}
 	
 	private Livro carregarObjeto(ResultSet rs) throws SQLException {
@@ -51,7 +64,7 @@ public class LivroDaoBdLocal implements ILivroDAO {
 	
 	private Connection conn;
 	private PreparedStatement pstmt;
-	private String URL_DB = "jdbc:sqlite:/home/tiago/proj/Biblioteca/fontes_novo/Biblioteca/database/libdatabase";
+	private String URL_DB;
 	
 	public void setURL_DB(String url) {
 		this.URL_DB = url;
@@ -68,24 +81,24 @@ public class LivroDaoBdLocal implements ILivroDAO {
 					+ "NM_DOADOR, ID_PESSOA_CADASTRADORA, SITUACAO, AUTOR) "
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);			
-			pstmt.setString(1, livro.getTitulo());
-			pstmt.setString(2, livro.getSubtitulo());
+			pstmt.setString(1, livro.getTitulo().toUpperCase());
+			pstmt.setString(2, livro.getSubtitulo().toUpperCase());
 			pstmt.setDate(3, new java.sql.Date(livro.getDataCadastro().getTime()) );
 			pstmt.setString(4, livro.getIsbn());
-			pstmt.setString(5, livro.getEditora());
-			pstmt.setString(6, livro.getLocalPublicacao());
+			pstmt.setString(5, livro.getEditora().toUpperCase());
+			pstmt.setString(6, livro.getLocalPublicacao().toUpperCase());
 			pstmt.setObject(7, livro.getAnoPublicacao());
 			pstmt.setObject(8, livro.getNroPaginas());
 			pstmt.setString(9, livro.getGenero());
-			pstmt.setString(10, livro.getClassificacao());
-			pstmt.setString(11, livro.getPublicoAlvo());
+			pstmt.setString(10, livro.getClassificacao().toUpperCase());
+			pstmt.setString(11, livro.getPublicoAlvo().toUpperCase());
 			pstmt.setObject(12, livro.getPathFotoCapa() != null ? livro.getPathFotoCapa().toString() : null);
 			pstmt.setDate(13, new java.sql.Date(livro.getDataAquisicao().getTime()));
 			pstmt.setObject(14, livro.getTipoAquisicao() != null ? livro.getTipoAquisicao().toString() : null);
-			pstmt.setString(15, livro.getNomeDoador());
+			pstmt.setString(15, livro.getNomeDoador().toUpperCase());
 			pstmt.setObject(16, livro.getPessoaCadastradora() != null ? livro.getPessoaCadastradora().getId() : null);
 			pstmt.setObject(17, livro.getSituacao() != null ? livro.getSituacao().toString() : null );
-			pstmt.setString(18, livro.getAutoresAgrupados());
+			pstmt.setString(18, livro.getAutoresAgrupados().toUpperCase());
 			pstmt.executeUpdate();
 			logger.debug("Inserção concluída!");
 		} catch (SQLException e) {
@@ -108,24 +121,24 @@ public class LivroDaoBdLocal implements ILivroDAO {
 					+ "CLASSIFICACAO = ?, PUBLICO_ALVO = ?, PATH_FOTO_CAPA = ?, DT_AQUISICAO = ?, TIPO_AQUISICAO = ?,"
 					+ "NM_DOADOR = ?, ID_PESSOA_CADASTRADORA = ?, SITUACAO = ?, AUTOR = ?";
 			pstmt = conn.prepareStatement(sql);			
-			pstmt.setString(1, livro.getTitulo());
-			pstmt.setString(2, livro.getSubtitulo());
+			pstmt.setString(1, livro.getTitulo().toUpperCase());
+			pstmt.setString(2, livro.getSubtitulo().toUpperCase());
 			pstmt.setDate(3, new java.sql.Date(livro.getDataCadastro().getTime()) );
 			pstmt.setString(4, livro.getIsbn());
-			pstmt.setString(5, livro.getEditora());
-			pstmt.setString(6, livro.getLocalPublicacao());
+			pstmt.setString(5, livro.getEditora().toUpperCase());
+			pstmt.setString(6, livro.getLocalPublicacao().toUpperCase());
 			pstmt.setInt(7, livro.getAnoPublicacao());
 			pstmt.setInt(8, livro.getNroPaginas());
-			pstmt.setString(9, livro.getGenero());
-			pstmt.setString(10, livro.getClassificacao());
-			pstmt.setString(11, livro.getPublicoAlvo());
+			pstmt.setString(9, livro.getGenero().toUpperCase());
+			pstmt.setString(10, livro.getClassificacao().toUpperCase());
+			pstmt.setString(11, livro.getPublicoAlvo().toUpperCase());
 			pstmt.setString(12, livro.getPathFotoCapa().toString());
 			pstmt.setDate(13, new java.sql.Date(livro.getDataAquisicao().getTime()));
 			pstmt.setString(14, livro.getTipoAquisicao().toString());
-			pstmt.setString(15, livro.getNomeDoador());
+			pstmt.setString(15, livro.getNomeDoador().toUpperCase());
 			pstmt.setInt(16, livro.getPessoaCadastradora().getId());
 			pstmt.setString(17, livro.getSituacao().toString());
-			pstmt.setString(18, livro.getAutoresAgrupados());
+			pstmt.setString(18, livro.getAutoresAgrupados().toUpperCase());
 			pstmt.executeUpdate();
 			logger.debug("Atualização concluída!");
 		} catch (SQLException e) {
@@ -201,11 +214,11 @@ public class LivroDaoBdLocal implements ILivroDAO {
 			
 			pstmt = conn.prepareStatement(sql.toString());
 			int qtParams = 1;
-			if (titulo != null) pstmt.setString(qtParams++, titulo);
-			if (autor != null) pstmt.setString(qtParams++, autor);
+			if (titulo != null) pstmt.setString(qtParams++, titulo.toUpperCase());
+			if (autor != null) pstmt.setString(qtParams++, autor.toUpperCase());
 			if (isbn != null) pstmt.setString(qtParams++, isbn);
-			if (classificacao != null) pstmt.setString(qtParams++, classificacao);
-			if (publico != null) pstmt.setString(qtParams++, publico);
+			if (classificacao != null) pstmt.setString(qtParams++, classificacao.toUpperCase());
+			if (publico != null) pstmt.setString(qtParams++, publico.toUpperCase());
 						
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {

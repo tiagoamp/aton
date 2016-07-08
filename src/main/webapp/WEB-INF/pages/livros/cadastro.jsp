@@ -49,7 +49,7 @@
 	    	<h3 class="panel-title">Cadastro de Livros</h3>
 	  	</div>
 	  	<div class="panel-body">
-	  		<form:form id="formCadLivros" method="POST" cssClass="navbar" action="livrocadastrado" modelAttribute="livro">
+	  		<form:form id="formCadLivros" method="POST" cssClass="navbar" action="livrocadastrado" modelAttribute="livro" enctype="multipart/form-data">
 	  			<form:hidden path="id" />
 	  			<div class="panel panel-default">
 					<div class="panel-body">
@@ -154,6 +154,12 @@
 								<form:input path="observacoes" cssClass="form-control required" placeholder="Digite alguma informação complementar do livro, se houver" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
 							</div>
 						</div>
+						<div class="form-group">
+		    				<div class="input-group">
+								<span class="input-group-addon" id="basic-addon1">Foto do livro</span> 
+								<input type="file" name="file" id="file" value="Escolher arquivo..." />
+							</div>
+						</div>
 					</div>
 				</div>
 						
@@ -173,20 +179,28 @@
 				</c:if>			
 			</form:form>
 		
-			<form:form id="formCapaLivro" method="POST" cssClass="navbar" action="uploadFile" enctype="multipart/form-data">	
+			<%-- <form:form id="fileUploadForm" method="POST" cssClass="navbar" action="uploadFile" enctype="multipart/form-data">
+				
+				<strong>
+    				<form:errors path="*" element="div" cssClass="alert alert-danger error" />
+    			</strong>
+				
 				<div class="panel panel-default">
 					<div class="panel-body">
 						<div class="form-group">
 		    				<div class="input-group">
 								<span class="input-group-addon" id="basic-addon1">Foto do livro</span> 
-								<%-- <form:input path="nomeFotoCapa" cssClass="form-control required" placeholder="Digite o diretório e arquivo com foto do livro" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/> --%>
+								<form:input path="nomeFotoCapa" cssClass="form-control required" placeholder="Digite o diretório e arquivo com foto do livro" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
 								<input type="file" name="file" id="file" />
 							</div>
 						</div>	
-						<input type="submit" value="Upload"> Press here to upload the file!					
+						<input type="submit" value="Upload"> Press here to upload the file!
+						
+						<span><form:errors path="file" cssClass="alert alert-danger error" /></span>
+											
 					</div>
 				</div>
-			</form:form>
+			</form:form> --%>
 				
 	  	</div>
 	</div>

@@ -1,11 +1,12 @@
 package br.com.tiagoamp.aton.service;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
@@ -131,32 +132,39 @@ public class AtonService {
 		}
 	}
 	
-	public void inserirLivro(Livro livro/*, MultipartFile photoFile*/) throws BibException {
+	public void inserirLivro(Livro livro) throws BibException {
 		try {
 			Livro l = livroDao.consultar(livro.getIsbn());
 			if (l != null) throw new BibException("ISBN já cadastrado!");			
-			// gravando foto
-			/*if (!photoFile.isEmpty()) {
-				try {
-					byte[] bytes = photoFile.getBytes();
-					String originalName = photoFile.getOriginalFilename();
-					String[] split = originalName.split(".");
-					String extension = split[split.length - 1];
-					Path path = Paths.get(fotoDirPath, livro.getIsbn() + extension);
-					BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(path.toFile()));
-					stream.write(bytes);
-					stream.close();
-					livro.setPathFotoCapa(path);
-				} catch (IOException e) {
-					logger.error("Erro: " + e);
-					throw new BibException("Erro ao gravar foto!");
-				}
-			}*/			
 			livroDao.inserir(livro);			
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
 		}				
+	}
+	
+	public Path inserirFotoCapaLivro(MultipartFile mFile, String isbn) throws BibException {
+		Path path = null;
+		try {
+			String originalName = mFile.getOriginalFilename();
+			String[] validExtensions = {"jpg", "gif", "png"};
+			boolean isValidaExtension = false;
+			for (int i = 0; i < validExtensions.length; i++) {
+				if (originalName.endsWith(validExtensions[i])) {
+					isValidaExtension = true;
+					break;
+				}
+			}
+			if (!isValidaExtension) throw new BibException("Foto do livro: arquivo com extensão inválida!");
+			String[] split = originalName.split("\\.");
+			String extension = split[split.length - 1];
+			path = Paths.get(fotoDirPath, isbn + "." + extension);
+			Files.copy(mFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);			
+		} catch (IOException e) {
+			logger.error("Erro: " + e);
+			throw new BibException("Erro ao gravar foto da capa do livro!");
+		}
+		return path;
 	}
 	
 	public void atualizarLivro(Livro livro) throws BibException {
