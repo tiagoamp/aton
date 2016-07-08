@@ -70,7 +70,7 @@ public class PessoaDAOTest {
 			dao.inserir(pessoa);
 			List<Pessoa> lista = dao.consultar(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
 			pessoa = lista.get(0);
-			pessoa.setNome("Nome alterado 2");
+			pessoa.setNome("Nome alterado 2".toUpperCase());
 			
 			// teste
 			dao.atualizar(pessoa);
