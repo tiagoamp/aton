@@ -9,4 +9,4 @@ Contribuições e evoluções são bem-vindas, é uma versão inicial com vária
 
 ------------------------------------------------
 
-English: Aton - Simple Library Management System
+Aton - Simple Library Management System
