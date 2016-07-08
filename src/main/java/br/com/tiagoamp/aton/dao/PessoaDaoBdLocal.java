@@ -160,8 +160,8 @@ public class PessoaDaoBdLocal implements IPessoaDAO {
 			
 			pstmt = conn.prepareStatement(sql.toString());
 			int qtParams = 1;
-			if (nome != null) pstmt.setString(qtParams++, nome);
-			if (telefone != null) pstmt.setString(qtParams++, telefone);
+			if (nome != null) pstmt.setString(qtParams++, nome.toUpperCase());
+			if (telefone != null) pstmt.setString(qtParams++, telefone.toUpperCase());
 			if (perfil != null) pstmt.setString(qtParams++, perfil.toString());				
 									
 			ResultSet rs = pstmt.executeQuery();
@@ -214,7 +214,7 @@ public class PessoaDaoBdLocal implements IPessoaDAO {
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "SELECT * FROM PESSOAS WHERE EMAIL = ?";
 			pstmt = conn.prepareStatement(sql);			
-			pstmt.setString(1, email);
+			pstmt.setString(1, email.toUpperCase());
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				p = carregarObjeto(rs);
@@ -239,7 +239,7 @@ public class PessoaDaoBdLocal implements IPessoaDAO {
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "SELECT * FROM PESSOAS WHERE NOME LIKE ?";
 			pstmt = conn.prepareStatement(sql);			
-			pstmt.setString(1, "%" + nome + "%");
+			pstmt.setString(1, "%" + nome.toUpperCase() + "%");
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				Pessoa p = carregarObjeto(rs);
