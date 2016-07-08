@@ -1,5 +1,6 @@
 package br.com.tiagoamp.aton.controller;
 
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.tiagoamp.aton.model.BibException;
 import br.com.tiagoamp.aton.model.Livro;
@@ -224,12 +226,28 @@ public class AtonController {
 	    return "livros/cadastro";
 	}
 	
-	GRAVACAO FUNCIONANDO !!!
-	IMPLEMENTAR UPLOAD DE ARQUIVOS DESTE TUTORIAL:
-		http://www.mkyong.com/spring-mvc/spring-mvc-file-upload-example/
+	
+	/*@RequestMapping(value="uploadFile", method = RequestMethod.POST)
+	public String uploadCapaLivro(HttpServletRequest request, Livro livro, BindingResult result,
+	        @RequestParam(value="file", required=false) MultipartFile pFile, Model model) throws Exception {
+		
+		MultipartFile multipartFile = (MultipartFile) pFile;
+		
+		String fileName="";
+		
+		
+		if(multipartFile!=null){
+			fileName = multipartFile.getOriginalFilename();
+			//do whatever you want
+		}
+		
+		model.addAttribute("livro", livro);
+		return "livros/cadastro";
+	}*/
 	
 	@RequestMapping(value="livrocadastrado", method = RequestMethod.POST)
-	public String salvarLivro(@Valid Livro livro, BindingResult result, Model model) {
+	public String salvarLivro(@Valid Livro livro, BindingResult result, Model model, 
+			HttpServletRequest request, @RequestParam(value="file", required=false) MultipartFile pFile) {
 		boolean hasErrors = false;
 		if(result.hasErrors()) {
 			hasErrors = true;
@@ -251,8 +269,13 @@ public class AtonController {
 			model.addAttribute("livro", livro);
 			return "livros/cadastro";
 		}
-				
-		try {
+		
+		MultipartFile mFile = pFile;
+		try {			
+			if (!mFile.isEmpty()) {  // capa do livro
+				Path path = service.inserirFotoCapaLivro(mFile, livro.getIsbn());
+				livro.setPathFotoCapa(path);
+			}			
 			if (livro.getId() == null) {
 				service.inserirLivro(livro); // insert				
 			} else {

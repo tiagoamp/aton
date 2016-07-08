@@ -1,7 +1,13 @@
 package br.com.tiagoamp.aton;
 
+import java.nio.file.Paths;
+import java.util.Date;
+
+import br.com.tiagoamp.aton.model.Livro;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Pessoa;
+import br.com.tiagoamp.aton.model.Situacao;
+import br.com.tiagoamp.aton.model.TipoAquisicao;
 
 public class TestHelper {
 	
@@ -13,12 +19,12 @@ public class TestHelper {
 	
 	/*public static Biblioteca getBibliotecaTeste() {
 		return new Biblioteca("Nome Biblioteca", "uri do simbolo");
-	}
+	}*/
 	
 	public static Livro getLivroTeste() {
 		Livro livro = new Livro();
 		livro.setAnoPublicacao(2016);
-		livro.setAutor("Autor de Teste");
+		livro.setAutoresAgrupados("Autor de Teste 01, Autor de Teste 02");
 		livro.setClassificacao("Classificacao de Teste");
 		livro.setDataAquisicao(new Date());
 		livro.setDataCadastro(new Date());
@@ -31,7 +37,7 @@ public class TestHelper {
 		livro.setLocalPublicacao("Local de Teste");
 		livro.setNomeDoador("Doador de Teste");
 		livro.setNroPaginas(100);
-		livro.setPathFotoCapa("path/to/arquivo");
+		livro.setPathFotoCapa(Paths.get("/path/to/arquivo"));
 		livro.setPublicoAlvo("Publico de Teste");
 		livro.setSituacao(Situacao.DISPONIVEL);
 		livro.setSubtitulo("Subtitulo de Teste");
@@ -40,7 +46,7 @@ public class TestHelper {
 		return livro;
 	}
 	
-	public static Emprestimo getEmprestimoTeste() {
+	/*public static Emprestimo getEmprestimoTeste() {
 		Emprestimo emp = new Emprestimo();
 		Livro livro = TestHelper.getLivroTeste();
 		livro.setId(1);
