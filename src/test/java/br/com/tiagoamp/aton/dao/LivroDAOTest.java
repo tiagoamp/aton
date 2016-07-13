@@ -1,4 +1,4 @@
-/*package br.com.tiagoamp.aton.dao;
+package br.com.tiagoamp.aton.dao;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -11,10 +11,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.biblioteca.TestHelper;
-import br.com.tiagoamp.biblioteca.dao.ILivroDAO;
-import br.com.tiagoamp.biblioteca.dao.LivroDaoBdLocal;
-import br.com.tiagoamp.biblioteca.model.Livro;
+import br.com.tiagoamp.aton.TestHelper;
+import br.com.tiagoamp.aton.model.Livro;
 
 public class LivroDAOTest {
 	
@@ -23,7 +21,7 @@ public class LivroDAOTest {
 	@Before
 	public void iniciar() throws ClassNotFoundException {
 		dao = new LivroDaoBdLocal();
-		((LivroDaoBdLocal)dao).setURL_DB("jdbc:sqlite:/home/tiago/proj/Biblioteca/fontes_novo/Biblioteca/database/libdatabase_testes");
+		((LivroDaoBdLocal)dao).setURL_DB("jdbc:sqlite:database/atondbtests");
 		limparBaseDeDadosDeTeste();
 	}
 	
@@ -55,7 +53,7 @@ public class LivroDAOTest {
 			assertTrue("Nao deve lancar excecao",true);
 			
 			// apagando massa de dados
-			List<Livro> lista = dao.consultar(livro.getTitulo(), livro.getAutor(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
+			List<Livro> lista = dao.consultar(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
 			livro = lista.get(0);
 			dao.apagar(livro.getId());			
 		} catch (SQLException e) {
@@ -70,16 +68,16 @@ public class LivroDAOTest {
 			// criando massa de dados
 			Livro livro = TestHelper.getLivroTeste();
 			dao.inserir(livro);
-			List<Livro> lista = dao.consultar(livro.getTitulo(), livro.getAutor(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
+			List<Livro> lista = dao.consultar(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
 			livro = lista.get(0);
-			livro.setAutor("Autor Alterado 2");
+			livro.setAutoresAgrupados("Autor Alterado 2".toUpperCase());
 			
 			// teste
 			dao.atualizar(livro);
 			assertTrue("Nao deve lancar excecao",true);
-			lista = dao.consultar(livro.getTitulo(), livro.getAutor(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
+			lista = dao.consultar(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
 			Livro livro2 = lista.get(0);
-			assertTrue(livro2.getAutor().equals(livro.getAutor()));
+			assertTrue(livro2.getAutoresAgrupados().equals(livro.getAutoresAgrupados()));
 			
 			// apagando massa de dados
 			dao.apagar(livro2.getId());
@@ -95,7 +93,7 @@ public class LivroDAOTest {
 			// criando massa de dados
 			Livro livro = TestHelper.getLivroTeste();
 			dao.inserir(livro);
-			List<Livro> lista = dao.consultar(livro.getTitulo(), livro.getAutor(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
+			List<Livro> lista = dao.consultar(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
 			livro = lista.get(0);
 			
 			// teste
@@ -113,7 +111,7 @@ public class LivroDAOTest {
 			// criando massa de dados
 			Livro livro = TestHelper.getLivroTeste();
 			dao.inserir(livro);
-			List<Livro> lista = dao.consultar(livro.getTitulo(), livro.getAutor(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
+			List<Livro> lista = dao.consultar(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
 			int id = lista.get(0).getId();
 			
 			// teste
@@ -136,7 +134,7 @@ public class LivroDAOTest {
 			dao.inserir(livro);
 			
 			// teste
-			List<Livro> lista = dao.consultar(livro.getTitulo(), livro.getAutor(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
+			List<Livro> lista = dao.consultar(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
 			assertTrue(!lista.isEmpty());
 			assertTrue(lista.size() == 1);
 			
@@ -170,4 +168,3 @@ public class LivroDAOTest {
 	}
 	
 }
-*/
