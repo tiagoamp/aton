@@ -5,7 +5,7 @@ import java.util.List;
 
 import br.com.tiagoamp.aton.model.Livro;
 
-public interface ILivroDAO {
+public interface LivroDAO {
 	
 	/**
 	 * Insere um livro no base de dados.

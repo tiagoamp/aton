@@ -16,7 +16,7 @@ import br.com.tiagoamp.aton.model.Livro;
 
 public class LivroDAOTest {
 	
-	private ILivroDAO dao;
+	private LivroDAO dao;
 	
 	@Before
 	public void iniciar() throws ClassNotFoundException {

@@ -6,7 +6,7 @@ import java.util.List;
 
 import br.com.tiagoamp.aton.model.Emprestimo;
 
-public interface IEmprestimoDAO {
+public interface EmprestimoDAO {
 	
 	/**
 	 * Insere um empréstimo no base de dados.
