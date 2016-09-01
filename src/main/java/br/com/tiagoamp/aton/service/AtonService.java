@@ -145,7 +145,7 @@ public class AtonService {
 	public Path inserirFotoCapaLivro(MultipartFile mFile, String isbn) throws BibException {
 		Path path = null;
 		try {
-			String originalName = mFile.getOriginalFilename();
+			String originalName = mFile.getOriginalFilename().toLowerCase();
 			String[] validExtensions = {"jpg", "gif", "png"};
 			boolean isValidaExtension = false;
 			for (int i = 0; i < validExtensions.length; i++) {
