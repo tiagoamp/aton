@@ -6,7 +6,7 @@ import java.util.List;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Pessoa;
 
-public interface IPessoaDAO {
+public interface PessoaDAO {
 	
 	/**
 	 * Insere uma pessoa no base de dados.

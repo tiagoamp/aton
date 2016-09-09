@@ -15,7 +15,7 @@ import br.com.tiagoamp.aton.model.Emprestimo;
 import br.com.tiagoamp.aton.model.Livro;
 import br.com.tiagoamp.aton.model.Pessoa;
 
-public class EmprestimoDaoBdLocal implements IEmprestimoDAO {
+public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	
 	Logger logger = Logger.getLogger(EmprestimoDaoBdLocal.class);
 	

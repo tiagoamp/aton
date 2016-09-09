@@ -19,7 +19,7 @@ import br.com.tiagoamp.aton.model.Pessoa;
 import br.com.tiagoamp.aton.model.Situacao;
 import br.com.tiagoamp.aton.model.TipoAquisicao;
 
-public class LivroDaoBdLocal implements ILivroDAO {
+public class LivroDaoBdLocal implements LivroDAO {
 	
 	Logger logger = Logger.getLogger(LivroDaoBdLocal.class);
 	

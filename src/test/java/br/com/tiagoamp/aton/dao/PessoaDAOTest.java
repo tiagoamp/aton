@@ -16,7 +16,7 @@ import br.com.tiagoamp.aton.model.Pessoa;
 
 public class PessoaDAOTest {
 	
-	private IPessoaDAO dao;
+	private PessoaDAO dao;
 	
 	@Before
 	public void iniciar() throws ClassNotFoundException {

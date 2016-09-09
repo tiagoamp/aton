@@ -13,11 +13,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.com.tiagoamp.aton.TestHelper;
+import br.com.tiagoamp.aton.dao.EmprestimoDAO;
 import br.com.tiagoamp.aton.dao.EmprestimoDaoBdLocal;
-import br.com.tiagoamp.aton.dao.IEmprestimoDAO;
-import br.com.tiagoamp.aton.dao.ILivroDAO;
-import br.com.tiagoamp.aton.dao.IPessoaDAO;
+import br.com.tiagoamp.aton.dao.LivroDAO;
 import br.com.tiagoamp.aton.dao.LivroDaoBdLocal;
+import br.com.tiagoamp.aton.dao.PessoaDAO;
 import br.com.tiagoamp.aton.dao.PessoaDaoBdLocal;
 import br.com.tiagoamp.aton.model.BibException;
 import br.com.tiagoamp.aton.model.Perfil;
@@ -29,9 +29,9 @@ public class AtonServiceTest {
 	private AtonService service;
 
 	// mocks
-	private IPessoaDAO daoPessoaMock;
-	private ILivroDAO daoLivroMock;
-	private IEmprestimoDAO daoEmprestimoMock;
+	private PessoaDAO daoPessoaMock;
+	private LivroDAO daoLivroMock;
+	private EmprestimoDAO daoEmprestimoMock;
 
 	@Before
 	public void setUp() throws Exception {

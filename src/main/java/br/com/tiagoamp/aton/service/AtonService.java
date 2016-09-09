@@ -2,7 +2,6 @@ package br.com.tiagoamp.aton.service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,11 +13,11 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.com.tiagoamp.aton.dao.EmprestimoDAO;
 import br.com.tiagoamp.aton.dao.EmprestimoDaoBdLocal;
-import br.com.tiagoamp.aton.dao.IEmprestimoDAO;
-import br.com.tiagoamp.aton.dao.ILivroDAO;
-import br.com.tiagoamp.aton.dao.IPessoaDAO;
+import br.com.tiagoamp.aton.dao.LivroDAO;
 import br.com.tiagoamp.aton.dao.LivroDaoBdLocal;
+import br.com.tiagoamp.aton.dao.PessoaDAO;
 import br.com.tiagoamp.aton.dao.PessoaDaoBdLocal;
 import br.com.tiagoamp.aton.model.BibException;
 import br.com.tiagoamp.aton.model.Livro;
@@ -48,11 +47,11 @@ public class AtonService {
 		fotoDirPath = prop.getProperty("foto_path");
 	}
 	
-	private IPessoaDAO pessoaDao;
-	private ILivroDAO livroDao;
-	private IEmprestimoDAO empDao;
+	private PessoaDAO pessoaDao;
+	private LivroDAO livroDao;
+	private EmprestimoDAO empDao;
 	
-	public void inicializarDaosBdLocal(IPessoaDAO pessDao, ILivroDAO livDao, IEmprestimoDAO empDao) {
+	public void inicializarDaosBdLocal(PessoaDAO pessDao, LivroDAO livDao, EmprestimoDAO empDao) {
 		this.pessoaDao = pessDao;
 		this.livroDao = livDao;
 		this.empDao = empDao;				

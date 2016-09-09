@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Pessoa;
 
-public class PessoaDaoBdLocal implements IPessoaDAO {
+public class PessoaDaoBdLocal implements PessoaDAO {
 	
 	Logger logger = Logger.getLogger(PessoaDaoBdLocal.class);
 	
