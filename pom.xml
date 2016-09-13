@@ -9,7 +9,6 @@
   <version>0.0.1-SNAPSHOT</version>
   
   <name>Aton</name>
-  <url>http://maven.apache.org</url>
 
 	<dependencies>
 		<dependency>
@@ -114,6 +113,11 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.10.19</version>
 		</dependency>								
 	</dependencies>
   
