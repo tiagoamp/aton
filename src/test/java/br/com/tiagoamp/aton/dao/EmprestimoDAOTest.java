@@ -1,4 +1,4 @@
-/*package br.com.tiagoamp.aton.dao;
+package br.com.tiagoamp.aton.dao;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -170,4 +170,3 @@ private IEmprestimoDAO dao;
 	}
 
 }
-*/

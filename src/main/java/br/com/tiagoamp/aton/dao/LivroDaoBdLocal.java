@@ -72,7 +72,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 
 	@Override
 	public int create(Livro livro) throws SQLException {
-		logger.debug("Inserindo 'livro': " + livro);
+		logger.debug("Inserindo: " + livro);
 		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
@@ -122,7 +122,8 @@ public class LivroDaoBdLocal implements LivroDAO {
 					+ "TITULO = ?, SUBTITULO = ?, DT_CADASTRO = ?, ISBN = ?,"
 					+ "EDITORA = ?, LOCAL_PUBLICACAO = ?, ANO_PUBLICACAO = ?, NRO_PAGINAS = ?, GENERO = ?,"
 					+ "CLASSIFICACAO = ?, PUBLICO_ALVO = ?, PATH_FOTO_CAPA = ?, DT_AQUISICAO = ?, TIPO_AQUISICAO = ?,"
-					+ "NM_DOADOR = ?, ID_PESSOA_CADASTRADORA = ?, SITUACAO = ?, AUTOR = ?";
+					+ "NM_DOADOR = ?, ID_PESSOA_CADASTRADORA = ?, SITUACAO = ?, AUTOR = ? "
+					+ "	WHERE ID = ?";
 			pstmt = conn.prepareStatement(sql);			
 			pstmt.setString(1, livro.getTitulo().toUpperCase());
 			pstmt.setString(2, livro.getSubtitulo().toUpperCase());
@@ -142,6 +143,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 			pstmt.setInt(16, livro.getPessoaCadastradora().getId());
 			pstmt.setString(17, livro.getSituacao().toString());
 			pstmt.setString(18, livro.getAutoresAgrupados().toUpperCase());
+			pstmt.setInt(19, livro.getId());
 			result = pstmt.executeUpdate();
 			logger.debug("Atualização concluída!");
 			return result;

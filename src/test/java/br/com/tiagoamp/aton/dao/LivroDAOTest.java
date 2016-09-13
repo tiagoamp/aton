@@ -17,16 +17,19 @@ import br.com.tiagoamp.aton.model.Livro;
 public class LivroDAOTest {
 	
 	private LivroDAO dao;
+	private Livro livro;
 	
 	@Before
-	public void iniciar() throws ClassNotFoundException {
+	public void setup() throws ClassNotFoundException {
 		dao = new LivroDaoBdLocal();
 		((LivroDaoBdLocal)dao).setURL_DB("jdbc:sqlite:database/atondbtests");
 		limparBaseDeDadosDeTeste();
+		
+		livro = TestHelper.getLivroTeste();
 	}
 	
 	@After
-	public void encerrar() {
+	public void teardown() {
 		limparBaseDeDadosDeTeste();		
 		dao = null;		
 	}
@@ -35,7 +38,7 @@ public class LivroDAOTest {
 		try {
 			List<Livro> lista = dao.findAll();
 			for (Iterator<Livro> iterator = lista.iterator(); iterator.hasNext();) {
-				Livro livro = (Livro) iterator.next();
+				Livro livro = iterator.next();
 				dao.delete(livro.getId());
 			}
 		} catch (SQLException e) {
@@ -44,127 +47,66 @@ public class LivroDAOTest {
 	}
 
 	@Test
-	public void testInserir() {
-		try {
-			Livro livro = TestHelper.getLivroTeste();
-			
-			// teste
-			dao.create(livro);
-			assertTrue("Nao deve lancar excecao",true);
-			
-			// apagando massa de dados
-			List<Livro> lista = dao.find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
-			livro = lista.get(0);
-			dao.delete(livro.getId());			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			fail("Nao deveria lancar excecao!");
-		}
+	public void testCreate() throws SQLException {
+		int result = dao.create(livro);
+		assertTrue(result == 1);	
 	}
 
 	@Test
-	public void testAtualizar() {
-		try {
-			// criando massa de dados
-			Livro livro = TestHelper.getLivroTeste();
-			dao.create(livro);
-			List<Livro> lista = dao.find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
-			livro = lista.get(0);
-			livro.setAutoresAgrupados("Autor Alterado 2".toUpperCase());
-			
-			// teste
-			dao.update(livro);
-			assertTrue("Nao deve lancar excecao",true);
-			lista = dao.find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
-			Livro livro2 = lista.get(0);
-			assertTrue(livro2.getAutoresAgrupados().equals(livro.getAutoresAgrupados()));
-			
-			// apagando massa de dados
-			dao.delete(livro2.getId());
-		} catch (SQLException e) {
-			e.printStackTrace();
-			fail("Nao deveria lancar excecao!");
-		}
+	public void testUpdate() throws SQLException {
+		// criando massa de dados
+		dao.create(livro);
+		List<Livro> lista = dao.find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
+		livro = lista.get(0);
+		String nmAutoresAlterados = "Autor Alterado 2"; 
+		livro.setAutoresAgrupados(nmAutoresAlterados);			
+		// teste
+		int result = dao.update(livro);
+		assertTrue(result == 1);
+		lista = dao.find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
+		livro = lista.get(0);
+		assertTrue(nmAutoresAlterados.toUpperCase().equals(livro.getAutoresAgrupados()));		
 	}
 
 	@Test
-	public void testApagar() {
-		try {
-			// criando massa de dados
-			Livro livro = TestHelper.getLivroTeste();
-			dao.create(livro);
-			List<Livro> lista = dao.find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
-			livro = lista.get(0);
-			
-			// teste
-			dao.delete(livro.getId());
-			assertTrue("Nao deve lancar excecao",true);			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			fail("Nao deveria lancar excecao!");
-		}
+	public void testDelete() throws SQLException {
+		// criando massa de dados
+		dao.create(livro);
+		List<Livro> lista = dao.find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
+		livro = lista.get(0);			
+		// teste
+		int result = dao.delete(livro.getId());
+		assertTrue(result == 1);		
 	}
 
 	@Test
-	public void testConsultarInt() {
-		try {
-			// criando massa de dados
-			Livro livro = TestHelper.getLivroTeste();
-			dao.create(livro);
-			List<Livro> lista = dao.find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
-			int id = lista.get(0).getId();
-			
-			// teste
-			Livro livro2 = dao.findById(id);
-			assertTrue(id == livro2.getId());
-			
-			// apagando massa de dados
-			dao.delete(livro2.getId());
-		} catch (SQLException e) {
-			e.printStackTrace();
-			fail("Nao deveria lancar excecao!");
-		}
+	public void testFindById() throws SQLException {
+		// criando massa de dados
+		dao.create(livro);
+		List<Livro> lista = dao.find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
+		int id = lista.get(0).getId();
+		// teste
+		Livro livro2 = dao.findById(id);
+		assertTrue(id == livro2.getId());
 	}
 
 	@Test
-	public void testConsultarStringStringStringStringString() {
-		try {
-			// criando massa de dados
-			Livro livro = TestHelper.getLivroTeste();
-			dao.create(livro);
-			
-			// teste
-			List<Livro> lista = dao.find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
-			assertTrue(!lista.isEmpty());
-			assertTrue(lista.size() == 1);
-			
-			// apagando massa de dados
-			livro = lista.get(0);
-			dao.delete(livro.getId());
-		} catch (SQLException e) {
-			e.printStackTrace();
-			fail("Nao deveria lancar excecao!");
-		}
+	public void testFindStringStringStringStringString() throws SQLException {
+		// criando massa de dados
+		dao.create(livro);
+		// teste
+		List<Livro> lista = dao.find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
+		assertTrue(!lista.isEmpty());
+		assertTrue(lista.size() == 1);		
 	}
 
 	@Test
-	public void testConsultar() {
-		try {
-			// criando massa de dados
-			Livro livro = TestHelper.getLivroTeste();
-			dao.create(livro);
-			
-			// teste
-			List<Livro> lista = dao.findAll();
-			assertTrue(!lista.isEmpty());
-			
-			// apagando massa de dados
-			livro = lista.get(0);
-			dao.delete(livro.getId());
-		} catch (SQLException e) {
-			e.printStackTrace();
-			fail("Nao deveria lancar excecao!");
-		}
+	public void testFindAll() throws SQLException {
+		// criando massa de dados
+		dao.create(livro);
+		// teste
+		List<Livro> lista = dao.findAll();
+		assertTrue(!lista.isEmpty());		
 	}
 	
 }
