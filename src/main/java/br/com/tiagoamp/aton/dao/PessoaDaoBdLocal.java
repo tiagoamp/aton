@@ -33,6 +33,14 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 		URL_DB = "jdbc:sqlite:" + bdpath;
 	}
 	
+	private Connection conn;
+	private PreparedStatement pstmt;
+	private String URL_DB;
+	
+	public void setURL_DB(String url) {
+		this.URL_DB = url;
+	}
+	
 	private Pessoa carregarObjeto(ResultSet rs) throws SQLException {
 		Pessoa p = new Pessoa();
 		p.setId(rs.getInt("ID"));
@@ -42,14 +50,6 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 		p.setPerfil(Perfil.valueOf(rs.getString("PERFIL")));
 		p.setSenha(rs.getString("SENHA"));
 		return p;
-	}
-	
-	private Connection conn;
-	private PreparedStatement pstmt;
-	private String URL_DB;
-	
-	public void setURL_DB(String url) {
-		this.URL_DB = url;
 	}
 	
 	@Override
