@@ -13,24 +13,27 @@ public interface PessoaDAO {
 	 * 
 	 * @param pessoa
 	 * @throws SQLException 
+	 * @return int number of rows inserted
 	 */
-	void inserir(Pessoa pessoa) throws SQLException;
+	int create(Pessoa pessoa) throws SQLException;
 	
 	/**
 	 * Atualiza uma pessoa na base de dados.
 	 * 
 	 * @param pessoa
-	 * @throws SQLException 
+	 * @throws SQLException
+	 * @return int number of rows updated 
 	 */
-	void atualizar(Pessoa pessoa) throws SQLException;
+	int update(Pessoa pessoa) throws SQLException;
 	
 	/**
 	 * Apaga uma pessoa na base de dados.
 	 * 
 	 * @param id 
 	 * @throws SQLException 
+	 * @return int number of rows deleted
 	 */
-	void apagar(int id) throws SQLException;
+	int delete(int id) throws SQLException;
 	
 	/**
 	 * Consulta uma pessoa pelo id.
@@ -39,7 +42,7 @@ public interface PessoaDAO {
 	 * @return Pessoa Instância da pessoa ou null se não existir.
 	 * @throws SQLException 
 	 */
-	Pessoa consultarPorId(int id) throws SQLException;
+	Pessoa findById(int id) throws SQLException;
 	
 	/**
 	 * Consulta uma pessoa pelo e-mail.
@@ -48,16 +51,16 @@ public interface PessoaDAO {
 	 * @return Pessoa Instância da pessoa ou null se não existir.
 	 * @throws SQLException
 	 */
-	Pessoa consultarPorEmail(String email) throws SQLException;
+	Pessoa findByEmail(String email) throws SQLException;
 	
 	/**
 	 * Consulta pessoas na base de dados por nome aproximado.
 	 * 
 	 * @param nome
-	 * @return
+	 * @return List<Pessoa> lista de pessoas
 	 * @throws SQLException
 	 */
-	List<Pessoa> consultarPorNomeAproximado(String nome) throws SQLException;
+	List<Pessoa> findByNomeAproximado(String nome) throws SQLException;
 	
 	/**
 	 * Consulta pessoas na base de dados conforme parâmetros informados.
@@ -65,16 +68,16 @@ public interface PessoaDAO {
 	 * @param nome
 	 * @param telefone
 	 * @param perfil
-	 * @return
+	 * @return List<Pessoa> lista de pessoas
 	 * @throws SQLException
 	 */
-	List<Pessoa> consultar(String nome, String telefone, Perfil perfil) throws SQLException;
+	List<Pessoa> find(String nome, String telefone, Perfil perfil) throws SQLException;
 	
 	/**
 	 * Consulta e retorna todas as 'pessoas' na base de dados
 	 * @return List<Pessoa> Lista de pessoas
 	 * @throws SQLException
 	 */
-	List<Pessoa> consultar() throws SQLException;
+	List<Pessoa> findAll() throws SQLException;
 
 }

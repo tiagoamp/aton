@@ -11,38 +11,46 @@ public interface LivroDAO {
 	 * Insere um livro no base de dados.
 	 * 
 	 * @param livro
+	 * @throws SQLException
+	 * @return int number of rows inserted
 	 */
-	void inserir(Livro livro) throws SQLException;
+	int create(Livro livro) throws SQLException;
 	
 	/**
 	 * Atualiza um livro na base de dados.
 	 * 
 	 * @param livro
+	 * @throws SQLException
+	 * @return int number of rows updated
 	 */
-	void atualizar(Livro livro) throws SQLException;
+	int update(Livro livro) throws SQLException;
 	
 	/**
 	 * Apaga um livro na base de dados.
 	 * 
 	 * @param id
+	 * @throws SQLException
+	 * @return int number of rows deleted
 	 */
-	void apagar(int id) throws SQLException;
+	int delete(int id) throws SQLException;
 	
 	/**
 	 * Consulta um livro pelo id.
 	 * 
 	 * @param id Identificador do livro.
 	 * @return Livro Instância do livro ou null se não existir.
+	 * @throws SQLException
 	 */
-	Livro consultar(int id) throws SQLException;
+	Livro findById(int id) throws SQLException;
 	
 	/**
 	 * Consulta um livro pelo isbn.
 	 * 
 	 * @param isbn ISBN do livro.
 	 * @return Livro Instância do livro ou null se não existir.
+	 * @throws SQLException
 	 */
-	Livro consultar(String isbn) throws SQLException;
+	Livro findByIsbn(String isbn) throws SQLException;
 	
 	/**
 	 * Consulta livros na base de dados baseado nos parâmetros informados.
@@ -55,13 +63,13 @@ public interface LivroDAO {
 	 * 
 	 * @return List<Livro> Lista de livros ou null se não existir.
 	 */
-	List<Livro> consultar(String titulo, String autor, String isbn, String classificacao, String publico) throws SQLException;
+	List<Livro> find(String titulo, String autor, String isbn, String classificacao, String publico) throws SQLException;
 	
 	/**
 	 * Consulta todos os livros da base de dados.
 	 * @return List<Livro>
 	 * @throws SQLException
 	 */
-	List<Livro> consultar() throws SQLException;
+	List<Livro> findAll() throws SQLException;
 
 }

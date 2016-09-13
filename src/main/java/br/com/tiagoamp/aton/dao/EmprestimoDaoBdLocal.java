@@ -45,8 +45,9 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	}
 
 	@Override
-	public void inserir(Emprestimo emprestimo) throws SQLException {
+	public int create(Emprestimo emprestimo) throws SQLException {
 		logger.debug("Inserindo : " + emprestimo);
+		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "INSERT INTO EMPRESTIMOS(ID_PESSOA, ID_LIVRO, DT_EMPRESTIMO, DT_DEVOLUCAO) VALUES (?, ?, ?, ?)";
@@ -57,8 +58,9 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 			if (emprestimo.getDataDevolucao() != null) {
 				pstmt.setDate(4, new java.sql.Date(emprestimo.getDataDevolucao().getTime()));
 			}			
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 			logger.debug("Inserção concluída!");
+			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
@@ -69,8 +71,9 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	}
 
 	@Override
-	public void atualizar(Emprestimo emprestimo) throws SQLException {
+	public int update(Emprestimo emprestimo) throws SQLException {
 		logger.debug("Atualizando: " + emprestimo);
+		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "UPDATE EMPRESTIMOS SET ID_PESSOA = ?, ID_LIVRO = ?, DT_EMPRESTIMO = ?, "
@@ -81,8 +84,9 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 			pstmt.setDate(3, new java.sql.Date(emprestimo.getDataEmprestimo().getTime()));
 			pstmt.setDate(4, new java.sql.Date(emprestimo.getDataDevolucao().getTime()));
 			pstmt.setInt(5, emprestimo.getId());
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 			logger.debug("Atualização concluída!");
+			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
@@ -94,15 +98,17 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	}
 
 	@Override
-	public void apagar(int id) throws SQLException {
+	public int delete(int id) throws SQLException {
 		logger.debug("Apagando id: " + id);
+		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "DELETE FROM EMPRESTIMOS WHERE ID = ?";
 			pstmt = conn.prepareStatement(sql);			
 			pstmt.setInt(1, id);
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 			logger.debug("Delete concluído!");
+			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
@@ -113,7 +119,7 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	}
 
 	@Override
-	public Emprestimo consultar(int id) throws SQLException {
+	public Emprestimo findById(int id) throws SQLException {
 		logger.debug("Consultar com id: " + id);
 		Emprestimo emp = null;
 		try {			
@@ -138,7 +144,7 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	}
 
 	@Override
-	public List<Emprestimo> consultar(Integer idLivro, Integer idPessoa, Date dataEmprestimo, Date dataDevolucao) throws SQLException {
+	public List<Emprestimo> find(Integer idLivro, Integer idPessoa, Date dataEmprestimo, Date dataDevolucao) throws SQLException {
 		logger.debug("Consultando com parametros: " + idLivro + " , " + idPessoa + ", " + dataEmprestimo + " , " + dataDevolucao);
 		List<Emprestimo> lista = new ArrayList<>();
 		try {			
@@ -178,7 +184,7 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	}
 
 	@Override
-	public List<Emprestimo> consultar() throws SQLException {
+	public List<Emprestimo> findAll() throws SQLException {
 		logger.debug("Consultando todos 'emprestimos'");
 		List<Emprestimo> lista = new ArrayList<>();
 		try {			
