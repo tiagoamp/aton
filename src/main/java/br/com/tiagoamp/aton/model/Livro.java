@@ -8,11 +8,12 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class Livro {
+public class Livro implements Comparable<Livro> {
 	
 	public Livro() {
 		this.dataCadastro = new Date();
 		this.situacao = Situacao.DISPONIVEL;
+		this.tipoAquisicao = TipoAquisicao.COMPRA;
 	}
 		
 	private Integer id;
@@ -47,6 +48,10 @@ public class Livro {
     	return titulo + " - " + autoresAgrupados;
     }
     
+    @Override
+    public int compareTo(Livro o) {
+    	return this.getTitulo().compareTo(o.getTitulo());
+    }
     
 	public Integer getId() {
 		return id;

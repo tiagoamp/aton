@@ -226,25 +226,6 @@ public class AtonController {
 	    return "livros/cadastro";
 	}
 	
-	
-	/*@RequestMapping(value="uploadFile", method = RequestMethod.POST)
-	public String uploadCapaLivro(HttpServletRequest request, Livro livro, BindingResult result,
-	        @RequestParam(value="file", required=false) MultipartFile pFile, Model model) throws Exception {
-		
-		MultipartFile multipartFile = (MultipartFile) pFile;
-		
-		String fileName="";
-		
-		
-		if(multipartFile!=null){
-			fileName = multipartFile.getOriginalFilename();
-			//do whatever you want
-		}
-		
-		model.addAttribute("livro", livro);
-		return "livros/cadastro";
-	}*/
-	
 	@RequestMapping(value="livrocadastrado", method = RequestMethod.POST)
 	public String salvarLivro(@Valid Livro livro, BindingResult result, Model model, 
 			HttpServletRequest request, @RequestParam(value="file", required=false) MultipartFile pFile) {
@@ -290,6 +271,25 @@ public class AtonController {
 			return "livros/cadastro";
 		}		
 		return "livros";
+	}
+	
+	@RequestMapping("listalivros")
+	public String listarLivros(HttpServletRequest request, Model model) {
+		List<Livro> lista = new ArrayList<>();
+		try {		
+			lista = service.consultarLivros();
+			if (lista.isEmpty()) {
+				throw new BibException("Consulta sem resultados!");
+			}
+			Set<Livro> listaOrdenada = new TreeSet<>();
+			listaOrdenada.addAll(lista);
+			model.addAttribute("listalivros", listaOrdenada);
+		} catch (BibException e) {
+			logger.error("Erro: " + e);
+			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+			return "livros";
+		}		
+	    return "livros";
 	}
 	
 }
