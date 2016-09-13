@@ -1,7 +1,6 @@
 package br.com.tiagoamp.aton.dao;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.sql.SQLException;
 import java.util.Iterator;

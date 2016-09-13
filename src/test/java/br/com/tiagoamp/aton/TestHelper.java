@@ -3,6 +3,7 @@ package br.com.tiagoamp.aton;
 import java.nio.file.Paths;
 import java.util.Date;
 
+import br.com.tiagoamp.aton.model.Emprestimo;
 import br.com.tiagoamp.aton.model.Livro;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Pessoa;
@@ -16,11 +17,7 @@ public class TestHelper {
 		pessoa.setSenha("123");
 		return pessoa;
 	}
-	
-	/*public static Biblioteca getBibliotecaTeste() {
-		return new Biblioteca("Nome Biblioteca", "uri do simbolo");
-	}*/
-	
+		
 	public static Livro getLivroTeste() {
 		Livro livro = new Livro();
 		livro.setAnoPublicacao(2016);
@@ -46,7 +43,7 @@ public class TestHelper {
 		return livro;
 	}
 	
-	/*public static Emprestimo getEmprestimoTeste() {
+	public static Emprestimo getEmprestimoTeste() {
 		Emprestimo emp = new Emprestimo();
 		Livro livro = TestHelper.getLivroTeste();
 		livro.setId(1);
@@ -56,6 +53,6 @@ public class TestHelper {
 		emp.setPessoa(pessoa);
 		emp.setDataEmprestimo(new Date());
 		return emp;
-	}*/
+	}
 
 }
