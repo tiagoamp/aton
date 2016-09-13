@@ -59,9 +59,9 @@ public class AtonService {
 	
 	public void inserirPessoa(Pessoa pessoa) throws BibException {
 		try {
-			Pessoa p = pessoaDao.consultarPorEmail(pessoa.getEmail());
+			Pessoa p = pessoaDao.findByEmail(pessoa.getEmail());
 			if (p != null) throw new BibException("E-mail já cadastrado!");
-			pessoaDao.inserir(pessoa);
+			pessoaDao.create(pessoa);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
@@ -70,7 +70,7 @@ public class AtonService {
 	
 	public void atualizarPessoa(Pessoa pessoa) throws BibException {
 		try {
-			pessoaDao.atualizar(pessoa);
+			pessoaDao.update(pessoa);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
@@ -79,7 +79,7 @@ public class AtonService {
 	
 	public void apagarPessoa(int id) throws BibException {
 		try {
-			pessoaDao.apagar(id);
+			pessoaDao.delete(id);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
@@ -88,7 +88,7 @@ public class AtonService {
 	
 	public Pessoa consultarPessoa(int id) throws BibException {
 		try {
-			return pessoaDao.consultarPorId(id);
+			return pessoaDao.findById(id);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
@@ -97,7 +97,7 @@ public class AtonService {
 	
 	public Pessoa consultarPessoa(String email) throws BibException {
 		try {
-			return pessoaDao.consultarPorEmail(email);
+			return pessoaDao.findByEmail(email);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
@@ -106,7 +106,7 @@ public class AtonService {
 	
 	public List<Pessoa> consultarPessoas(String nome, String telefone, Perfil perfil) throws BibException {
 		try {
-			return pessoaDao.consultar(nome, telefone, perfil);			
+			return pessoaDao.find(nome, telefone, perfil);			
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
@@ -115,7 +115,7 @@ public class AtonService {
 	
 	public List<Pessoa> consultarPessoasPorNomeAproximado(String nome) throws BibException {
 		try {
-			return pessoaDao.consultarPorNomeAproximado(nome);			
+			return pessoaDao.findByNomeAproximado(nome);			
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
@@ -124,7 +124,7 @@ public class AtonService {
 	
 	public List<Pessoa> consultarPessoas() throws BibException {
 		try {
-			return pessoaDao.consultar();
+			return pessoaDao.findAll();
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
@@ -133,9 +133,9 @@ public class AtonService {
 	
 	public void inserirLivro(Livro livro) throws BibException {
 		try {
-			Livro l = livroDao.consultar(livro.getIsbn());
+			Livro l = livroDao.findByIsbn(livro.getIsbn());
 			if (l != null) throw new BibException("ISBN já cadastrado!");			
-			livroDao.inserir(livro);			
+			livroDao.create(livro);			
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
@@ -168,7 +168,7 @@ public class AtonService {
 	
 	public void atualizarLivro(Livro livro) throws BibException {
 		try {
-			livroDao.atualizar(livro);
+			livroDao.update(livro);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
@@ -177,7 +177,7 @@ public class AtonService {
 	
 	public void apagarLivro(int id) throws BibException {
 		try {
-			livroDao.apagar(id);
+			livroDao.delete(id);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
@@ -186,7 +186,7 @@ public class AtonService {
 	
 	public Livro consultarLivro(int id) throws BibException {
 		try {
-			return livroDao.consultar(id);
+			return livroDao.findById(id);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
@@ -195,7 +195,7 @@ public class AtonService {
 	
 	public Livro consultarLivro(String isbn) throws BibException {
 		try {
-			return livroDao.consultar(isbn);
+			return livroDao.findByIsbn(isbn);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
@@ -204,7 +204,7 @@ public class AtonService {
 	
 	public List<Livro> consultarLivro(String titulo, String autor, String isbn, String classificacao, String publico) throws BibException {
 		try {
-			return livroDao.consultar(titulo, autor, isbn, classificacao, publico);
+			return livroDao.find(titulo, autor, isbn, classificacao, publico);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
@@ -213,7 +213,7 @@ public class AtonService {
 	
 	public List<Livro> consultarLivros() throws BibException {
 		try {
-			return livroDao.consultar();
+			return livroDao.findAll();
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);

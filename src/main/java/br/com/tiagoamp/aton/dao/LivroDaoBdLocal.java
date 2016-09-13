@@ -71,8 +71,9 @@ public class LivroDaoBdLocal implements LivroDAO {
 	}
 
 	@Override
-	public void inserir(Livro livro) throws SQLException {
+	public int create(Livro livro) throws SQLException {
 		logger.debug("Inserindo 'livro': " + livro);
+		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "INSERT INTO LIVROS(TITULO, SUBTITULO, DT_CADASTRO, ISBN,"
@@ -99,8 +100,9 @@ public class LivroDaoBdLocal implements LivroDAO {
 			pstmt.setObject(16, livro.getPessoaCadastradora() != null ? livro.getPessoaCadastradora().getId() : null);
 			pstmt.setObject(17, livro.getSituacao() != null ? livro.getSituacao().toString() : null );
 			pstmt.setString(18, livro.getAutoresAgrupados().toUpperCase());
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 			logger.debug("Inserção concluída!");
+			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
@@ -111,8 +113,9 @@ public class LivroDaoBdLocal implements LivroDAO {
 	}
 
 	@Override
-	public void atualizar(Livro livro) throws SQLException {
+	public int update(Livro livro) throws SQLException {
 		logger.debug("Atualizando: " + livro);
+		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "UPDATE LIVROS SET "
@@ -139,8 +142,9 @@ public class LivroDaoBdLocal implements LivroDAO {
 			pstmt.setInt(16, livro.getPessoaCadastradora().getId());
 			pstmt.setString(17, livro.getSituacao().toString());
 			pstmt.setString(18, livro.getAutoresAgrupados().toUpperCase());
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 			logger.debug("Atualização concluída!");
+			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
@@ -151,15 +155,17 @@ public class LivroDaoBdLocal implements LivroDAO {
 	}
 
 	@Override
-	public void apagar(int id) throws SQLException {
+	public int delete(int id) throws SQLException {
 		logger.debug("Apagando id: " + id);
+		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "DELETE FROM LIVROS WHERE ID = ?";
 			pstmt = conn.prepareStatement(sql);			
 			pstmt.setInt(1, id);
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 			logger.debug("Delete concluído!");
+			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
@@ -171,7 +177,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 	}
 
 	@Override
-	public Livro consultar(int id) throws SQLException {
+	public Livro findById(int id) throws SQLException {
 		logger.debug("Consultar com id: " + id);
 		Livro p = null;
 		try {			
@@ -196,7 +202,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 	}
 
 	@Override
-	public List<Livro> consultar(String titulo, String autor, String isbn, String classificacao, String publico) throws SQLException {
+	public List<Livro> find(String titulo, String autor, String isbn, String classificacao, String publico) throws SQLException {
 		logger.debug("Consultando com parametros: " + titulo + " , " + autor + ", " + isbn + " , " + classificacao + " , " + publico);
 		List<Livro> lista = new ArrayList<>();
 		try {			
@@ -238,7 +244,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 	}
 
 	@Override
-	public List<Livro> consultar() throws SQLException {
+	public List<Livro> findAll() throws SQLException {
 		logger.debug("Consultando todos 'livros'");
 		List<Livro> lista = new ArrayList<>();
 		try {			
@@ -263,7 +269,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 	}
 
 	@Override
-	public Livro consultar(String isbn) throws SQLException {
+	public Livro findByIsbn(String isbn) throws SQLException {
 		logger.debug("Consultar com isbn: " + isbn);
 		Livro p = null;
 		try {			

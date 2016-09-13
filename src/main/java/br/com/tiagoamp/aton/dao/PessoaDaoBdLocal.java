@@ -53,8 +53,9 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 	}
 	
 	@Override
-	public void inserir(Pessoa pessoa) throws SQLException {
+	public int create(Pessoa pessoa) throws SQLException {
 		logger.debug("Inserindo : " + pessoa);
+		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "INSERT INTO PESSOAS(EMAIL, NOME, TELEFONE, PERFIL, SENHA) VALUES (?, ?, ?, ?, ?)";
@@ -64,8 +65,9 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 			pstmt.setString(3, pessoa.getTelefone());
 			pstmt.setString(4, pessoa.getPerfil().toString());
 			pstmt.setString(5, pessoa.getSenha() != null ? pessoa.getSenha() : null);
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 			logger.debug("Inserção executada!");
+			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
@@ -76,8 +78,9 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 	}
 
 	@Override
-	public void atualizar(Pessoa pessoa) throws SQLException {
+	public int update(Pessoa pessoa) throws SQLException {
 		logger.debug("Atualizando: " + pessoa);
+		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "UPDATE PESSOAS SET EMAIL = ?, NOME = ?, TELEFONE = ?, PERFIL = ?, SENHA = ? WHERE ID = ?";
@@ -88,8 +91,9 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 			pstmt.setString(4, pessoa.getPerfil().toString());
 			pstmt.setString(5, pessoa.getSenha() != null ? pessoa.getSenha() : null);
 			pstmt.setInt(6, pessoa.getId());
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 			logger.debug("Atualização executada!");
+			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
@@ -100,15 +104,17 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 	}
 
 	@Override
-	public void apagar(int id) throws SQLException {
+	public int delete(int id) throws SQLException {
 		logger.debug("Apagando id: " + id);
+		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "DELETE FROM PESSOAS WHERE ID = ?";
 			pstmt = conn.prepareStatement(sql);			
 			pstmt.setInt(1, id);
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 			logger.debug("Exclusão concluída!");
+			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
@@ -119,7 +125,7 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 	}
 
 	@Override
-	public Pessoa consultarPorId(int id) throws SQLException {
+	public Pessoa findById(int id) throws SQLException {
 		logger.debug("Consultar com id: " + id);
 		Pessoa p = null;
 		try {			
@@ -144,7 +150,7 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 	}
 	
 	@Override
-	public List<Pessoa> consultar(String nome, String telefone, Perfil perfil) throws SQLException {
+	public List<Pessoa> find(String nome, String telefone, Perfil perfil) throws SQLException {
 		logger.debug("Consultando com parametros: " + nome +","+ telefone +","+ perfil);
 		List<Pessoa> lista = new ArrayList<>();
 		try {
@@ -182,7 +188,7 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 	}
 
 	@Override
-	public List<Pessoa> consultar() throws SQLException {
+	public List<Pessoa> findAll() throws SQLException {
 		logger.debug("Consultando todas 'pessoas'");
 		List<Pessoa> lista = new ArrayList<>();
 		try {			
@@ -207,7 +213,7 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 	}
 
 	@Override
-	public Pessoa consultarPorEmail(String email) throws SQLException {
+	public Pessoa findByEmail(String email) throws SQLException {
 		logger.debug("Consultar com e-mail: " + email);
 		Pessoa p = null;
 		try {			
@@ -232,7 +238,7 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 	}
 
 	@Override
-	public List<Pessoa> consultarPorNomeAproximado(String nome) throws SQLException {
+	public List<Pessoa> findByNomeAproximado(String nome) throws SQLException {
 		logger.debug("Consultando por nome: " + nome);
 		List<Pessoa> lista = new ArrayList<>();
 		try {

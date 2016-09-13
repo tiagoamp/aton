@@ -12,24 +12,28 @@ public interface EmprestimoDAO {
 	 * Insere um empréstimo no base de dados.
 	 * 
 	 * @param emprestimo
+	 * @throws SQLException	 * 
+	 * @return int number of rows inserted
 	 */
-	void inserir(Emprestimo emprestimo) throws SQLException;
+	int create(Emprestimo emprestimo) throws SQLException;
 	
 	/**
 	 * Atualiza um empréstimo na base de dados.
 	 * 
 	 * @param emprestimo
-	 * @throws SQLException
+	 * @throws SQLException 
+	 * @return int number of rows updated
 	 */
-	void atualizar(Emprestimo emprestimo) throws SQLException;
+	int update(Emprestimo emprestimo) throws SQLException;
 	
 	/**
 	 * Apaga um empréstimo na base de dados.
 	 * 
 	 * @param id
 	 * @throws SQLException
+	 * @return int number of rows deleted
 	 */
-	void apagar(int id) throws SQLException;
+	int delete(int id) throws SQLException;
 	
 	/**
 	 * Consulta um empréstimo pelo id.
@@ -38,7 +42,7 @@ public interface EmprestimoDAO {
 	 * @return Emprestimo Instância do empréstimo ou null se não existir.
 	 * @throws SQLException
 	 */
-	Emprestimo consultar(int id) throws SQLException;
+	Emprestimo findById(int id) throws SQLException;
 	
 	/**
 	 * Consulta emprestimos na base de dados baseado nos parâmetros informados.
@@ -52,13 +56,13 @@ public interface EmprestimoDAO {
 	 * 
 	 * @return List<Emprestimo> Lista de empréstimos ou null se não existir.
 	 */
-	List<Emprestimo> consultar(Integer idLivro, Integer idPessoa, Date dataEmprestimo, Date dataDevolucao) throws SQLException;
+	List<Emprestimo> find(Integer idLivro, Integer idPessoa, Date dataEmprestimo, Date dataDevolucao) throws SQLException;
 	
 	/**
 	 * Consulta todos os emprestimos da base de dados.
 	 * @return List<Emprestimo>
 	 * @throws SQLException
 	 */
-	List<Emprestimo> consultar() throws SQLException;
+	List<Emprestimo> findAll() throws SQLException;
 
 }

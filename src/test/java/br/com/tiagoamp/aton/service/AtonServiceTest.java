@@ -57,8 +57,8 @@ public class AtonServiceTest {
 	public void testInserirPessoa() {
 		try {
 			Pessoa p = TestHelper.getPessoaTeste();
-			EasyMock.expect(daoPessoaMock.consultarPorEmail(EasyMock.anyString())).andReturn(null);
-			daoPessoaMock.inserir((Pessoa)EasyMock.anyObject());
+			EasyMock.expect(daoPessoaMock.findByEmail(EasyMock.anyString())).andReturn(null);
+			daoPessoaMock.create((Pessoa)EasyMock.anyObject());
 			EasyMock.replay(daoPessoaMock);		
 			EasyMock.verify();
 			
@@ -75,7 +75,7 @@ public class AtonServiceTest {
 	public void testAtualizarPessoa() {
 		try {
 			Pessoa p = TestHelper.getPessoaTeste();
-			daoPessoaMock.atualizar((Pessoa)EasyMock.anyObject());
+			daoPessoaMock.update((Pessoa)EasyMock.anyObject());
 			EasyMock.replay(daoPessoaMock);	
 			EasyMock.verify();
 			
@@ -91,7 +91,7 @@ public class AtonServiceTest {
 	@Test
 	public void testApagarPessoa() {
 		try {
-			daoPessoaMock.apagar(EasyMock.anyInt());
+			daoPessoaMock.delete(EasyMock.anyInt());
 			EasyMock.replay(daoPessoaMock);	
 			EasyMock.verify();
 			
@@ -108,7 +108,7 @@ public class AtonServiceTest {
 	public void testConsultarPessoaInt() {
 		try {
 			Pessoa p = TestHelper.getPessoaTeste();
-			EasyMock.expect(daoPessoaMock.consultarPorId(EasyMock.anyInt())).andReturn(p);
+			EasyMock.expect(daoPessoaMock.findById(EasyMock.anyInt())).andReturn(p);
 			EasyMock.replay(daoPessoaMock);	
 			EasyMock.verify();
 						
@@ -127,7 +127,7 @@ public class AtonServiceTest {
 			Pessoa p = TestHelper.getPessoaTeste();
 			List<Pessoa> lista = new ArrayList<>();
 			lista.add(p);
-			EasyMock.expect(daoPessoaMock.consultar(EasyMock.anyString(),EasyMock.anyString(),(Perfil)EasyMock.anyObject())).andReturn(lista);
+			EasyMock.expect(daoPessoaMock.find(EasyMock.anyString(),EasyMock.anyString(),(Perfil)EasyMock.anyObject())).andReturn(lista);
 			EasyMock.replay(daoPessoaMock);	
 			EasyMock.verify();
 						
@@ -146,7 +146,7 @@ public class AtonServiceTest {
 			Pessoa p = TestHelper.getPessoaTeste();
 			List<Pessoa> lista = new ArrayList<>();
 			lista.add(p);
-			EasyMock.expect(daoPessoaMock.consultar()).andReturn(lista);
+			EasyMock.expect(daoPessoaMock.findAll()).andReturn(lista);
 			EasyMock.replay(daoPessoaMock);	
 			EasyMock.verify();
 						

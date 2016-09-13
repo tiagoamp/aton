@@ -33,10 +33,10 @@ public class PessoaDAOTest {
 	
 	private void limparBaseDeDadosDeTeste() {
 		try {
-			List<Pessoa> lista = dao.consultar();
+			List<Pessoa> lista = dao.findAll();
 			for (Iterator<Pessoa> iterator = lista.iterator(); iterator.hasNext();) {
 				Pessoa pessoa = (Pessoa) iterator.next();
-				dao.apagar(pessoa.getId());
+				dao.delete(pessoa.getId());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -49,13 +49,13 @@ public class PessoaDAOTest {
 			Pessoa pessoa = TestHelper.getPessoaTeste();
 			
 			// teste
-			dao.inserir(pessoa);
+			dao.create(pessoa);
 			assertTrue("Nao deve lancar excecao",true);
 			
 			// apagando massa de dados
-			List<Pessoa> lista = dao.consultar(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
+			List<Pessoa> lista = dao.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
 			pessoa = lista.get(0);
-			dao.apagar(pessoa.getId());			
+			dao.delete(pessoa.getId());			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Nao deveria lancar excecao!");
@@ -67,20 +67,20 @@ public class PessoaDAOTest {
 		try {
 			// criando massa de dados
 			Pessoa pessoa = TestHelper.getPessoaTeste();
-			dao.inserir(pessoa);
-			List<Pessoa> lista = dao.consultar(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
+			dao.create(pessoa);
+			List<Pessoa> lista = dao.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
 			pessoa = lista.get(0);
 			pessoa.setNome("Nome alterado 2".toUpperCase());
 			
 			// teste
-			dao.atualizar(pessoa);
+			dao.update(pessoa);
 			assertTrue("Nao deve lancar excecao",true);
-			lista = dao.consultar(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
+			lista = dao.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
 			Pessoa pessoa2 = lista.get(0);
 			assertTrue(pessoa2.getNome().equals(pessoa.getNome()));
 			
 			// apagando massa de dados
-			dao.apagar(pessoa2.getId());
+			dao.delete(pessoa2.getId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Nao deveria lancar excecao!");
@@ -92,16 +92,16 @@ public class PessoaDAOTest {
 		try {
 			// criando massa de dados
 			Pessoa pessoa1 = TestHelper.getPessoaTeste();
-			dao.inserir(pessoa1);
-			List<Pessoa> lista = dao.consultar(pessoa1.getNome(), pessoa1.getTelefone(), pessoa1.getPerfil());
+			dao.create(pessoa1);
+			List<Pessoa> lista = dao.find(pessoa1.getNome(), pessoa1.getTelefone(), pessoa1.getPerfil());
 			int id = lista.get(0).getId();
 			
 			// teste
-			Pessoa pessoa2 = dao.consultarPorId(id);
+			Pessoa pessoa2 = dao.findById(id);
 			assertTrue(id == pessoa2.getId());
 			
 			// apagando massa de dados
-			dao.apagar(pessoa2.getId());
+			dao.delete(pessoa2.getId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Nao deveria lancar excecao!");
@@ -113,16 +113,16 @@ public class PessoaDAOTest {
 		try {
 			// criando massa de dados
 			Pessoa pessoa1 = TestHelper.getPessoaTeste();
-			dao.inserir(pessoa1);
-			List<Pessoa> lista = dao.consultar(pessoa1.getNome(), pessoa1.getTelefone(), pessoa1.getPerfil());
+			dao.create(pessoa1);
+			List<Pessoa> lista = dao.find(pessoa1.getNome(), pessoa1.getTelefone(), pessoa1.getPerfil());
 			String email = lista.get(0).getEmail();
 			
 			// teste
-			Pessoa pessoa2 = dao.consultarPorEmail(email);
+			Pessoa pessoa2 = dao.findByEmail(email);
 			assertTrue(email.equals(pessoa2.getEmail()));
 			
 			// apagando massa de dados
-			dao.apagar(pessoa2.getId());
+			dao.delete(pessoa2.getId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Nao deveria lancar excecao!");
@@ -136,17 +136,17 @@ public class PessoaDAOTest {
 		try {
 			// criando massa de dados
 			Pessoa pessoa1 = TestHelper.getPessoaTeste();
-			dao.inserir(pessoa1);
-			List<Pessoa> lista = dao.consultar(pessoa1.getNome(), pessoa1.getTelefone(), pessoa1.getPerfil());
+			dao.create(pessoa1);
+			List<Pessoa> lista = dao.find(pessoa1.getNome(), pessoa1.getTelefone(), pessoa1.getPerfil());
 			String nome = lista.get(0).getNome();
 			
 			// teste
-			List<Pessoa> lista2 = dao.consultarPorNomeAproximado(nome);
+			List<Pessoa> lista2 = dao.findByNomeAproximado(nome);
 			Pessoa pessoa2 = lista2.get(0);
 			assertTrue(nome.equals(pessoa2.getNome()));
 			
 			// apagando massa de dados
-			dao.apagar(pessoa2.getId());
+			dao.delete(pessoa2.getId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Nao deveria lancar excecao!");
@@ -158,16 +158,16 @@ public class PessoaDAOTest {
 		try {
 			// criando massa de dados
 			Pessoa pessoa = TestHelper.getPessoaTeste();
-			dao.inserir(pessoa);
+			dao.create(pessoa);
 			
 			// teste
-			List<Pessoa> lista = dao.consultar(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
+			List<Pessoa> lista = dao.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
 			assertTrue(!lista.isEmpty());
 			assertTrue(lista.size() == 1);
 			
 			// apagando massa de dados
 			pessoa = lista.get(0);
-			dao.apagar(pessoa.getId());
+			dao.delete(pessoa.getId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Nao deveria lancar excecao!");
@@ -179,15 +179,15 @@ public class PessoaDAOTest {
 		try {
 			// criando massa de dados
 			Pessoa pessoa = TestHelper.getPessoaTeste();
-			dao.inserir(pessoa);
+			dao.create(pessoa);
 			
 			// teste
-			List<Pessoa> lista = dao.consultar();
+			List<Pessoa> lista = dao.findAll();
 			assertTrue(!lista.isEmpty());
 			
 			// apagando massa de dados
 			pessoa = lista.get(0);
-			dao.apagar(pessoa.getId());
+			dao.delete(pessoa.getId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Nao deveria lancar excecao!");
@@ -199,12 +199,12 @@ public class PessoaDAOTest {
 		try {
 			// criando massa de dados
 			Pessoa pessoa = TestHelper.getPessoaTeste();
-			dao.inserir(pessoa);
-			List<Pessoa> lista = dao.consultar(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
+			dao.create(pessoa);
+			List<Pessoa> lista = dao.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
 			pessoa = lista.get(0);
 			
 			// teste
-			dao.apagar(pessoa.getId());
+			dao.delete(pessoa.getId());
 			assertTrue("Nao deve lancar excecao",true);			
 		} catch (SQLException e) {
 			e.printStackTrace();
