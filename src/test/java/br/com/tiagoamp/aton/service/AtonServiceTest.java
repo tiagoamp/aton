@@ -5,6 +5,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -123,44 +125,54 @@ public class AtonServiceTest {
 	}
 
 	
-	/*
 	@Test
-	public void testConsultarPessoaStringStringString() {
-		try {
-			Pessoa p = TestHelper.getPessoaTeste();
-			List<Pessoa> lista = new ArrayList<>();
-			lista.add(p);
-			EasyMock.expect(daoPessoaMock.find(EasyMock.anyString(),EasyMock.anyString(),(Perfil)EasyMock.anyObject())).andReturn(lista);
-			EasyMock.replay(daoPessoaMock);	
-			EasyMock.verify();
-						
-			Pessoa p2 = service.consultarPessoas(p.getNome(), p.getTelefone(), p.getPerfil()).get(0);
-			
-			assertTrue(p.getNome().equals(p2.getNome()));
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
+	public void testConsultarPessoasParametros_shouldReturnValidOutput() throws SQLException, BibException {
+		List<Pessoa> lista = new ArrayList<>();
+		when(pessoaDAOMock.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil())).thenReturn(lista);
+		lista = service.consultarPessoas(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
+		assertTrue(lista != null);
+		verify(pessoaDAOMock).find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = BibException.class)
+	public void testConsultarPessoasParametros_shouldThrowException() throws SQLException, BibException {
+		when(pessoaDAOMock.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil())).thenThrow(SQLException.class);
+		service.consultarPessoas(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());	
+	}
+		
 	@Test
-	public void testConsultarPessoas() {
-		try {
-			Pessoa p = TestHelper.getPessoaTeste();
-			List<Pessoa> lista = new ArrayList<>();
-			lista.add(p);
-			EasyMock.expect(daoPessoaMock.findAll()).andReturn(lista);
-			EasyMock.replay(daoPessoaMock);	
-			EasyMock.verify();
-						
-			Pessoa p2 = service.consultarPessoas().get(0);
-			
-			assertTrue(p.getNome().equals(p2.getNome()));
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
-	}*/
+	public void testConsultarPessoasPorNomeAproximado_shouldReturnValidOutput() throws SQLException, BibException {
+		List<Pessoa> lista = new ArrayList<>();
+		when(pessoaDAOMock.findByNomeAproximado(pessoa.getNome())).thenReturn(lista);
+		lista = service.consultarPessoasPorNomeAproximado(pessoa.getNome());
+		assertTrue(lista != null);
+		verify(pessoaDAOMock).findByNomeAproximado(pessoa.getNome());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = BibException.class)
+	public void testConsultarPessoasPorNomeAproximado_shouldThrowException() throws SQLException, BibException {
+		when(pessoaDAOMock.findByNomeAproximado(pessoa.getNome())).thenThrow(SQLException.class);
+		service.consultarPessoasPorNomeAproximado(pessoa.getNome());	
+	}
+	
+	@Test
+	public void testConsultarPessoas_shouldReturnValidOutput() throws SQLException, BibException {
+		List<Pessoa> lista = new ArrayList<>();
+		when(pessoaDAOMock.findAll()).thenReturn(lista);
+		lista = service.consultarPessoas();
+		assertTrue(lista != null);
+		verify(pessoaDAOMock).findAll();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = BibException.class)
+	public void testConsultarPessoas_shouldThrowException() throws SQLException, BibException {
+		when(pessoaDAOMock.findAll()).thenThrow(SQLException.class);
+		service.consultarPessoas();	
+	}
+	
 
 	/*@Test
 	public void testInserirLivro() {
