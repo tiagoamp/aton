@@ -36,6 +36,14 @@ public class LivroDaoBdLocal implements LivroDAO {
 		URL_DB = "jdbc:sqlite:" + bdpath;
 	}
 	
+	private Connection conn;
+	private PreparedStatement pstmt;
+	private String URL_DB;
+	
+	public void setURL_DB(String url) {
+		this.URL_DB = url;
+	}
+	
 	private Livro carregarObjeto(ResultSet rs) throws SQLException {
 		Livro l = new Livro();
 		l.setId(rs.getInt("ID"));
@@ -62,14 +70,6 @@ public class LivroDaoBdLocal implements LivroDAO {
 		return l;
 	}
 	
-	private Connection conn;
-	private PreparedStatement pstmt;
-	private String URL_DB;
-	
-	public void setURL_DB(String url) {
-		this.URL_DB = url;
-	}
-
 	@Override
 	public int create(Livro livro) throws SQLException {
 		logger.debug("Inserindo: " + livro);

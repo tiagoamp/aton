@@ -80,15 +80,15 @@
 						<form id="formAcoes">
 							<input type="hidden" id ="acao" name="acao">
 							<input type="hidden" id ="identificador" name="identificador">
-							<c:forEach items="${listalivros}" var="pessoa">
+							<c:forEach items="${listalivros}" var="livro">
 								<li class="list-group-item">				
-									&nbsp;&nbsp; <a href="javascript:carregarAcoes('consultar',${pessoa.id},'cadastropessoa');" title="Consultar"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-									&nbsp;&nbsp; <a href="javascript:carregarAcoes('alterar',${pessoa.id},'cadastropessoa');" title="Alterar"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a> 
-									&nbsp;&nbsp; <a href="javascript:carregarAcoes('excluir',${pessoa.id},'cadastropessoa');" title="Excluir"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a>
+									&nbsp;&nbsp; <a href="javascript:carregarAcoes('consultar',${livro.id},'cadastrolivro');" title="Consultar"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+									&nbsp;&nbsp; <a href="javascript:carregarAcoes('alterar',${livro.id},'cadastrolivro');" title="Alterar"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a> 
+									&nbsp;&nbsp; <a href="javascript:carregarAcoes('excluir',${livro.id},'cadastrolivro');" title="Excluir"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a>
 									&nbsp;&nbsp;&nbsp;&nbsp;
-									<c:out value="${pessoa.nome}" /> - 
-									<c:out value="${pessoa.email}" /> - 
-									<c:out value="${pessoa.perfil}" />							
+									<c:out value="${livro.isbn}" /> - 
+									<c:out value="${livro.titulo}" /> - 
+									<c:out value="${livro.autoresAgrupados}" />							
 								</li>
 							</c:forEach>
 						</form>

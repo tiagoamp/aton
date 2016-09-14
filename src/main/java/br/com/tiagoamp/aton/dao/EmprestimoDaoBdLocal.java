@@ -1,5 +1,7 @@
 package br.com.tiagoamp.aton.dao;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -20,6 +23,16 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	Logger logger = Logger.getLogger(EmprestimoDaoBdLocal.class);
 	
 	public EmprestimoDaoBdLocal() {
+		InputStream istream = this.getClass().getResourceAsStream("config.properties");
+		Properties prop = new Properties();
+		try {
+			prop.load(istream);
+			Class.forName("org.sqlite.JDBC");
+		} catch (IOException | ClassNotFoundException e) {
+			logger.error(e);
+		}
+		String bdpath = prop.getProperty("bd_path");
+		URL_DB = "jdbc:sqlite:" + bdpath;
 	}
 	
 	private Connection conn;
