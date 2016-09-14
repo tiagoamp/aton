@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import br.com.tiagoamp.aton.model.BibException;
+import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Livro;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Pessoa;
@@ -57,7 +57,7 @@ public class AtonController {
 		if (pId != null && !pId.isEmpty()) {
 			try {		
 				pessoa = service.consultarPessoa(Integer.parseInt(pId));				 				
-			} catch (BibException e) {
+			} catch (AtonBOException e) {
 				logger.error("Erro: " + e);
 				model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
 				return "pessoas";
@@ -80,12 +80,12 @@ public class AtonController {
 		try {		
 			lista = service.consultarPessoas();
 			if (lista.isEmpty()) {
-				throw new BibException("Consulta sem resultados!");
+				throw new AtonBOException("Consulta sem resultados!");
 			}
 			Set<Pessoa> listaOrdenada = new TreeSet<>();
 			listaOrdenada.addAll(lista);
 			model.addAttribute("listapessoas", listaOrdenada);
-		} catch (BibException e) {
+		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
 			return "pessoas";
@@ -103,12 +103,12 @@ public class AtonController {
 		try {		
 			pessoa = service.consultarPessoa(Integer.parseInt(pId));
 			if (pessoa == null) {
-				throw new BibException("Erro na exclusão de pessoa: Identificador inválido!");
+				throw new AtonBOException("Erro na exclusão de pessoa: Identificador inválido!");
 			}
 			service.apagarPessoa(pessoa.getId());
 			model.addAttribute("mensagem",new MensagemTO("Exclusão com sucesso: " + pessoa.toString(), TipoMensagem.SUCESSO));
 			logger.info("Pessoa excluída: " + pessoa);
-		} catch (BibException e) {
+		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));			
 		}		
@@ -144,7 +144,7 @@ public class AtonController {
 			}
 			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + pessoa.toString(), TipoMensagem.SUCESSO));
 			logger.info("Pessoa cadastrada: " + pessoa);
-		} catch (BibException e) {
+		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("pessoa", pessoa);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
@@ -183,10 +183,10 @@ public class AtonController {
 				}
 			}
 			if (lista.isEmpty()) {
-				throw new BibException("Consulta sem resultados!");
+				throw new AtonBOException("Consulta sem resultados!");
 			}
 			model.addAttribute("listapessoas", lista);
-		} catch (BibException e) {
+		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
 			return "pessoas";
@@ -210,7 +210,7 @@ public class AtonController {
 		if (pId != null && !pId.isEmpty()) {
 			try {		
 				livro = service.consultarLivro(Integer.parseInt(pId));				 				
-			} catch (BibException e) {
+			} catch (AtonBOException e) {
 				logger.error("Erro: " + e);
 				model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
 				return "livros";
@@ -264,7 +264,7 @@ public class AtonController {
 			}
 			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + livro.toString(), TipoMensagem.SUCESSO));
 			logger.info("Livro cadastrado: " + livro);
-		} catch (BibException e) {
+		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("livro", livro);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
@@ -279,12 +279,12 @@ public class AtonController {
 		try {		
 			lista = service.consultarLivros();
 			if (lista.isEmpty()) {
-				throw new BibException("Consulta sem resultados!");
+				throw new AtonBOException("Consulta sem resultados!");
 			}
 			Set<Livro> listaOrdenada = new TreeSet<>();
 			listaOrdenada.addAll(lista);
 			model.addAttribute("listalivros", listaOrdenada);
-		} catch (BibException e) {
+		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
 			return "livros";

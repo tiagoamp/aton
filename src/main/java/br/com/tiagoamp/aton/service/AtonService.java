@@ -19,7 +19,7 @@ import br.com.tiagoamp.aton.dao.LivroDAO;
 import br.com.tiagoamp.aton.dao.LivroDaoBdLocal;
 import br.com.tiagoamp.aton.dao.PessoaDAO;
 import br.com.tiagoamp.aton.dao.PessoaDaoBdLocal;
-import br.com.tiagoamp.aton.model.BibException;
+import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Livro;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Pessoa;
@@ -54,95 +54,96 @@ public class AtonService {
 	private LivroDAO livroDao;
 	private EmprestimoDAO empDao;
 	
-	public boolean inserirPessoa(Pessoa pessoa) throws BibException {
+	public boolean inserirPessoa(Pessoa pessoa) throws AtonBOException {
 		try {
 			Pessoa p = pessoaDao.findByEmail(pessoa.getEmail());
-			if (p != null) throw new BibException("E-mail já cadastrado!");
+			if (p != null) throw new AtonBOException("E-mail já cadastrado!");
 			int result = pessoaDao.create(pessoa);
 			return result == 1;
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
-			throw new BibException("Erro durante acesso no banco de dados!", e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public boolean atualizarPessoa(Pessoa pessoa) throws BibException {
+	public boolean atualizarPessoa(Pessoa pessoa) throws AtonBOException {
 		try {
 			int result = pessoaDao.update(pessoa);
 			return result == 1;
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
-			throw new BibException("Erro durante acesso no banco de dados!", e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public boolean apagarPessoa(int id) throws BibException {
+	public boolean apagarPessoa(int id) throws AtonBOException {
 		try {
 			int result = pessoaDao.delete(id);
 			return result == 1;
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
-			throw new BibException("Erro durante acesso no banco de dados!", e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public Pessoa consultarPessoa(int id) throws BibException {
+	public Pessoa consultarPessoa(int id) throws AtonBOException {
 		try {
 			return pessoaDao.findById(id);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
-			throw new BibException("Erro durante acesso no banco de dados!", e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public Pessoa consultarPessoaPorEmail(String email) throws BibException {
+	public Pessoa consultarPessoaPorEmail(String email) throws AtonBOException {
 		try {
 			return pessoaDao.findByEmail(email);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
-			throw new BibException("Erro durante acesso no banco de dados!", e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public List<Pessoa> consultarPessoas(String nome, String telefone, Perfil perfil) throws BibException {
+	public List<Pessoa> consultarPessoas(String nome, String telefone, Perfil perfil) throws AtonBOException {
 		try {
 			return pessoaDao.find(nome, telefone, perfil);			
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
-			throw new BibException("Erro durante acesso no banco de dados!", e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public List<Pessoa> consultarPessoasPorNomeAproximado(String nome) throws BibException {
+	public List<Pessoa> consultarPessoasPorNomeAproximado(String nome) throws AtonBOException {
 		try {
 			return pessoaDao.findByNomeAproximado(nome);			
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
-			throw new BibException("Erro durante acesso no banco de dados!", e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public List<Pessoa> consultarPessoas() throws BibException {
+	public List<Pessoa> consultarPessoas() throws AtonBOException {
 		try {
 			return pessoaDao.findAll();
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
-			throw new BibException("Erro durante acesso no banco de dados!", e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public void inserirLivro(Livro livro) throws BibException {
+	public boolean inserirLivro(Livro livro) throws AtonBOException {
 		try {
 			Livro l = livroDao.findByIsbn(livro.getIsbn());
-			if (l != null) throw new BibException("ISBN já cadastrado!");			
-			livroDao.create(livro);			
+			if (l != null) throw new AtonBOException("ISBN já cadastrado!");			
+			int result = livroDao.create(livro);
+			return result == 1;
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
-			throw new BibException("Erro durante acesso no banco de dados!", e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}				
 	}
 	
-	public Path inserirFotoCapaLivro(MultipartFile mFile, String isbn) throws BibException {
+	public Path inserirFotoCapaLivro(MultipartFile mFile, String isbn) throws AtonBOException {
 		Path path = null;
 		try {
 			String originalName = mFile.getOriginalFilename().toLowerCase();
@@ -154,69 +155,71 @@ public class AtonService {
 					break;
 				}
 			}
-			if (!isValidaExtension) throw new BibException("Foto do livro: arquivo com extensão inválida!");
+			if (!isValidaExtension) throw new AtonBOException("Foto do livro: arquivo com extensão inválida!");
 			String[] split = originalName.split("\\.");
 			String extension = split[split.length - 1];
 			path = Paths.get(fotoDirPath, isbn + "." + extension);
 			Files.copy(mFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);			
 		} catch (IOException e) {
 			logger.error("Erro: " + e);
-			throw new BibException("Erro ao gravar foto da capa do livro!");
+			throw new AtonBOException("Erro ao gravar foto da capa do livro!");
 		}
 		return path;
 	}
 	
-	public void atualizarLivro(Livro livro) throws BibException {
+	public boolean atualizarLivro(Livro livro) throws AtonBOException {
 		try {
-			livroDao.update(livro);
+			int result = livroDao.update(livro);
+			return result == 1;
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
-			throw new BibException("Erro durante acesso no banco de dados!", e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public void apagarLivro(int id) throws BibException {
+	public boolean apagarLivro(int id) throws AtonBOException {
 		try {
-			livroDao.delete(id);
+			int result = livroDao.delete(id);
+			return result == 1;
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
-			throw new BibException("Erro durante acesso no banco de dados!", e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public Livro consultarLivro(int id) throws BibException {
+	public Livro consultarLivro(int id) throws AtonBOException {
 		try {
 			return livroDao.findById(id);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
-			throw new BibException("Erro durante acesso no banco de dados!", e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public Livro consultarLivro(String isbn) throws BibException {
+	public Livro consultarLivro(String isbn) throws AtonBOException {
 		try {
 			return livroDao.findByIsbn(isbn);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
-			throw new BibException("Erro durante acesso no banco de dados!", e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public List<Livro> consultarLivro(String titulo, String autor, String isbn, String classificacao, String publico) throws BibException {
+	public List<Livro> consultarLivro(String titulo, String autor, String isbn, String classificacao, String publico) throws AtonBOException {
 		try {
 			return livroDao.find(titulo, autor, isbn, classificacao, publico);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
-			throw new BibException("Erro durante acesso no banco de dados!", e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public List<Livro> consultarLivros() throws BibException {
+	public List<Livro> consultarLivros() throws AtonBOException {
 		try {
 			return livroDao.findAll();
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
-			throw new BibException("Erro durante acesso no banco de dados!", e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	/*

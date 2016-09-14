@@ -5,20 +5,20 @@ package br.com.tiagoamp.aton.model;
  * 
  * @author tiagoamp
  */
-public class BibException extends Exception {
+public class AtonBOException extends Exception {
 	
-	public BibException() {		
+	public AtonBOException() {		
 	}
 	
-	public BibException(String message) {
+	public AtonBOException(String message) {
 		this.msg = message;
 	}
 	
-	public BibException(Throwable exceptionCause){
+	public AtonBOException(Throwable exceptionCause){
 		super(exceptionCause);
 	}
 	
-	public BibException(String msg, Throwable exceptionCause){
+	public AtonBOException(String msg, Throwable exceptionCause){
 		super(msg, exceptionCause);
 	}
 
