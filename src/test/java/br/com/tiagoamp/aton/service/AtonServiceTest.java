@@ -1,51 +1,41 @@
 package br.com.tiagoamp.aton.service;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import br.com.tiagoamp.aton.TestHelper;
-import br.com.tiagoamp.aton.dao.EmprestimoDAO;
-import br.com.tiagoamp.aton.dao.EmprestimoDaoBdLocal;
-import br.com.tiagoamp.aton.dao.LivroDAO;
-import br.com.tiagoamp.aton.dao.LivroDaoBdLocal;
 import br.com.tiagoamp.aton.dao.PessoaDAO;
-import br.com.tiagoamp.aton.dao.PessoaDaoBdLocal;
 import br.com.tiagoamp.aton.model.BibException;
-import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Pessoa;
 
 public class AtonServiceTest {
 	
-	// Classe alvo
+	@Mock
+	private PessoaDAO pessoaDAOMock;
+	
+	// class under test
 	private AtonService service;
+	
+	private Pessoa pessoa;
 
-	// mocks
-	private PessoaDAO daoPessoaMock;
-	private LivroDAO daoLivroMock;
-	private EmprestimoDAO daoEmprestimoMock;
-
+	
 	@Before
 	public void setUp() throws Exception {
-		//iniciacao da classe alvo
-		service = new AtonService();		
-				
-		//iniciacao dos mocks
-		daoPessoaMock = EasyMock.createMock(PessoaDaoBdLocal.class);
-		daoLivroMock = EasyMock.createMock(LivroDaoBdLocal.class);
-		daoEmprestimoMock = EasyMock.createMock(EmprestimoDaoBdLocal.class);
-				
-		// setando mocks na classe alvo
-		service.inicializarDaosBdLocal(daoPessoaMock, daoLivroMock, daoEmprestimoMock);
+		MockitoAnnotations.initMocks(this);
 		
+		service = new AtonService();
+		pessoa = TestHelper.getPessoaTeste();
+		
+		service.setPessoaDao(pessoaDAOMock);
 	}
 
 	@After
@@ -54,73 +44,86 @@ public class AtonServiceTest {
 		
 
 	@Test
-	public void testInserirPessoa() {
-		try {
-			Pessoa p = TestHelper.getPessoaTeste();
-			EasyMock.expect(daoPessoaMock.findByEmail(EasyMock.anyString())).andReturn(null);
-			daoPessoaMock.create((Pessoa)EasyMock.anyObject());
-			EasyMock.replay(daoPessoaMock);		
-			EasyMock.verify();
-			
-			service.inserirPessoa(p);
-			
-			assertTrue("Não deve lançar exceção!", true);
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
+	public void testInserirPessoa_shouldInsertPessoa() throws SQLException, BibException {
+		when(pessoaDAOMock.create(pessoa)).thenReturn(new Integer(1));
+		boolean result = service.inserirPessoa(pessoa);
+		assertTrue(result);
+		verify(pessoaDAOMock).create(pessoa);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = BibException.class)
+	public void testInserirPessoa_shouldThrowException() throws SQLException, BibException {
+		when(pessoaDAOMock.create(pessoa)).thenThrow(SQLException.class);
+		service.inserirPessoa(pessoa);		
+	}
+	
+	@Test
+	public void testAtualizarPessoa_shouldUpdatePessoa() throws SQLException, BibException {
+		when(pessoaDAOMock.update(pessoa)).thenReturn(new Integer(1));
+		boolean result = service.atualizarPessoa(pessoa);
+		assertTrue(result);
+		verify(pessoaDAOMock).update(pessoa);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = BibException.class)
+	public void testAtualizarPessoa_shouldThrowException() throws SQLException, BibException {
+		when(pessoaDAOMock.update(pessoa)).thenThrow(SQLException.class);
+		service.atualizarPessoa(pessoa);		
 	}
 
 	@Test
-	public void testAtualizarPessoa() {
-		try {
-			Pessoa p = TestHelper.getPessoaTeste();
-			daoPessoaMock.update((Pessoa)EasyMock.anyObject());
-			EasyMock.replay(daoPessoaMock);	
-			EasyMock.verify();
-			
-			service.atualizarPessoa(p);
-			
-			assertTrue("Não deve lançar exceção!", true);
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
+	public void testApagarPessoa_shouldDeletePessoa() throws SQLException, BibException {
+		pessoa.setId(100);
+		when(pessoaDAOMock.delete(pessoa.getId())).thenReturn(new Integer(1));
+		boolean result = service.apagarPessoa(pessoa.getId());
+		assertTrue(result);
+		verify(pessoaDAOMock).delete(pessoa.getId());
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = BibException.class)
+	public void testApagarPessoa_shouldThrowException() throws SQLException, BibException {
+		pessoa.setId(100);
+		when(pessoaDAOMock.delete(pessoa.getId())).thenThrow(SQLException.class);
+		service.apagarPessoa(pessoa.getId());		
+	}
+	
 	@Test
-	public void testApagarPessoa() {
-		try {
-			daoPessoaMock.delete(EasyMock.anyInt());
-			EasyMock.replay(daoPessoaMock);	
-			EasyMock.verify();
-			
-			service.apagarPessoa(100);
-			
-			assertTrue("Não deve lançar exceção!", true);
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
+	public void testConsultarPessoaPorId_shouldReturnValidOutput() throws SQLException, BibException {
+		int id = 100;
+		when(pessoaDAOMock.findById(id)).thenReturn(pessoa);
+		Pessoa p = service.consultarPessoa(id);
+		assertTrue(p != null);
+		verify(pessoaDAOMock).findById(id);
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = BibException.class)
+	public void testConsultarPessoaPorId_shouldThrowException() throws SQLException, BibException {
+		int id = 100;
+		when(pessoaDAOMock.findById(id)).thenThrow(SQLException.class);
+		service.consultarPessoa(id);	
+	}
+	
 	@Test
-	public void testConsultarPessoaInt() {
-		try {
-			Pessoa p = TestHelper.getPessoaTeste();
-			EasyMock.expect(daoPessoaMock.findById(EasyMock.anyInt())).andReturn(p);
-			EasyMock.replay(daoPessoaMock);	
-			EasyMock.verify();
-						
-			Pessoa p2 = service.consultarPessoa(100);
-			
-			assertTrue(p.getNome().equals(p2.getNome()));
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
+	public void testConsultarPessoaPorEmail_shouldReturnValidOutput() throws SQLException, BibException {
+		when(pessoaDAOMock.findByEmail(pessoa.getEmail())).thenReturn(pessoa);
+		Pessoa p = service.consultarPessoaPorEmail(pessoa.getEmail());
+		assertTrue(p != null);
+		verify(pessoaDAOMock).findByEmail(pessoa.getEmail());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = BibException.class)
+	public void testConsultarPessoaPorEmail_shouldThrowException() throws SQLException, BibException {
+		when(pessoaDAOMock.findByEmail(pessoa.getEmail())).thenThrow(SQLException.class);
+		service.consultarPessoaPorEmail(pessoa.getEmail());	
 	}
 
+	
+	/*
 	@Test
 	public void testConsultarPessoaStringStringString() {
 		try {
@@ -157,7 +160,7 @@ public class AtonServiceTest {
 			e.printStackTrace();
 			fail("Não deve lançar exceção!");
 		}
-	}
+	}*/
 
 	/*@Test
 	public void testInserirLivro() {

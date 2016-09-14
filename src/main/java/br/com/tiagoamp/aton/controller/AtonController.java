@@ -163,7 +163,7 @@ public class AtonController {
 		try {
 			if (pEmail != null && !pEmail.isEmpty()) { // CAMPO DE PESQ EMAIL PREENCHIDO				
 							// pesquisa por e-mail
-				Pessoa p = service.consultarPessoa(pEmail.trim().toUpperCase());
+				Pessoa p = service.consultarPessoaPorEmail(pEmail.trim().toUpperCase());
 				if (p != null) lista.add(p);
 			} else {								   // CAMPO DE PESQ DADOS PREENCHIDO
 				if (pDados != null && !pDados.isEmpty()) { 

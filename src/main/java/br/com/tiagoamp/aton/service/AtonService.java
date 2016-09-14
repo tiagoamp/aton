@@ -35,8 +35,11 @@ public class AtonService {
 	
 	private final String fotoDirPath;
 	
-	public AtonService() {
-		this.inicializarDaosBdLocal(new PessoaDaoBdLocal(), new LivroDaoBdLocal(), new EmprestimoDaoBdLocal());
+	public AtonService() {		
+		this.pessoaDao = new PessoaDaoBdLocal();
+		this.livroDao = new LivroDaoBdLocal();
+		this.empDao = new EmprestimoDaoBdLocal();
+		
 		InputStream istream = this.getClass().getResourceAsStream("config.properties");
 		Properties prop = new Properties();
 		try {
@@ -51,35 +54,32 @@ public class AtonService {
 	private LivroDAO livroDao;
 	private EmprestimoDAO empDao;
 	
-	public void inicializarDaosBdLocal(PessoaDAO pessDao, LivroDAO livDao, EmprestimoDAO empDao) {
-		this.pessoaDao = pessDao;
-		this.livroDao = livDao;
-		this.empDao = empDao;				
-	}
-	
-	public void inserirPessoa(Pessoa pessoa) throws BibException {
+	public boolean inserirPessoa(Pessoa pessoa) throws BibException {
 		try {
 			Pessoa p = pessoaDao.findByEmail(pessoa.getEmail());
 			if (p != null) throw new BibException("E-mail já cadastrado!");
-			pessoaDao.create(pessoa);
+			int result = pessoaDao.create(pessoa);
+			return result == 1;
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public void atualizarPessoa(Pessoa pessoa) throws BibException {
+	public boolean atualizarPessoa(Pessoa pessoa) throws BibException {
 		try {
-			pessoaDao.update(pessoa);
+			int result = pessoaDao.update(pessoa);
+			return result == 1;
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public void apagarPessoa(int id) throws BibException {
+	public boolean apagarPessoa(int id) throws BibException {
 		try {
-			pessoaDao.delete(id);
+			int result = pessoaDao.delete(id);
+			return result == 1;
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new BibException("Erro durante acesso no banco de dados!", e);
@@ -95,7 +95,7 @@ public class AtonService {
 		}
 	}
 	
-	public Pessoa consultarPessoa(String email) throws BibException {
+	public Pessoa consultarPessoaPorEmail(String email) throws BibException {
 		try {
 			return pessoaDao.findByEmail(email);
 		} catch (SQLException e) {
@@ -273,5 +273,25 @@ public class AtonService {
 			throw new BibException("Erro durante acesso no banco de dados!", e);
 		}
 	}*/
+
+	
+	public PessoaDAO getPessoaDao() {
+		return pessoaDao;
+	}
+	public void setPessoaDao(PessoaDAO pessoaDao) {
+		this.pessoaDao = pessoaDao;
+	}
+	public LivroDAO getLivroDao() {
+		return livroDao;
+	}
+	public void setLivroDao(LivroDAO livroDao) {
+		this.livroDao = livroDao;
+	}
+	public EmprestimoDAO getEmpDao() {
+		return empDao;
+	}
+	public void setEmpDao(EmprestimoDAO empDao) {
+		this.empDao = empDao;
+	}	
 
 }
