@@ -196,7 +196,7 @@ public class AtonService {
 		}
 	}
 	
-	public Livro consultarLivro(String isbn) throws AtonBOException {
+	public Livro consultarLivroPorIsbn(String isbn) throws AtonBOException {
 		try {
 			return livroDao.findByIsbn(isbn);
 		} catch (SQLException e) {

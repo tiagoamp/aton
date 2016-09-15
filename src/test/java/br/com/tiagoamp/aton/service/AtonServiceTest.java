@@ -38,6 +38,8 @@ public class AtonServiceTest {
 	
 	private Pessoa pessoa;
 	private Livro livro;
+	
+	private static int ID = 100;
 
 	
 	@Before
@@ -97,7 +99,7 @@ public class AtonServiceTest {
 
 	@Test
 	public void testApagarPessoa_shouldDeletePessoa() throws SQLException, AtonBOException {
-		pessoa.setId(100);
+		pessoa.setId(ID);
 		when(pessoaDAOMock.delete(pessoa.getId())).thenReturn(new Integer(1));
 		boolean result = service.apagarPessoa(pessoa.getId());
 		assertTrue(result);
@@ -107,33 +109,31 @@ public class AtonServiceTest {
 	@SuppressWarnings("unchecked")
 	@Test(expected = AtonBOException.class)
 	public void testApagarPessoa_shouldThrowException() throws SQLException, AtonBOException {
-		pessoa.setId(100);
+		pessoa.setId(ID);
 		when(pessoaDAOMock.delete(pessoa.getId())).thenThrow(SQLException.class);
 		service.apagarPessoa(pessoa.getId());		
 	}
 	
 	@Test
 	public void testConsultarPessoaPorId_shouldReturnValidOutput() throws SQLException, AtonBOException {
-		int id = 100;
-		when(pessoaDAOMock.findById(id)).thenReturn(pessoa);
-		Pessoa p = service.consultarPessoa(id);
-		assertTrue(p != null);
-		verify(pessoaDAOMock).findById(id);
+		when(pessoaDAOMock.findById(ID)).thenReturn(pessoa);
+		pessoa = service.consultarPessoa(ID);
+		assertTrue(pessoa != null);
+		verify(pessoaDAOMock).findById(ID);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test(expected = AtonBOException.class)
 	public void testConsultarPessoaPorId_shouldThrowException() throws SQLException, AtonBOException {
-		int id = 100;
-		when(pessoaDAOMock.findById(id)).thenThrow(SQLException.class);
-		service.consultarPessoa(id);	
+		when(pessoaDAOMock.findById(ID)).thenThrow(SQLException.class);
+		service.consultarPessoa(ID);	
 	}
 	
 	@Test
 	public void testConsultarPessoaPorEmail_shouldReturnValidOutput() throws SQLException, AtonBOException {
 		when(pessoaDAOMock.findByEmail(pessoa.getEmail())).thenReturn(pessoa);
-		Pessoa p = service.consultarPessoaPorEmail(pessoa.getEmail());
-		assertTrue(p != null);
+		pessoa = service.consultarPessoaPorEmail(pessoa.getEmail());
+		assertTrue(pessoa != null);
 		verify(pessoaDAOMock).findByEmail(pessoa.getEmail());
 	}
 	
@@ -226,198 +226,66 @@ public class AtonServiceTest {
 		service.inserirFotoCapaLivro(multipartFile, livro.getIsbn());
 	}
 	
-
-	/*
 	@Test
-	public void testAtualizarLivro() {
-		try {
-			Livro l = TestHelper.getLivroTeste();
-			daoLivroMock.atualizar((Livro)EasyMock.anyObject());
-			EasyMock.replay(daoLivroMock);	
-			EasyMock.verify();
-			
-			service.atualizarLivro(l);
-			
-			assertTrue("Não deve lançar exceção!", true);
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
-	}
-
-	@Test
-	public void testApagarLivro() {
-		try {
-			daoLivroMock.apagar(EasyMock.anyInt());
-			EasyMock.replay(daoLivroMock);	
-			EasyMock.verify();
-			
-			service.apagarLivro(100);
-			
-			assertTrue("Não deve lançar exceção!", true);
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
-	}
-
-	@Test
-	public void testConsultarLivroInt() {
-		try {
-			Livro l = TestHelper.getLivroTeste();
-			EasyMock.expect(daoLivroMock.consultar(EasyMock.anyInt())).andReturn(l);
-			EasyMock.replay(daoLivroMock);	
-			EasyMock.verify();
-						
-			Livro l2 = service.consultarLivro(100);
-			
-			assertTrue(l.getAutor().equals(l2.getAutor()));
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
-	}
-
-	@Test
-	public void testConsultarLivroStringStringStringStringString() {
-		try {
-			Livro l = TestHelper.getLivroTeste();
-			List<Livro> lista = new ArrayList<>();
-			lista.add(l);
-			EasyMock.expect(daoLivroMock.consultar(EasyMock.anyString(),EasyMock.anyString(),EasyMock.anyString(), EasyMock.anyString(), EasyMock.anyString())).andReturn(lista);
-			EasyMock.replay(daoLivroMock);	
-			EasyMock.verify();
-						
-			Livro l2 = service.consultarLivro(l.getTitulo(), l.getAutor(),l.getIsbn(),l.getClassificacao(),l.getPublicoAlvo()).get(0);
-			
-			assertTrue(l.getAutor().equals(l2.getAutor()));
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
-	}
-
-	@Test
-	public void testConsultarLivros() {
-		try {
-			Livro l = TestHelper.getLivroTeste();
-			List<Livro> lista = new ArrayList<>();
-			lista.add(l);
-			EasyMock.expect(daoLivroMock.consultar()).andReturn(lista);
-			EasyMock.replay(daoLivroMock);	
-			EasyMock.verify();
-						
-			Livro l2 = service.consultarLivros().get(0);
-			
-			assertTrue(l.getAutor().equals(l2.getAutor()));
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
-	}
-
-	@Test
-	public void testInserirEmprestimo() {
-		try {
-			Emprestimo e = TestHelper.getEmprestimoTeste();
-			daoEmprestimoMock.inserir((Emprestimo)EasyMock.anyObject());
-			EasyMock.replay(daoEmprestimoMock);		
-			EasyMock.verify();
-			
-			service.inserirEmprestimo(e);
-			
-			assertTrue("Não deve lançar exceção!", true);
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
-	}
-
-	@Test
-	public void testAtualizarEmprestimo() {
-		try {
-			Emprestimo e = TestHelper.getEmprestimoTeste();
-			daoEmprestimoMock.atualizar((Emprestimo)EasyMock.anyObject());
-			EasyMock.replay(daoEmprestimoMock);	
-			EasyMock.verify();
-			
-			service.atualizarEmprestimo(e);
-			
-			assertTrue("Não deve lançar exceção!", true);
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
-	}
-
-	@Test
-	public void testApagarEmprestimo() {
-		try {
-			daoEmprestimoMock.apagar(EasyMock.anyInt());
-			EasyMock.replay(daoEmprestimoMock);	
-			EasyMock.verify();
-			
-			service.apagarEmprestimo(100);
-			
-			assertTrue("Não deve lançar exceção!", true);
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
-	}
-
-	@Test
-	public void testConsultarEmprestimoInt() {
-		try {
-			Emprestimo e = TestHelper.getEmprestimoTeste();
-			EasyMock.expect(daoEmprestimoMock.consultar(EasyMock.anyInt())).andReturn(e);
-			EasyMock.replay(daoEmprestimoMock);	
-			EasyMock.verify();
-						
-			Emprestimo e2 = service.consultarEmprestimo(100);
-			
-			assertTrue( e.getPessoa().getNome().equals(e2.getPessoa().getNome()) );
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
-	}
-
-	@Test
-	public void testConsultarEmprestimoIntIntDateDate() {
-		try {
-			Emprestimo e = TestHelper.getEmprestimoTeste();
-			List<Emprestimo> lista = new ArrayList<>();
-			lista.add(e);
-			EasyMock.expect(daoEmprestimoMock.consultar(EasyMock.anyInt(),EasyMock.anyInt(),(Date)EasyMock.anyObject(),(Date)EasyMock.anyObject())).andReturn(lista);
-			EasyMock.replay(daoEmprestimoMock);	
-			EasyMock.verify();
-						
-			Emprestimo e2 = service.consultarEmprestimo(100, 100, new Date(), new Date()).get(0);
-			
-			assertTrue( e.getPessoa().getNome().equals(e2.getPessoa().getNome()) );
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
+	public void testAtualizarLivro_shouldUpdateLivro() throws SQLException, AtonBOException {
+		when(livroDAOMock.update(livro)).thenReturn(new Integer(1));
+		boolean result = service.atualizarLivro(livro);
+		assertTrue(result);
+		verify(livroDAOMock).update(livro);
 	}
 	
-	public void testConsultarEmprestimos() {
-		try {
-			Emprestimo e = TestHelper.getEmprestimoTeste();
-			List<Emprestimo> lista = new ArrayList<>();
-			lista.add(e);
-			EasyMock.expect(daoEmprestimoMock.consultar()).andReturn(lista);
-			EasyMock.replay(daoEmprestimoMock);	
-			EasyMock.verify();
-						
-			Emprestimo e2 = service.consultarEmprestimos().get(0);
-			
-			assertTrue( e.getPessoa().getNome().equals(e2.getPessoa().getNome()) );
-		} catch (SQLException | BibException e) {
-			e.printStackTrace();
-			fail("Não deve lançar exceção!");
-		}
-	}*/
-
+	@SuppressWarnings("unchecked")
+	@Test(expected = AtonBOException.class)
+	public void testAtualizarLivro_shouldThrowException() throws SQLException, AtonBOException {
+		when(livroDAOMock.update(livro)).thenThrow(SQLException.class);
+		service.atualizarLivro(livro);		
+	}
+	
+	@Test
+	public void testApagarLivro_shouldDeleteLivro() throws SQLException, AtonBOException {
+		livro.setId(ID);
+		when(livroDAOMock.delete(livro.getId())).thenReturn(new Integer(1));
+		boolean result = service.apagarLivro(livro.getId());
+		assertTrue(result);
+		verify(livroDAOMock).delete(livro.getId());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = AtonBOException.class)
+	public void testApagarLivro_shouldThrowException() throws SQLException, AtonBOException {
+		livro.setId(ID);
+		when(livroDAOMock.delete(livro.getId())).thenThrow(SQLException.class);
+		service.apagarLivro(livro.getId());		
+	}
+	
+	@Test
+	public void testConsultarLivroPorId_shouldReturnValidOutput() throws SQLException, AtonBOException {
+		when(livroDAOMock.findById(ID)).thenReturn(livro);
+		livro = service.consultarLivro(ID);
+		assertTrue(livro != null);
+		verify(livroDAOMock).findById(ID);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = AtonBOException.class)
+	public void testConsultarLivroPorId_shouldThrowException() throws SQLException, AtonBOException {
+		when(livroDAOMock.findById(ID)).thenThrow(SQLException.class);
+		service.consultarLivro(ID);	
+	}
+	
+	@Test
+	public void testConsultarLivroPorIsbn_shouldReturnValidOutput() throws SQLException, AtonBOException {
+		when(livroDAOMock.findByIsbn(livro.getIsbn())).thenReturn(livro);
+		livro = service.consultarLivroPorIsbn(livro.getIsbn());
+		assertTrue(livro != null);
+		verify(livroDAOMock).findByIsbn(livro.getIsbn());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = AtonBOException.class)
+	public void testConsultarLivroPorIsbn_shouldThrowException() throws SQLException, AtonBOException {
+		when(livroDAOMock.findByIsbn(livro.getIsbn())).thenThrow(SQLException.class);
+		service.consultarLivroPorIsbn(livro.getIsbn());	
+	}
+	
 }
