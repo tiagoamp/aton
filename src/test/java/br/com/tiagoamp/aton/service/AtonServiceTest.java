@@ -20,9 +20,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import br.com.tiagoamp.aton.TestHelper;
+import br.com.tiagoamp.aton.dao.EmprestimoDAO;
 import br.com.tiagoamp.aton.dao.LivroDAO;
 import br.com.tiagoamp.aton.dao.PessoaDAO;
 import br.com.tiagoamp.aton.model.AtonBOException;
+import br.com.tiagoamp.aton.model.Emprestimo;
 import br.com.tiagoamp.aton.model.Livro;
 import br.com.tiagoamp.aton.model.Pessoa;
 
@@ -32,12 +34,15 @@ public class AtonServiceTest {
 	private PessoaDAO pessoaDAOMock;
 	@Mock
 	private LivroDAO livroDAOMock;
+	@Mock
+	private EmprestimoDAO emprestimoDAOMock;
 	
 	// class under test
 	private AtonService service;
 	
 	private Pessoa pessoa;
 	private Livro livro;
+	private Emprestimo emprestimo;
 	
 	private static int ID = 100;
 
@@ -49,9 +54,11 @@ public class AtonServiceTest {
 		service = new AtonService();
 		pessoa = TestHelper.getPessoaTeste();
 		livro = TestHelper.getLivroTeste();
+		emprestimo = TestHelper.getEmprestimoTeste();
 		
 		service.setPessoaDao(pessoaDAOMock);
 		service.setLivroDao(livroDAOMock);
+		service.setEmpDao(emprestimoDAOMock);
 	}
 
 	@After
@@ -243,11 +250,10 @@ public class AtonServiceTest {
 	
 	@Test
 	public void testApagarLivro_shouldDeleteLivro() throws SQLException, AtonBOException {
-		livro.setId(ID);
-		when(livroDAOMock.delete(livro.getId())).thenReturn(new Integer(1));
-		boolean result = service.apagarLivro(livro.getId());
+		when(livroDAOMock.delete(ID)).thenReturn(new Integer(1));
+		boolean result = service.apagarLivro(ID);
 		assertTrue(result);
-		verify(livroDAOMock).delete(livro.getId());
+		verify(livroDAOMock).delete(ID);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -286,6 +292,130 @@ public class AtonServiceTest {
 	public void testConsultarLivroPorIsbn_shouldThrowException() throws SQLException, AtonBOException {
 		when(livroDAOMock.findByIsbn(livro.getIsbn())).thenThrow(SQLException.class);
 		service.consultarLivroPorIsbn(livro.getIsbn());	
+	}
+	
+	@Test
+	public void testConsultarLivrosParametros_shouldReturnValidOutput() throws SQLException, AtonBOException {
+		List<Livro> lista = new ArrayList<>();
+		when(livroDAOMock.find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo())).thenReturn(lista);
+		lista = service.consultarLivros(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
+		assertTrue(lista != null);
+		verify(livroDAOMock).find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = AtonBOException.class)
+	public void testConsultarLivrosParametros_shouldThrowException() throws SQLException, AtonBOException {
+		when(livroDAOMock.find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo())).thenThrow(SQLException.class);
+		service.consultarLivros(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());	
+	}
+
+	@Test
+	public void testConsultarLivros_shouldReturnValidOutput() throws SQLException, AtonBOException {
+		List<Livro> lista = new ArrayList<>();
+		when(livroDAOMock.findAll()).thenReturn(lista);
+		lista = service.consultarLivros();
+		assertTrue(lista != null);
+		verify(livroDAOMock).findAll();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = AtonBOException.class)
+	public void testConsultarLivros_shouldThrowException() throws SQLException, AtonBOException {
+		when(livroDAOMock.findAll()).thenThrow(SQLException.class);
+		service.consultarLivros();	
+	}
+	
+	@Test
+	public void testInserirEmprestimo_shouldInsertEmprestimo() throws SQLException, AtonBOException {
+		when(emprestimoDAOMock.create(emprestimo)).thenReturn(new Integer(1));
+		boolean result = service.inserirEmprestimo(emprestimo);
+		assertTrue(result);
+		verify(emprestimoDAOMock).create(emprestimo);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = AtonBOException.class)
+	public void testInserirEmprestimo_ErroBD_shouldThrowException() throws SQLException, AtonBOException {
+		when(emprestimoDAOMock.create(emprestimo)).thenThrow(SQLException.class);
+		service.inserirEmprestimo(emprestimo);		
+	}
+	
+	@Test
+	public void testAtualizarEmprestimo_shouldUpdateLivro() throws SQLException, AtonBOException {
+		when(emprestimoDAOMock.update(emprestimo)).thenReturn(new Integer(1));
+		boolean result = service.atualizarEmprestimo(emprestimo);
+		assertTrue(result);
+		verify(emprestimoDAOMock).update(emprestimo);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = AtonBOException.class)
+	public void testAtualizarEmprestimo_shouldThrowException() throws SQLException, AtonBOException {
+		when(emprestimoDAOMock.update(emprestimo)).thenThrow(SQLException.class);
+		service.atualizarEmprestimo(emprestimo);		
+	}
+	
+	@Test
+	public void testApagarEmprestimo_shouldDeleteLivro() throws SQLException, AtonBOException {
+		when(emprestimoDAOMock.delete(ID)).thenReturn(new Integer(1));
+		boolean result = service.apagarEmprestimo(ID);
+		assertTrue(result);
+		verify(emprestimoDAOMock).delete(ID);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = AtonBOException.class)
+	public void testApagarEmprestimo_shouldThrowException() throws SQLException, AtonBOException {
+		when(livroDAOMock.delete(ID)).thenThrow(SQLException.class);
+		service.apagarLivro(ID);		
+	}
+	
+	@Test
+	public void testConsultarEmprestimoPorId_shouldReturnValidOutput() throws SQLException, AtonBOException {
+		when(emprestimoDAOMock.findById(ID)).thenReturn(emprestimo);
+		emprestimo = service.consultarEmprestimo(ID);
+		assertTrue(emprestimo != null);
+		verify(emprestimoDAOMock).findById(ID);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = AtonBOException.class)
+	public void testConsultarEmprestimoPorId_shouldThrowException() throws SQLException, AtonBOException {
+		when(emprestimoDAOMock.findById(ID)).thenThrow(SQLException.class);
+		service.consultarEmprestimo(ID);	
+	}
+	
+	@Test
+	public void testConsultarEmprestimosParametros_shouldReturnValidOutput() throws SQLException, AtonBOException {
+		List<Emprestimo> lista = new ArrayList<>();
+		when(emprestimoDAOMock.find(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao())).thenReturn(lista);
+		lista = service.consultarEmprestimos(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao());
+		assertTrue(lista != null);
+		verify(emprestimoDAOMock).find(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = AtonBOException.class)
+	public void testConsultarEmprestimosParametros_shouldThrowException() throws SQLException, AtonBOException {
+		when(emprestimoDAOMock.find(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao())).thenThrow(SQLException.class);
+		service.consultarEmprestimos(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao());	
+	}
+
+	@Test
+	public void testConsultarEmprestimos_shouldReturnValidOutput() throws SQLException, AtonBOException {
+		List<Emprestimo> lista = new ArrayList<>();
+		when(emprestimoDAOMock.findAll()).thenReturn(lista);
+		lista = service.consultarEmprestimos();
+		assertTrue(lista != null);
+		verify(emprestimoDAOMock).findAll();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = AtonBOException.class)
+	public void testConsultarEmprestimos_shouldThrowException() throws SQLException, AtonBOException {
+		when(emprestimoDAOMock.findAll()).thenThrow(SQLException.class);
+		service.consultarEmprestimos();	
 	}
 	
 }
