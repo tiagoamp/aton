@@ -156,8 +156,15 @@
 						</div>
 						<div class="form-group">
 		    				<div class="input-group">
-								<span class="input-group-addon" id="basic-addon1">Foto do livro</span> 
-								<input type="file" name="file" id="file" value="Escolher arquivo..." />
+								<span class="input-group-addon" id="basic-addon1">Foto do livro</span>
+								<c:if test="${acao != 'consultar' && acao != 'excluir'}"> 
+									<input type="file" name="file" id="file" value="Escolher arquivo..." />
+								</c:if>
+								<c:if test="${acao eq 'consultar'}">
+									<c:if test="${not empty livro.pathFotoCapa}">
+										<img src="${livro.pathFotoCapa}" width="100px" height="200px" />
+									</c:if>
+								</c:if>
 							</div>
 						</div>
 					</div>
@@ -178,30 +185,7 @@
 					</button>					
 				</c:if>			
 			</form:form>
-		
-			<%-- <form:form id="fileUploadForm" method="POST" cssClass="navbar" action="uploadFile" enctype="multipart/form-data">
-				
-				<strong>
-    				<form:errors path="*" element="div" cssClass="alert alert-danger error" />
-    			</strong>
-				
-				<div class="panel panel-default">
-					<div class="panel-body">
-						<div class="form-group">
-		    				<div class="input-group">
-								<span class="input-group-addon" id="basic-addon1">Foto do livro</span> 
-								<form:input path="nomeFotoCapa" cssClass="form-control required" placeholder="Digite o diretório e arquivo com foto do livro" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
-								<input type="file" name="file" id="file" />
-							</div>
-						</div>	
-						<input type="submit" value="Upload"> Press here to upload the file!
-						
-						<span><form:errors path="file" cssClass="alert alert-danger error" /></span>
-											
-					</div>
-				</div>
-			</form:form> --%>
-				
+									
 	  	</div>
 	</div>
 

@@ -41,7 +41,7 @@ public class AtonController {
 	    return "aton";
 	}
 	
-	@RequestMapping("/pessoas")
+	@RequestMapping("pessoas")
 	public String pagePessoas() {
 	    return "pessoas";
 	}
@@ -194,7 +194,7 @@ public class AtonController {
 		return "pessoas";		
 	}
 	
-	@RequestMapping("/livros")
+	@RequestMapping("livros")
 	public String pageLivros() {
 	    return "livros";
 	}
