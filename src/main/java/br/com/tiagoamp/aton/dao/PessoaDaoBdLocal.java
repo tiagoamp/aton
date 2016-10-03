@@ -29,13 +29,15 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 		} catch (IOException | ClassNotFoundException e) {
 			logger.error(e);
 		}
-		String bdpath = prop.getProperty("bd_path");
+		PATH_DB = prop.getProperty("bd_path");
+		String bdpath = PATH_DB + prop.getProperty("bd_name");
 		URL_DB = "jdbc:sqlite:" + bdpath;
 	}
 	
 	private Connection conn;
 	private PreparedStatement pstmt;
 	private String URL_DB;
+	private String PATH_DB;
 	
 	public void setURL_DB(String url) {
 		this.URL_DB = url;

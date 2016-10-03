@@ -2,7 +2,10 @@ package br.com.tiagoamp.aton.dao;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,6 +16,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.tiagoamp.aton.model.Livro;
 import br.com.tiagoamp.aton.model.Pessoa;
@@ -32,13 +36,15 @@ public class LivroDaoBdLocal implements LivroDAO {
 		} catch (IOException | ClassNotFoundException e) {
 			logger.error(e);
 		}
-		String bdpath = prop.getProperty("bd_path");
+		PATH_DB = prop.getProperty("bd_path");
+		String bdpath = PATH_DB + prop.getProperty("bd_name");
 		URL_DB = "jdbc:sqlite:" + bdpath;
 	}
 	
 	private Connection conn;
 	private PreparedStatement pstmt;
 	private String URL_DB;
+	private String PATH_DB;
 	
 	public void setURL_DB(String url) {
 		this.URL_DB = url;
@@ -140,7 +146,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 			pstmt.setDate(13, new java.sql.Date(livro.getDataAquisicao().getTime()));
 			pstmt.setString(14, livro.getTipoAquisicao().toString());
 			pstmt.setString(15, livro.getNomeDoador().toUpperCase());
-			pstmt.setInt(16, livro.getPessoaCadastradora().getId());
+			pstmt.setInt(16, livro.getPessoaCadastradora() != null ? livro.getPessoaCadastradora().getId() : 0);
 			pstmt.setString(17, livro.getSituacao().toString());
 			pstmt.setString(18, livro.getAutoresAgrupados().toUpperCase());
 			pstmt.setInt(19, livro.getId());
@@ -293,6 +299,13 @@ public class LivroDaoBdLocal implements LivroDAO {
 			if (!pstmt.isClosed()) pstmt.close();
 			if (!conn.isClosed()) conn.close();
 		}
+	}
+
+	@Override
+	public Path createCapaLivro(MultipartFile mFile, String nomeArquivo) throws IOException {
+		Path path = Paths.get(PATH_DB,"pics",nomeArquivo);
+		Files.copy(mFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+		return path;
 	}
 
 }

@@ -1,15 +1,11 @@
 package br.com.tiagoamp.aton.service;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,21 +31,10 @@ public class AtonService {
 	
 	Logger logger = Logger.getLogger(AtonService.class);
 	
-	private final String fotoDirPath;
-	
 	public AtonService() {		
 		this.pessoaDao = new PessoaDaoBdLocal();
 		this.livroDao = new LivroDaoBdLocal();
-		this.empDao = new EmprestimoDaoBdLocal();
-		
-		InputStream istream = this.getClass().getResourceAsStream("config.properties");
-		Properties prop = new Properties();
-		try {
-			prop.load(istream);			
-		} catch (IOException e) {
-			logger.error(e);
-		}
-		fotoDirPath = prop.getProperty("foto_path");
+		this.empDao = new EmprestimoDaoBdLocal();		
 	}
 	
 	private PessoaDAO pessoaDao;
@@ -147,6 +132,7 @@ public class AtonService {
 	
 	public Path inserirFotoCapaLivro(MultipartFile mFile, String isbn) throws AtonBOException {
 		Path path = null;
+		String nomeArquivo = null;
 		try {
 			String originalName = mFile.getOriginalFilename().toLowerCase();
 			String[] validExtensions = {"jpg", "gif", "png"};
@@ -160,13 +146,13 @@ public class AtonService {
 			if (!isValidaExtension) throw new AtonBOException("Foto do livro: arquivo com extensão inválida!");
 			String[] split = originalName.split("\\.");
 			String extension = split[split.length - 1];
-			path = Paths.get(fotoDirPath, isbn + "." + extension);
-			Files.copy(mFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);			
+			nomeArquivo = isbn + "." + extension;
+			path = livroDao.createCapaLivro(mFile, nomeArquivo);
 		} catch (IOException e) {
 			logger.error("Erro: " + e);
 			throw new AtonBOException("Erro ao gravar foto da capa do livro!");
 		}
-		return path;
+		return path != null ? Paths.get("database", "pics", nomeArquivo) : null;
 	}
 	
 	public boolean atualizarLivro(Livro livro) throws AtonBOException {

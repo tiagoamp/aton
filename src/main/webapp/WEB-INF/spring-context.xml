@@ -46,6 +46,7 @@
 	
   
   <mvc:resources mapping="/resources/**" location="/resources/" />
+  <mvc:resources mapping="/database/**" location="/database/" />
   <mvc:annotation-driven/>
 
 </beans>

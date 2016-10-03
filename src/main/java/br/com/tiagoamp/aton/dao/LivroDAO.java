@@ -1,7 +1,11 @@
 package br.com.tiagoamp.aton.dao;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.tiagoamp.aton.model.Livro;
 
@@ -67,9 +71,20 @@ public interface LivroDAO {
 	
 	/**
 	 * Consulta todos os livros da base de dados.
+	 * 
 	 * @return List<Livro>
 	 * @throws SQLException
 	 */
 	List<Livro> findAll() throws SQLException;
+	
+	/**
+	 * Insere figura da capa do livro no sistema de arquivos.
+	 * 
+	 * @param mFile Arquivo feito upload
+	 * @param nomeArquivo Nome do arquivo
+	 * @return Path Caminho do arquivo gravado
+	 * @throws IOException
+	 */
+	Path createCapaLivro(MultipartFile mFile, String nomeArquivo) throws IOException; 
 
 }
