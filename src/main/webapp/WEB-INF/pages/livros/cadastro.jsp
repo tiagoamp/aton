@@ -162,7 +162,7 @@
 								</c:if>
 								<c:if test="${acao eq 'consultar'}">
 									<c:if test="${not empty livro.pathFotoCapa}">
-										<img src="${livro.pathFotoCapa}" width="100px" height="200px" />
+										<img src="${livro.pathFotoCapa}" width="150px" height="200px" />
 									</c:if>
 								</c:if>
 							</div>
@@ -182,9 +182,19 @@
 				<c:if test="${acao eq 'consultar'}">
 					<button type="button" class="btn btn-default" onClick="location.href='livros'">
 						<span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span> Voltar
-					</button>					
+					</button>										
 				</c:if>			
 			</form:form>
+						
+			<c:if test="${acao eq 'consultar'}">
+				<form id="formAcoes">
+					<input type="hidden" id ="acao" name="acao">
+					<input type="hidden" id ="identificador" name="identificador">
+					<button type="button" class="btn btn-default" onClick="javascript:carregarAcoes('emprestar',${livro.id},'emprestimolivro');">
+						<span class="glyphicon glyphicon-home" aria-hidden="true"></span> Emprestar Livro
+					</button>
+				</form>					
+			</c:if>
 									
 	  	</div>
 	</div>

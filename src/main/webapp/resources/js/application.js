@@ -24,7 +24,7 @@ $(document).ready(function() {
     });
 });
 
-// SETANDO PARAMETROS FORM
+// SETANDO PARAMETROS FORM DE ACOES
 function carregarAcoes(pacao, pid, paction){
 	var f = document.getElementById('formAcoes');
     f.method="post";

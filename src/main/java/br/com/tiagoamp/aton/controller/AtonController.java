@@ -291,5 +291,28 @@ public class AtonController {
 		}		
 	    return "livros";
 	}
+
+	@RequestMapping("/emprestimolivro")
+	public String emprestarLivro(HttpServletRequest request,  
+	        @RequestParam(value="acao", required=false) String pAcao, 
+	        @RequestParam(value="identificador", required=false) String pId, 
+	        Model model) {
+		
+		Livro livro = new Livro();
+				
+		if (pId != null && !pId.isEmpty()) {
+			try {		
+				livro = service.consultarLivro(Integer.parseInt(pId));				 				
+			} catch (AtonBOException e) {
+				logger.error("Erro: " + e);
+				model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+				return "livros";
+			}
+			model.addAttribute("acao",pAcao);
+		}
+		
+		model.addAttribute("livro", livro);
+	    return "emprestimo";
+	}
 	
 }

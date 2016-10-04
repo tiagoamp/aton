@@ -15,7 +15,7 @@
 	
 	<!-- Begin page content -->
     <div class="" style="margin: 10px;">
-      <p class="lead">Livros</p>      
+      <p class="lead">Emprestimo de Livros</p>      
     </div>
     
     <!-- MENSAGENS -->
@@ -24,7 +24,7 @@
     <!-- PESQUISA -->
     <div class="panel panel-default" style="margin: 10px;">
 		<div class="panel-heading">
-	    	<h3 class="panel-title">Pesquisa de Livros</h3>
+	    	<h3 class="panel-title">Emprestimo de Livros</h3>
 	  	</div>
 	  	<div class="panel-body">
 	  		<form id="formConsultaLivross" class="navbar-form navbar-left" method="POST" action="consultalivro" role="search">
@@ -50,7 +50,7 @@
 	<!-- INCLUSÃO -->
     <div class="panel panel-default" style="margin: 10px;">
 		<div class="panel-heading">
-	    	<h3 class="panel-title">Cadastramento de Livros</h3>
+	    	<h3 class="panel-title">Emprestimo de Livros</h3>
 	  	</div>
 	  	<div class="panel-body">
 	  		<form class="navbar-form" role="redirect">
@@ -85,7 +85,6 @@
 									&nbsp;&nbsp; <a href="javascript:carregarAcoes('consultar',${livro.id},'cadastrolivro');" title="Consultar"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
 									&nbsp;&nbsp; <a href="javascript:carregarAcoes('alterar',${livro.id},'cadastrolivro');" title="Alterar"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a> 
 									&nbsp;&nbsp; <a href="javascript:carregarAcoes('excluir',${livro.id},'cadastrolivro');" title="Excluir"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a>
-									&nbsp;&nbsp; <a href="javascript:carregarAcoes('emprestar',${livro.id},'emprestimolivro');" title="Emprestar"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>
 									&nbsp;&nbsp;&nbsp;&nbsp;
 									<c:out value="${livro.isbn}" /> - 
 									<c:out value="${livro.titulo}" /> - 
