@@ -22,10 +22,7 @@ public class EmprestimoDAOTest {
 	@Before
 	public void setup() throws ClassNotFoundException {
 		dao = new EmprestimoDaoBdLocal();
-		//FIXME Colocar isso dinâmico
-		((EmprestimoDaoBdLocal)dao).setURL_DB("jdbc:sqlite:/home/tiago/proj/Biblioteca/sourcecode/aton/src/main/webapp/database/atondbtests");
-		limparBaseDeDadosDeTeste();
-		
+		((EmprestimoDaoBdLocal)dao).setURL_DB("jdbc:sqlite:" + ((EmprestimoDaoBdLocal)dao).getPATH_DB() + "atondbtests");
 		emp = TestHelper.getEmprestimoTeste();
 	}
 	

@@ -21,10 +21,7 @@ public class LivroDAOTest {
 	@Before
 	public void setup() throws ClassNotFoundException {
 		dao = new LivroDaoBdLocal();
-		//FIXME Colocar isso dinâmico
-		((LivroDaoBdLocal)dao).setURL_DB("jdbc:sqlite:/home/tiago/proj/Biblioteca/sourcecode/aton/src/main/webapp/database/atondbtests");
-		limparBaseDeDadosDeTeste();
-		
+		((LivroDaoBdLocal)dao).setURL_DB("jdbc:sqlite:" + ((LivroDaoBdLocal)dao).getPATH_DB() + "atondbtests");		
 		livro = TestHelper.getLivroTeste();
 	}
 	

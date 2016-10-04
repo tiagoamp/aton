@@ -37,18 +37,15 @@ public class LivroDaoBdLocal implements LivroDAO {
 			logger.error(e);
 		}
 		PATH_DB = prop.getProperty("bd_path");
-		String bdpath = PATH_DB + prop.getProperty("bd_name");
-		URL_DB = "jdbc:sqlite:" + bdpath;
+		NAME_DB = prop.getProperty("bd_name");
+		URL_DB = "jdbc:sqlite:" + PATH_DB + NAME_DB;
 	}
 	
 	private Connection conn;
 	private PreparedStatement pstmt;
 	private String URL_DB;
 	private String PATH_DB;
-	
-	public void setURL_DB(String url) {
-		this.URL_DB = url;
-	}
+	private String NAME_DB;
 	
 	private Livro carregarObjeto(ResultSet rs) throws SQLException {
 		Livro l = new Livro();
@@ -307,5 +304,25 @@ public class LivroDaoBdLocal implements LivroDAO {
 		Files.copy(mFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 		return path;
 	}
+	
 
+	public String getPATH_DB() {
+		return PATH_DB;
+	}
+	public void setPATH_DB(String strPathDB) {
+		PATH_DB = strPathDB;
+	}
+	public String getNAME_DB() {
+		return NAME_DB;
+	}
+	public void setNAME_DB(String strNameDB) {
+		NAME_DB = strNameDB;
+	}
+	public String getURL_DB() {
+		return URL_DB;
+	}
+	public void setURL_DB(String url) {
+		this.URL_DB = url;
+	}
+	
 }
