@@ -189,8 +189,7 @@ public class AtonController {
 			model.addAttribute("listapessoas", lista);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
-			return "pessoas";
+			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));			
 		}		
 		return "pessoas";		
 	}

@@ -15,7 +15,7 @@
 	
 	<!-- Begin page content -->
     <div class="" style="margin: 10px;">
-      <p class="lead">Empréstimo de Livros</p>      
+      <p class="lead">Empréstimo</p>      
     </div>
     
     <!-- MENSAGENS -->
@@ -25,9 +25,7 @@
 		<div class="panel-heading">
 	    	<h3 class="panel-title">Empréstimo de Livros</h3>
 	  	</div>
-	  	<div class="panel-body">
-	  		<form:form id="formEmpLivros" method="POST" cssClass="navbar" action="livroemprestado" modelAttribute="emprestimo">
-	  			<form:hidden path="id" />
+	  	<div class="panel-body">	  		
 	  			<div class="panel panel-default">
 					<!-- BOX DE LIVRO -->
 					<div class="row">
@@ -48,31 +46,32 @@
 								<div class="caption">
 									<div class="panel-heading">
 										<h3 class="panel-title">Pesquisa de Leitor</h3>
-									</div>
-									
-									<div class="col-lg-12">									
-										<div class="input-group">
-											<span class="input-group-addon" id="basic-addon1">Consulta por E-mail</span>
-											<input type="text" class="form-control"	placeholder="Digite o e-mail do leitor"> 
-												<span class="input-group-btn">
-												<button class="btn btn-default" type="button"> 
-													<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar
-												</button>
-											</span>
+									</div>			
+									<form id="formConsultaPessoas" class="navbar-form navbar-left" method="POST" action="consultapessoa" role="search">				
+										<div class="col-lg-12">																		
+											<div class="input-group">
+												<span class="input-group-addon" id="basic-addon1">Consulta por E-mail</span>
+												<input type="text" class="form-control"	placeholder="Digite o e-mail do leitor"> 
+													<span class="input-group-btn">
+														<button class="btn btn-default" type="button"> 
+															<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar
+														</button>
+													</span>
+											</div>
 										</div>
-									</div>
-									&nbsp;&nbsp;&nbsp;&nbsp;
-									<div class="col-lg-12">									
-										<div class="input-group">
-											<span class="input-group-addon" id="basic-addon1">Consulta por Dados</span>
-											<input type="text" class="form-control"	placeholder="Digite o nome, telefone ou perfil do leitor"> 
-												<span class="input-group-btn">
-												<button class="btn btn-default" type="button"> 
-													<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar
-												</button>
-											</span>
+										&nbsp;&nbsp;&nbsp;&nbsp;
+										<div class="col-lg-12">									
+											<div class="input-group">
+												<span class="input-group-addon" id="basic-addon1">Consulta por Dados</span>
+												<input type="text" class="form-control"	placeholder="Digite o nome, telefone ou perfil do leitor"> 
+													<span class="input-group-btn">
+													<button class="btn btn-default" type="button"> 
+														<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar
+													</button>
+												</span>
+											</div>
 										</div>
-									</div>
+									</form>
 									<p/> &nbsp;&nbsp;&nbsp;&nbsp;
 									<!-- LISTAGEM -->
 								    <c:if test="${not empty listapessoas}">
@@ -106,25 +105,24 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> <!-- div row -->
 					
-					
-					
-					<p> ADICIONAR CAMPOS DE DATA DE EMPRESTIMO E DATA DE DEVOLUÇÃO</p>
-											
-					<!-- BOTOES -->
-					<button type="submit" class="btn btn-default">
-						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Emprestar
-					</button>
-					<button type="button" class="btn btn-default" onClick="location.href='livros'">
-						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancelar
-					</button>
+					<form:form id="formEmpLivros" method="POST" cssClass="navbar" action="livroemprestado" modelAttribute="emprestimo">
+		  				<form:hidden path="id" />		
+						
+						<p> ADICIONAR CAMPOS DE DATA DE EMPRESTIMO E DATA DE DEVOLUÇÃO</p>
 												
-			
-				</div>
-								
-			</form:form>
-												
+						<!-- BOTOES -->
+						<button type="submit" class="btn btn-default">
+							<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Emprestar
+						</button>
+						<button type="button" class="btn btn-default" onClick="location.href='livros'">
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancelar
+						</button>
+						
+					</form:form>
+					
+			</div>					
 	  	</div>
 	</div>
 
