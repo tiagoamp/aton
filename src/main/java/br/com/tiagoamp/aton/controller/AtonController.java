@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.tiagoamp.aton.model.AtonBOException;
+import br.com.tiagoamp.aton.model.Emprestimo;
 import br.com.tiagoamp.aton.model.Livro;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Pessoa;
@@ -311,8 +312,12 @@ public class AtonController {
 			model.addAttribute("acao",pAcao);
 		}
 		
-		model.addAttribute("livro", livro);
-	    return "emprestimo";
+		Emprestimo emprestimo = new Emprestimo();
+		emprestimo.setLivro(livro);
+		emprestimo.setPessoa(new Pessoa());
+		
+		model.addAttribute("emprestimo", emprestimo);
+		return "emprestimo";
 	}
 	
 }

@@ -23,7 +23,10 @@ public class Emprestimo {
     
     @Override
     public String toString() {
-    	return "Emprestimo > Livro: " + livro.getTitulo() + " para: " + pessoa.getNome();
+    	if (pessoa != null) {
+    		return "Emprestimo > Livro: " + livro.getTitulo() + " para: " + pessoa.getNome();
+    	}
+    	return "Emprestimo > Livro: " + livro.getTitulo();
     }
     
     
