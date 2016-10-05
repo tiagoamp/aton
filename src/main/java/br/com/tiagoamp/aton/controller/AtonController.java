@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -162,38 +163,18 @@ public class AtonController {
 	        Model model){
 		List<Pessoa> lista = new ArrayList<>();
 		try {
-			if (pEmail != null && !pEmail.isEmpty()) { // CAMPO DE PESQ EMAIL PREENCHIDO				
-							// pesquisa por e-mail
-				Pessoa p = service.consultarPessoaPorEmail(pEmail.trim().toUpperCase());
-				if (p != null) lista.add(p);
-			} else {								   // CAMPO DE PESQ DADOS PREENCHIDO
-				if (pDados != null && !pDados.isEmpty()) { 
-					pDados = pDados.trim().toUpperCase();
-							// pesquisa por perfil
-					for (Perfil perfil : Perfil.values()) {
-						if (perfil.toString().equals(pDados)) lista = service.consultarPessoas(null, null, Perfil.valueOf(pDados));
-					}
-					if (lista.isEmpty()) {
-							// pesquisa por telefone
-						lista = service.consultarPessoas(null, pDados, null);
-						if (lista.isEmpty()) {
-							// pesquisa por nome aproximado	
-							lista = service.consultarPessoasPorNomeAproximado(pDados);
-						}
-					}				
-				}
-			}
+			lista = this.pesquisarPessoasPorParametros(pEmail, pDados);
 			if (lista.isEmpty()) {
 				throw new AtonBOException("Consulta sem resultados!");
 			}
 			model.addAttribute("listapessoas", lista);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));			
-		}		
+			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+		}
 		return "pessoas";		
 	}
-	
+		
 	@RequestMapping("livros")
 	public String pageLivros() {
 	    return "livros";
@@ -311,12 +292,92 @@ public class AtonController {
 			model.addAttribute("acao",pAcao);
 		}
 		
-		Emprestimo emprestimo = new Emprestimo();
-		emprestimo.setLivro(livro);
-		emprestimo.setPessoa(new Pessoa());
-		
+		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), new Date());
 		model.addAttribute("emprestimo", emprestimo);
-		return "emprestimo";
+		return "emprestimos";
+	}
+	
+	@RequestMapping(value = "consultapessoaemprestimo", method = RequestMethod.POST)
+	public String consultarPessoaParaEmprestimo(HttpServletRequest request,  
+	        @RequestParam(value="tEmail", required=false) String pEmail, 
+	        @RequestParam(value="tDados", required=false) String pDados,
+	        @RequestParam(value="tIdLivro", required=false) String pIdLivro,
+	        Model model){
+		List<Pessoa> lista = new ArrayList<>();
+		Livro livro = null;
+		try {
+			// recarregando livro
+			livro = service.consultarLivro(Integer.parseInt(pIdLivro));
+			// fazendo pesquisas
+			lista = this.pesquisarPessoasPorParametros(pEmail, pDados); 
+			if (lista.isEmpty()) {
+				throw new AtonBOException("Consulta sem resultados!");
+			}
+			model.addAttribute("listapessoas", lista);
+		} catch (AtonBOException e) {
+			logger.error("Erro: " + e);
+			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+		}				
+		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), new Date());
+		model.addAttribute("emprestimo", emprestimo);
+		return "emprestimos";
+	}
+	
+	@RequestMapping(value = "emprestimoselecionarpessoa", method = RequestMethod.POST)
+	public String selecionarPessoaParaEmprestimo(HttpServletRequest request,  
+	        @RequestParam(value="tEmail", required=false) String pEmail, 
+	        @RequestParam(value="tDados", required=false) String pDados,
+	        @RequestParam(value="tIdLivro", required=false) String pIdLivro,
+	        Model model){
+		
+		TO DO : TERMINAR ESTE METODO DA AÇAO DE SELECIONAR PESSOA NA LISTA DE MPRESTIMO
+		
+		List<Pessoa> lista = new ArrayList<>();
+		Livro livro = null;
+		try {
+			// recarregando livro
+			livro = service.consultarLivro(Integer.parseInt(pIdLivro));
+			// fazendo pesquisas
+			lista = this.pesquisarPessoasPorParametros(pEmail, pDados); 
+			if (lista.isEmpty()) {
+				throw new AtonBOException("Consulta sem resultados!");
+			}
+			model.addAttribute("listapessoas", lista);
+		} catch (AtonBOException e) {
+			logger.error("Erro: " + e);
+			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+		}				
+		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), new Date());
+		model.addAttribute("emprestimo", emprestimo);
+		return "emprestimos";
+	}
+	
+	private List<Pessoa> pesquisarPessoasPorParametros(String email, String param) throws AtonBOException {
+		List<Pessoa> lista = new ArrayList<>();
+		if (email != null && !email.isEmpty()) { // CAMPO DE PESQ EMAIL PREENCHIDO
+			// pesquisa por e-mail
+			Pessoa p = service.consultarPessoaPorEmail(email.trim().toUpperCase());
+			if (p != null)
+				lista.add(p);
+		} else { // CAMPO DE PESQ DADOS PREENCHIDO
+			if (param != null && !param.isEmpty()) {
+				param = param.trim().toUpperCase();
+				// pesquisa por perfil
+				for (Perfil perfil : Perfil.values()) {
+					if (perfil.toString().equals(param))
+						lista = service.consultarPessoas(null, null, Perfil.valueOf(param));
+				}
+				if (lista.isEmpty()) {
+					// pesquisa por telefone
+					lista = service.consultarPessoas(null, param, null);
+					if (lista.isEmpty()) {
+						// pesquisa por nome aproximado
+						lista = service.consultarPessoasPorNomeAproximado(param);
+					}
+				}
+			}
+		}
+		return lista;
 	}
 	
 }

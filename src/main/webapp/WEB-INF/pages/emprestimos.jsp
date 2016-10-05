@@ -27,8 +27,10 @@
 	  	</div>
 	  	<div class="panel-body">	  		
 	  			<div class="panel panel-default">
-					<!-- BOX DE LIVRO -->
+	  								
 					<div class="row">
+					
+						<!-- BOX DE LIVRO -->
 						<div class="col-sm-6 col-md-6">
 							<div class="thumbnail">
 								<img src="${emprestimo.livro.pathFotoCapa}" alt="[Sem capa cadastrada]" width="180px" height="200px">
@@ -40,6 +42,7 @@
 								</div>
 							</div>
 						</div>
+						
 						<!-- BOX DE PESSOA/LEITOR -->
 						<div class="col-sm-6 col-md-6">
 							<div class="thumbnail">
@@ -47,13 +50,14 @@
 									<div class="panel-heading">
 										<h3 class="panel-title">Pesquisa de Leitor</h3>
 									</div>			
-									<form id="formConsultaPessoas" class="navbar-form navbar-left" method="POST" action="consultapessoa" role="search">				
+									<form id="formConsultaPessoas" class="navbar-form navbar-left" method="POST" action="consultapessoaemprestimo" role="search">
+										<input type="hidden" id ="tIdLivro" name="tIdLivro" value=${emprestimo.livro.id}>
 										<div class="col-lg-12">																		
 											<div class="input-group">
 												<span class="input-group-addon" id="basic-addon1">Consulta por E-mail</span>
-												<input type="text" class="form-control"	placeholder="Digite o e-mail do leitor"> 
+												<input type="text" name="tEmail" class="form-control"	placeholder="Digite o e-mail do leitor"> 
 													<span class="input-group-btn">
-														<button class="btn btn-default" type="button"> 
+														<button class="btn btn-default" type="submit"> 
 															<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar
 														</button>
 													</span>
@@ -63,9 +67,9 @@
 										<div class="col-lg-12">									
 											<div class="input-group">
 												<span class="input-group-addon" id="basic-addon1">Consulta por Dados</span>
-												<input type="text" class="form-control"	placeholder="Digite o nome, telefone ou perfil do leitor"> 
+												<input type="text" name="tDados" class="form-control" placeholder="Digite o nome, telefone ou perfil do leitor"> 
 													<span class="input-group-btn">
-													<button class="btn btn-default" type="button"> 
+													<button class="btn btn-default" type="submit"> 
 														<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar
 													</button>
 												</span>
@@ -87,11 +91,10 @@
 															<input type="hidden" id ="identificador" name="identificador">
 															<c:forEach items="${listapessoas}" var="pessoa">
 																<li class="list-group-item">				
-																	&nbsp;&nbsp; <a href="javascript:carregarAcoes('selecionar',${pessoa.id},'emprestimoselecionarpessoa');" title="Selecionar"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+																	&nbsp;&nbsp; <a href="javascript:carregarAcoes('selecionar',${pessoa.id},'emprestimoselecionarpessoa');" title="Selecionar"><span class="glyphicon glyphicon-open" aria-hidden="true"></span></a>
 																	&nbsp;&nbsp;&nbsp;&nbsp;
 																	<c:out value="${pessoa.nome}" /> - 
-																	<c:out value="${pessoa.email}" /> - 
-																	<c:out value="${pessoa.perfil}" />							
+																	<c:out value="${pessoa.email}" />							
 																</li>
 															</c:forEach>
 														</form>
@@ -101,15 +104,28 @@
 										</div>
 									</c:if>
 									
-									
 								</div>
 							</div>
 						</div>
 					</div> <!-- div row -->
 					
 					<form:form id="formEmpLivros" method="POST" cssClass="navbar" action="livroemprestado" modelAttribute="emprestimo">
-		  				<form:hidden path="id" />		
-						
+		  				<form:hidden path="id" />
+		  				<input type="hidden" id ="idLivro" name="idLivro" value=${emprestimo.livro.id}>
+		  				<input type="hidden" id ="idPessoa" name="idPessoa" value=${emprestimo.pessoa.id}>
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon" id="basic-addon1">Leitor selecionado</span>
+								<form:input path="pessoa.nome" cssClass="form-control required" placeholder="Selecione o leitor" aria-describedby="basic-addon1" size="50" disabled="true" />
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon" id="basic-addon1">E-mail do leitor selecionado</span>
+								<form:input path="pessoa.email" cssClass="form-control required" placeholder="Selecione o leitor" aria-describedby="basic-addon1" size="50" disabled="true" />
+							</div>
+						</div>
+	
 						<p> ADICIONAR CAMPOS DE DATA DE EMPRESTIMO E DATA DE DEVOLUÇÃO</p>
 												
 						<!-- BOTOES -->
