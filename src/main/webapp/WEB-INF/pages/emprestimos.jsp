@@ -89,6 +89,7 @@
 														<form id="formAcoes">
 															<input type="hidden" id ="acao" name="acao">
 															<input type="hidden" id ="identificador" name="identificador">
+															<input type="hidden" id ="idLivro" name="idLivro" value=${emprestimo.livro.id}>
 															<c:forEach items="${listapessoas}" var="pessoa">
 																<li class="list-group-item">				
 																	&nbsp;&nbsp; <a href="javascript:carregarAcoes('selecionar',${pessoa.id},'emprestimoselecionarpessoa');" title="Selecionar"><span class="glyphicon glyphicon-open" aria-hidden="true"></span></a>
@@ -111,9 +112,9 @@
 					
 					<form:form id="formEmpLivros" method="POST" cssClass="navbar" action="livroemprestado" modelAttribute="emprestimo">
 		  				<form:hidden path="id" />
-		  				<input type="hidden" id ="idLivro" name="idLivro" value=${emprestimo.livro.id}>
-		  				<input type="hidden" id ="idPessoa" name="idPessoa" value=${emprestimo.pessoa.id}>
-						<div class="form-group">
+		  				<form:hidden path="livro.id" />
+		  				<form:hidden path="pessoa.id" />
+		  				<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon" id="basic-addon1">Leitor selecionado</span>
 								<form:input path="pessoa.nome" cssClass="form-control required" placeholder="Selecione o leitor" aria-describedby="basic-addon1" size="50" disabled="true" />
@@ -121,13 +122,17 @@
 						</div>
 						<div class="form-group">
 							<div class="input-group">
-								<span class="input-group-addon" id="basic-addon1">E-mail do leitor selecionado</span>
-								<form:input path="pessoa.email" cssClass="form-control required" placeholder="Selecione o leitor" aria-describedby="basic-addon1" size="50" disabled="true" />
+								<span class="input-group-addon" id="basic-addon1">Data do Empréstimo</span>
+								<form:input path="dataEmprestimo" cssClass="form-control required" placeholder="Digite a data do emprestimo" aria-describedby="basic-addon1" size="20" disabled="false" />
 							</div>
 						</div>
-	
-						<p> ADICIONAR CAMPOS DE DATA DE EMPRESTIMO E DATA DE DEVOLUÇÃO</p>
-												
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon" id="basic-addon1">Data da Devolução</span>
+								<form:input path="dataDevolucao" cssClass="form-control required" placeholder="Digite a data de devolução" aria-describedby="basic-addon1" size="20" disabled="false" />
+							</div>
+						</div>
+									
 						<!-- BOTOES -->
 						<button type="submit" class="btn btn-default">
 							<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Emprestar

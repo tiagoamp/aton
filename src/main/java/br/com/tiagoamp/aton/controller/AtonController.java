@@ -325,31 +325,22 @@ public class AtonController {
 	
 	@RequestMapping(value = "emprestimoselecionarpessoa", method = RequestMethod.POST)
 	public String selecionarPessoaParaEmprestimo(HttpServletRequest request,  
-	        @RequestParam(value="tEmail", required=false) String pEmail, 
-	        @RequestParam(value="tDados", required=false) String pDados,
-	        @RequestParam(value="tIdLivro", required=false) String pIdLivro,
+	        @RequestParam(value="acao", required=false) String pAcao, 
+	        @RequestParam(value="identificador", required=false) String pId,
+	        @RequestParam(value="idLivro", required=false) String pIdLivro,
 	        Model model){
-		
-		TO DO : TERMINAR ESTE METODO DA AÇAO DE SELECIONAR PESSOA NA LISTA DE MPRESTIMO
-		
-		List<Pessoa> lista = new ArrayList<>();
 		Livro livro = null;
+		Pessoa pessoa = null;
 		try {
-			// recarregando livro
-			livro = service.consultarLivro(Integer.parseInt(pIdLivro));
-			// fazendo pesquisas
-			lista = this.pesquisarPessoasPorParametros(pEmail, pDados); 
-			if (lista.isEmpty()) {
-				throw new AtonBOException("Consulta sem resultados!");
-			}
-			model.addAttribute("listapessoas", lista);
+			livro = service.consultarLivro(Integer.parseInt(pIdLivro)); 
+			pessoa = service.consultarPessoa(Integer.parseInt(pId)); 			
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
 		}				
-		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), new Date());
+		Emprestimo emprestimo = new Emprestimo(livro, pessoa, new Date(), new Date());
 		model.addAttribute("emprestimo", emprestimo);
-		return "emprestimos";
+		return "emprestimos";	
 	}
 	
 	private List<Pessoa> pesquisarPessoasPorParametros(String email, String param) throws AtonBOException {
