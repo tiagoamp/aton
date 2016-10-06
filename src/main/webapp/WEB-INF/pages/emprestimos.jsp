@@ -123,16 +123,16 @@
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon" id="basic-addon1">Data do Empréstimo</span>
-								<form:input path="dataEmprestimo" cssClass="form-control required" placeholder="Digite a data do emprestimo" aria-describedby="basic-addon1" size="20" disabled="false" />
+								<form:input path="dataEmprestimoFormatada" cssClass="form-control required" placeholder="Digite a data do emprestimo" aria-describedby="basic-addon1" size="20" disabled="false" />
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon" id="basic-addon1">Data da Devolução</span>
-								<form:input path="dataDevolucao" cssClass="form-control required" placeholder="Digite a data de devolução" aria-describedby="basic-addon1" size="20" disabled="false" />
+								<form:input path="dataDevolucaoFormatada" cssClass="form-control required" placeholder="Digite a data de devolução" aria-describedby="basic-addon1" size="20" disabled="false" />
 							</div>
 						</div>
-									
+						
 						<!-- BOTOES -->
 						<button type="submit" class="btn btn-default">
 							<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Emprestar
@@ -140,7 +140,7 @@
 						<button type="button" class="btn btn-default" onClick="location.href='livros'">
 							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancelar
 						</button>
-						
+												
 					</form:form>
 					
 			</div>					

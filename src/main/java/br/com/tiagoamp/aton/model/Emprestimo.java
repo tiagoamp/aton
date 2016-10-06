@@ -1,5 +1,7 @@
 package br.com.tiagoamp.aton.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Emprestimo {
@@ -18,7 +20,9 @@ public class Emprestimo {
     private Livro livro;
     private Pessoa pessoa;
     private Date dataEmprestimo;
+    private String dataEmprestimoFormatada;
     private Date dataDevolucao;
+    private String dataDevolucaoFormatada;
 
     
     @Override
@@ -59,6 +63,38 @@ public class Emprestimo {
 	}
 	public void setDataDevolucao(Date dataDevolucao) {
 		this.dataDevolucao = dataDevolucao;
+	}
+	public String getDataEmprestimoFormatada() {
+		if (dataEmprestimo != null) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			dataEmprestimoFormatada = sdf.format(dataEmprestimo);
+		}
+		return dataEmprestimoFormatada;
+	}
+	public void setDataEmprestimoFormatada(String dataEmprestimoFormatada) {
+		this.dataEmprestimoFormatada = dataEmprestimoFormatada;
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			this.dataEmprestimo = sdf.parse(dataEmprestimoFormatada);
+		} catch (ParseException e) {
+			e.printStackTrace(); // validado no controller
+		}
+	}
+	public String getDataDevolucaoFormatada() {
+		if (dataDevolucao != null) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			dataDevolucaoFormatada = sdf.format(dataDevolucao);
+		}
+		return dataDevolucaoFormatada;
+	}
+	public void setDataDevolucaoFormatada(String dataDevolucaoFormatada) {
+		this.dataDevolucaoFormatada = dataDevolucaoFormatada;
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			this.dataDevolucao = sdf.parse(dataDevolucaoFormatada);
+		} catch (ParseException e) {
+			e.printStackTrace(); // validado no controller
+		}
 	}
 
 }

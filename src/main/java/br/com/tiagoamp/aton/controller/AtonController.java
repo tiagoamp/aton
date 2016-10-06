@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -207,6 +208,40 @@ public class AtonController {
 	    return "livros/cadastro";
 	}
 	
+	@RequestMapping(value = "consultalivro", method = RequestMethod.POST)
+	public String consultarLivro(HttpServletRequest request,  
+	        @RequestParam(value="tISBN", required=false) String pISBN, 
+	        @RequestParam(value="tDados", required=false) String pDados, 
+	        Model model){
+		List<Livro> lista = new ArrayList<>();
+		try {
+			if (pISBN != null && !pISBN.isEmpty()) { // CAMPO DE PESQ ISBN PREENCHIDO
+				// pesquisa por isbn
+				Livro l = service.consultarLivroPorIsbn(pISBN.trim().toUpperCase());
+				if (l != null)
+					lista.add(l);
+			} else { // CAMPO DE PESQ DADOS PREENCHIDO
+				if (pDados != null && !pDados.isEmpty()) {
+					pDados = pDados.trim().toUpperCase();
+					// pesquisa por titulo
+					lista = service.consultarLivros(pDados, null, null, null, null);
+					if (lista.isEmpty()) {
+						// pesquisa por autor
+						lista = service.consultarLivros(null, pDados, null, null, null);						
+					}
+				}
+			}
+			if (lista.isEmpty()) {
+				throw new AtonBOException("Consulta sem resultados!");
+			}
+			model.addAttribute("listalivros", lista);
+		} catch (AtonBOException e) {
+			logger.error("Erro: " + e);
+			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+		}
+		return "livros";		
+	}
+		
 	@RequestMapping(value="livrocadastrado", method = RequestMethod.POST)
 	public String salvarLivro(@Valid Livro livro, BindingResult result, Model model, 
 			HttpServletRequest request, @RequestParam(value="file", required=false) MultipartFile pFile) {
@@ -220,7 +255,7 @@ public class AtonController {
 				livro.setDataAquisicao(sdf.parse(livro.getDataAquisicaoFormatada()));
 			} catch (ParseException e) {
 				result.reject("dataAquisicao", "Data de Aquisição em formato inválido.");
-				hasErrors = true;				
+				hasErrors = true;
 			}
 		} else {
 			result.reject("dataAquisicaoFormatada", "Campo obrigatório não preenchido: Data de Aquisição.");
@@ -277,10 +312,8 @@ public class AtonController {
 	public String emprestarLivro(HttpServletRequest request,  
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
-	        Model model) {
-		
-		Livro livro = new Livro();
-				
+	        Model model) {		
+		Livro livro = new Livro();				
 		if (pId != null && !pId.isEmpty()) {
 			try {		
 				livro = service.consultarLivro(Integer.parseInt(pId));				 				
@@ -290,9 +323,8 @@ public class AtonController {
 				return "livros";
 			}
 			model.addAttribute("acao",pAcao);
-		}
-		
-		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), new Date());
+		}		
+		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), null);
 		model.addAttribute("emprestimo", emprestimo);
 		return "emprestimos";
 	}
@@ -306,9 +338,7 @@ public class AtonController {
 		List<Pessoa> lista = new ArrayList<>();
 		Livro livro = null;
 		try {
-			// recarregando livro
-			livro = service.consultarLivro(Integer.parseInt(pIdLivro));
-			// fazendo pesquisas
+			livro = service.consultarLivro(Integer.parseInt(pIdLivro)); // recarregando livro
 			lista = this.pesquisarPessoasPorParametros(pEmail, pDados); 
 			if (lista.isEmpty()) {
 				throw new AtonBOException("Consulta sem resultados!");
@@ -318,7 +348,7 @@ public class AtonController {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
 		}				
-		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), new Date());
+		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), null);
 		model.addAttribute("emprestimo", emprestimo);
 		return "emprestimos";
 	}
@@ -337,8 +367,12 @@ public class AtonController {
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
-		}				
-		Emprestimo emprestimo = new Emprestimo(livro, pessoa, new Date(), new Date());
+		}
+		// Regra da data sugerida de devolução ==> D + 10
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_MONTH, 10);
+		
+		Emprestimo emprestimo = new Emprestimo(livro, pessoa, new Date(), new Date(calendar.getTimeInMillis()));
 		model.addAttribute("emprestimo", emprestimo);
 		return "emprestimos";	
 	}

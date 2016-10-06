@@ -27,7 +27,7 @@
 	    	<h3 class="panel-title">Pesquisa de Livros</h3>
 	  	</div>
 	  	<div class="panel-body">
-	  		<form id="formConsultaLivross" class="navbar-form navbar-left" method="POST" action="consultalivro" role="search">
+	  		<form id="formConsultaLivros" class="navbar-form navbar-left" method="POST" action="consultalivro" role="search">
 				<div class="input-group">
 					<span class="input-group-addon" id="basic-addon1">Consulta por ISBN</span> 
 					<input type="text" name="tISBN" class="form-control" placeholder="Digite o ISBN do livro" aria-describedby="basic-addon1">				

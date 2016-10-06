@@ -88,7 +88,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 			pstmt.setString(1, livro.getTitulo().toUpperCase());
 			pstmt.setString(2, livro.getSubtitulo().toUpperCase());
 			pstmt.setDate(3, new java.sql.Date(livro.getDataCadastro().getTime()) );
-			pstmt.setString(4, livro.getIsbn());
+			pstmt.setString(4, livro.getIsbn().toUpperCase());
 			pstmt.setString(5, livro.getEditora().toUpperCase());
 			pstmt.setString(6, livro.getLocalPublicacao().toUpperCase());
 			pstmt.setObject(7, livro.getAnoPublicacao());
@@ -131,7 +131,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 			pstmt.setString(1, livro.getTitulo().toUpperCase());
 			pstmt.setString(2, livro.getSubtitulo().toUpperCase());
 			pstmt.setDate(3, new java.sql.Date(livro.getDataCadastro().getTime()) );
-			pstmt.setString(4, livro.getIsbn());
+			pstmt.setString(4, livro.getIsbn().toUpperCase());
 			pstmt.setString(5, livro.getEditora().toUpperCase());
 			pstmt.setString(6, livro.getLocalPublicacao().toUpperCase());
 			pstmt.setInt(7, livro.getAnoPublicacao());

@@ -14,6 +14,7 @@
 	      	<li><a href="aton">Aton</a></li>
 	      	<li><a href="livros">Livros</a></li>
 	        <li><a href="pessoas">Pessoas</a></li>
+	        <li><a href="livros">Emprestimos</a></li>
 	        <li><a href="admin.jsp">Administração</a></li>
 	        <li><a href="sobre.jsp">Sobre</a></li>	        
 	      </ul>
