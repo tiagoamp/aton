@@ -91,12 +91,10 @@ public class PessoaDAOTest {
 	public void testFindByNomeAproximado() throws SQLException {
 		// criando massa de dados
 		dao.create(pessoa);
-		List<Pessoa> lista = dao.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
-		String nome = lista.get(0).getNome();
 		// teste
-		List<Pessoa> lista2 = dao.findByNomeAproximado(nome);
-		Pessoa pessoa2 = lista2.get(0);
-		assertTrue(nome.equals(pessoa2.getNome()));
+		List<Pessoa> lista = dao.findByNomeAproximado(pessoa.getNome().substring(3));
+		assertTrue(!lista.isEmpty());
+		assertTrue(lista.contains(pessoa));
 	}
 
 	@Test

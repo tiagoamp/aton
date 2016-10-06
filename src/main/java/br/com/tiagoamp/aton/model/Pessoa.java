@@ -42,6 +42,11 @@ public class Pessoa implements Comparable<Pessoa> {
     }
     
     @Override
+    public boolean equals(Object obj) {
+    	return obj instanceof Pessoa && ((Pessoa)obj).email.equals(email);
+    }
+    
+    @Override
 	public int compareTo(Pessoa p) {
 		return this.nome.compareTo(p.nome); // ordem alfabetica
 	}

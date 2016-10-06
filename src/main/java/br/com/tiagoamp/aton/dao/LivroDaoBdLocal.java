@@ -324,5 +324,57 @@ public class LivroDaoBdLocal implements LivroDAO {
 	public void setURL_DB(String url) {
 		this.URL_DB = url;
 	}
+
+	@Override
+	public List<Livro> findByAutorAproximado(String autor) throws SQLException {
+		logger.debug("Consultando por autor aproximado: " + autor);
+		List<Livro> lista = new ArrayList<>();
+		try {
+			conn = DriverManager.getConnection(URL_DB);
+			String sql = "SELECT * FROM LIVROS WHERE AUTOR LIKE ?";
+			pstmt = conn.prepareStatement(sql);			
+			pstmt.setString(1, "%" + autor.toUpperCase() + "%");
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Livro l = carregarObjeto(rs);
+				lista.add(l);
+			}
+		    rs.close();
+			logger.debug("Consulta concluída!");
+			return lista;
+		} catch (SQLException e) {
+			logger.error(e);
+			throw e;			
+		} finally {
+			if (!pstmt.isClosed()) pstmt.close();
+			if (!conn.isClosed()) conn.close();
+		}
+	}
+
+	@Override
+	public List<Livro> findByTituloAproximado(String titulo) throws SQLException {
+		logger.debug("Consultando por titulo aproximado: " + titulo);
+		List<Livro> lista = new ArrayList<>();
+		try {
+			conn = DriverManager.getConnection(URL_DB);
+			String sql = "SELECT * FROM LIVROS WHERE TITULO LIKE ?";
+			pstmt = conn.prepareStatement(sql);			
+			pstmt.setString(1, "%" + titulo.toUpperCase() + "%");
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Livro l = carregarObjeto(rs);
+				lista.add(l);
+			}
+		    rs.close();
+			logger.debug("Consulta concluída!");
+			return lista;
+		} catch (SQLException e) {
+			logger.error(e);
+			throw e;			
+		} finally {
+			if (!pstmt.isClosed()) pstmt.close();
+			if (!conn.isClosed()) conn.close();
+		}
+	}
 	
 }

@@ -106,4 +106,24 @@ public class LivroDAOTest {
 		assertTrue(!lista.isEmpty());		
 	}
 	
+	@Test
+	public void testFindByAutorAproximado() throws SQLException {
+		// criando massa de dados
+		dao.create(livro);
+		// teste
+		List<Livro> lista = dao.findByAutorAproximado(livro.getAutoresAgrupados().substring(3));
+		assertTrue(!lista.isEmpty());
+		assertTrue(livro.getAutoresAgrupados().toUpperCase().equals(lista.get(0).getAutoresAgrupados()));
+	}
+	
+	@Test
+	public void testFindByTituloAproximado() throws SQLException {
+		// criando massa de dados
+		dao.create(livro);
+		// teste
+		List<Livro> lista = dao.findByTituloAproximado(livro.getTitulo().substring(3));
+		assertTrue(!lista.isEmpty());
+		assertTrue(livro.getTitulo().toUpperCase().equals(lista.get(0).getTitulo()));
+	}
+	
 }

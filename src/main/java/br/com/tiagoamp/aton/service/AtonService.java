@@ -211,6 +211,24 @@ public class AtonService {
 		}
 	}
 	
+	public List<Livro> consultarLivrosPorAutorAproximado(String autor) throws AtonBOException {
+		try {
+			return livroDao.findByAutorAproximado(autor);			
+		} catch (SQLException e) {
+			logger.error("Erro durante acesso no banco de dados! " + e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
+		}
+	}
+	
+	public List<Livro> consultarLivrosPorTituloAproximado(String titulo) throws AtonBOException {
+		try {
+			return livroDao.findByTituloAproximado(titulo);			
+		} catch (SQLException e) {
+			logger.error("Erro durante acesso no banco de dados! " + e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
+		}
+	}
+	
 	public boolean inserirEmprestimo(Emprestimo emprestimo) throws AtonBOException {
 		try {
 			int result = empDao.create(emprestimo);

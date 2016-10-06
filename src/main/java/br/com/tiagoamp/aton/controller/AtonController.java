@@ -223,11 +223,11 @@ public class AtonController {
 			} else { // CAMPO DE PESQ DADOS PREENCHIDO
 				if (pDados != null && !pDados.isEmpty()) {
 					pDados = pDados.trim().toUpperCase();
-					// pesquisa por titulo
-					lista = service.consultarLivros(pDados, null, null, null, null);
+					// pesquisa por titulo aproximado
+					lista = service.consultarLivrosPorTituloAproximado(pDados);
 					if (lista.isEmpty()) {
-						// pesquisa por autor
-						lista = service.consultarLivros(null, pDados, null, null, null);						
+						// pesquisa por autor aproximado
+						lista = service.consultarLivrosPorAutorAproximado(pDados);						
 					}
 				}
 			}

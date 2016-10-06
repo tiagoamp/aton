@@ -78,6 +78,24 @@ public interface LivroDAO {
 	List<Livro> findAll() throws SQLException;
 	
 	/**
+	 * Consulta livros na base de dados por nome de autor aproximado.
+	 * 
+	 * @param nome do autor
+	 * @return List<Livro> lista de livros
+	 * @throws SQLException
+	 */
+	List<Livro> findByAutorAproximado(String autor) throws SQLException;
+	
+	/**
+	 * Consulta livros na base de dados por título aproximado.
+	 * 
+	 * @param titulo
+	 * @return List<Livro> lista de livros
+	 * @throws SQLException
+	 */
+	List<Livro> findByTituloAproximado(String titulo) throws SQLException;
+	
+	/**
 	 * Insere figura da capa do livro no sistema de arquivos.
 	 * 
 	 * @param mFile Arquivo feito upload
