@@ -9,21 +9,26 @@ public class Emprestimo {
 	public Emprestimo() {
 	}
 	
-	public Emprestimo(Livro livro, Pessoa pessoa, Date dataEmprestimo, Date dataDevolucao) {
+	public Emprestimo(Livro livro, Pessoa pessoa, Date dataEmprestimo, Date dataDevolucaoProgramada, Date dataDevolucao) {
 		this.livro = livro;
 		this.pessoa = pessoa;
 		this.dataEmprestimo = dataEmprestimo;
+		this.dataDevolucaoProgramada = dataDevolucaoProgramada;
 		this.dataDevolucao = dataDevolucao;
 	}
 	
 	private Integer id;
     private Livro livro;
     private Pessoa pessoa;
+    
     private Date dataEmprestimo;
     private String dataEmprestimoFormatada;
+    
+    private Date dataDevolucaoProgramada;
+    private String dataDevolucaoProgramadaFormatada;
+
     private Date dataDevolucao;
     private String dataDevolucaoFormatada;
-
     
     @Override
     public String toString() {
@@ -58,11 +63,11 @@ public class Emprestimo {
 	public void setDataEmprestimo(Date dataEmprestimo) {
 		this.dataEmprestimo = dataEmprestimo;
 	}
-	public Date getDataDevolucao() {
-		return dataDevolucao;
+	public Date getDataDevolucaoProgramada() {
+		return dataDevolucaoProgramada;
 	}
-	public void setDataDevolucao(Date dataDevolucao) {
-		this.dataDevolucao = dataDevolucao;
+	public void setDataDevolucaoProgramada(Date dataDevolucao) {
+		this.dataDevolucaoProgramada = dataDevolucao;
 	}
 	public String getDataEmprestimoFormatada() {
 		if (dataEmprestimo != null) {
@@ -80,6 +85,22 @@ public class Emprestimo {
 			e.printStackTrace(); // validado no controller
 		}
 	}
+	public String getDataDevolucaoProgramadaFormatada() {
+		if (dataDevolucaoProgramada != null) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			dataDevolucaoProgramadaFormatada = sdf.format(dataDevolucaoProgramada);
+		}
+		return dataDevolucaoProgramadaFormatada;
+	}
+	public void setDataDevolucaoProgramadaFormatada(String dataDevolucaoProgramadaFormatada) {
+		this.dataDevolucaoProgramadaFormatada = dataDevolucaoProgramadaFormatada;		
+	}
+	public Date getDataDevolucao() {
+		return dataDevolucao;
+	}
+	public void setDataDevolucao(Date dataDevolucao) {
+		this.dataDevolucao = dataDevolucao;
+	}
 	public String getDataDevolucaoFormatada() {
 		if (dataDevolucao != null) {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -87,14 +108,9 @@ public class Emprestimo {
 		}
 		return dataDevolucaoFormatada;
 	}
+
 	public void setDataDevolucaoFormatada(String dataDevolucaoFormatada) {
 		this.dataDevolucaoFormatada = dataDevolucaoFormatada;
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			this.dataDevolucao = sdf.parse(dataDevolucaoFormatada);
-		} catch (ParseException e) {
-			e.printStackTrace(); // validado no controller
-		}
 	}
 
 }

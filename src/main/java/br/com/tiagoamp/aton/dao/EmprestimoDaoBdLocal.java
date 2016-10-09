@@ -54,6 +54,7 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 		emp.setLivro(livro);
 		emp.setDataEmprestimo(rs.getDate("DT_EMPRESTIMO"));
 		emp.setDataDevolucao(rs.getDate("DT_DEVOLUCAO"));
+		emp.setDataDevolucaoProgramada(rs.getDate("DT_DEVOLUCAO_PROGRAMADA"));
 		return emp;
 	}
 
@@ -63,7 +64,7 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
-			String sql = "INSERT INTO EMPRESTIMOS(ID_PESSOA, ID_LIVRO, DT_EMPRESTIMO, DT_DEVOLUCAO) VALUES (?, ?, ?, ?)";
+			String sql = "INSERT INTO EMPRESTIMOS(ID_PESSOA, ID_LIVRO, DT_EMPRESTIMO, DT_DEVOLUCAO, DT_DEVOLUCAO_PROGRAMADA) VALUES (?, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);			
 			pstmt.setInt(1, emprestimo.getPessoa().getId());
 			pstmt.setInt(2, emprestimo.getLivro().getId());
@@ -71,6 +72,9 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 			if (emprestimo.getDataDevolucao() != null) {
 				pstmt.setDate(4, new java.sql.Date(emprestimo.getDataDevolucao().getTime()));
 			}			
+			if (emprestimo.getDataDevolucaoProgramada() != null) {
+				pstmt.setDate(5, new java.sql.Date(emprestimo.getDataDevolucaoProgramada().getTime()));
+			}
 			result = pstmt.executeUpdate();
 			logger.debug("Inserção concluída!");
 			return result;
@@ -90,13 +94,14 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "UPDATE EMPRESTIMOS SET ID_PESSOA = ?, ID_LIVRO = ?, DT_EMPRESTIMO = ?, "
-					+ "DT_DEVOLUCAO = ? WHERE ID = ?";
+					+ "DT_DEVOLUCAO = ?, DT_DEVOLUCAO_PROGRAMADA = ? WHERE ID = ?";
 			pstmt = conn.prepareStatement(sql);			
 			pstmt.setInt(1, emprestimo.getPessoa().getId());
 			pstmt.setInt(2, emprestimo.getLivro().getId());
 			pstmt.setDate(3, new java.sql.Date(emprestimo.getDataEmprestimo().getTime()));
-			pstmt.setDate(4, new java.sql.Date(emprestimo.getDataDevolucao().getTime()));
-			pstmt.setInt(5, emprestimo.getId());
+			pstmt.setDate(4, emprestimo.getDataDevolucao() != null ? new java.sql.Date(emprestimo.getDataDevolucao().getTime()) : null);
+			pstmt.setDate(5, emprestimo.getDataDevolucaoProgramada() != null ? new java.sql.Date(emprestimo.getDataDevolucaoProgramada().getTime()) : null);
+			pstmt.setInt(6, emprestimo.getId());
 			result = pstmt.executeUpdate();
 			logger.debug("Atualização concluída!");
 			return result;

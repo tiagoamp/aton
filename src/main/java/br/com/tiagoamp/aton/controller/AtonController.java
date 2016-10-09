@@ -324,7 +324,7 @@ public class AtonController {
 			}
 			model.addAttribute("acao",pAcao);
 		}		
-		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), null);
+		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), null, null);
 		model.addAttribute("emprestimo", emprestimo);
 		return "emprestimos";
 	}
@@ -348,7 +348,7 @@ public class AtonController {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
 		}				
-		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), null);
+		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), null, null);
 		model.addAttribute("emprestimo", emprestimo);
 		return "emprestimos";
 	}
@@ -372,7 +372,7 @@ public class AtonController {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_MONTH, 10);
 		
-		Emprestimo emprestimo = new Emprestimo(livro, pessoa, new Date(), new Date(calendar.getTimeInMillis()));
+		Emprestimo emprestimo = new Emprestimo(livro, pessoa, new Date(), new Date(calendar.getTimeInMillis()), null);
 		model.addAttribute("emprestimo", emprestimo);
 		return "emprestimos";	
 	}
@@ -403,6 +403,58 @@ public class AtonController {
 			}
 		}
 		return lista;
+	}
+	
+	@RequestMapping(value="livroemprestado", method = RequestMethod.POST)
+	public String emprestarLivro(@Valid Emprestimo emprestimo, BindingResult result, Model model, HttpServletRequest request) {
+		boolean hasErrors = false;
+		if(result.hasErrors()) {
+			hasErrors = true;
+		}
+		try { // recuperando livro e pessoa
+			emprestimo.setLivro(service.consultarLivro(emprestimo.getLivro().getId()));
+			emprestimo.setPessoa(service.consultarPessoa(emprestimo.getPessoa().getId()));			
+		} catch (AtonBOException e) {
+			logger.error("Erro: " + e);
+			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+		}
+		
+		if (emprestimo.getPessoa() == null || emprestimo.getPessoa().getId() == null) {
+			result.reject("pessoa.nome", "Pessoa não selecionada para fazer empréstimo do livro.");
+			hasErrors = true;
+		}
+		if (emprestimo.getDataEmprestimoFormatada().isEmpty()) {
+			result.reject("dataEmprestimoFormatada", "Campo obrigatório não preenchido: Data de Empresstimo.");
+			hasErrors = true;
+		} else if (emprestimo.getDataDevolucaoProgramadaFormatada().isEmpty()) {
+			result.reject("dataDevolucaoProgramadaFormatada", "Campo obrigatório não preenchido: Data de Devolução.");
+			hasErrors = true;
+		} else {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			try {
+				emprestimo.setDataEmprestimo(sdf.parse(emprestimo.getDataEmprestimoFormatada()));
+				emprestimo.setDataDevolucaoProgramada(sdf.parse(emprestimo.getDataDevolucaoProgramadaFormatada()));
+			} catch (ParseException e) {
+				result.reject("dataEmprestimoFormatada", "Data de Empréstimo ou Devolução em formato inválido.");
+				hasErrors = true;
+			}
+		} 
+		if (hasErrors) {
+			model.addAttribute("emprestimo", emprestimo);
+			return "emprestimos";
+		}
+		
+		try {			
+			service.inserirEmprestimo(emprestimo);
+			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + emprestimo.toString(), TipoMensagem.SUCESSO));
+			logger.info("Emprestimo cadastrado: " + emprestimo);
+		} catch (AtonBOException e) {
+			logger.error("Erro: " + e);
+			model.addAttribute("emprestimo", emprestimo);
+			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+			return "emprestimos";
+		}	
+		return "livros";
 	}
 	
 }

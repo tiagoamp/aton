@@ -110,7 +110,11 @@
 						</div>
 					</div> <!-- div row -->
 					
-					<form:form id="formEmpLivros" method="POST" cssClass="navbar" action="livroemprestado" modelAttribute="emprestimo">
+					<!-- BOX DE EMPRESTIMO -->
+				<strong> 
+					<form:errors path="emprestimo.*" element="div" cssClass="alert alert-danger error" />
+				</strong>
+				<form:form id="formEmpLivros" method="POST" cssClass="navbar" action="livroemprestado" modelAttribute="emprestimo">
 		  				<form:hidden path="id" />
 		  				<form:hidden path="livro.id" />
 		  				<form:hidden path="pessoa.id" />
@@ -128,8 +132,8 @@
 						</div>
 						<div class="form-group">
 							<div class="input-group">
-								<span class="input-group-addon" id="basic-addon1">Data da Devolução</span>
-								<form:input path="dataDevolucaoFormatada" cssClass="form-control required" placeholder="Digite a data de devolução" aria-describedby="basic-addon1" size="20" disabled="false" />
+								<span class="input-group-addon" id="basic-addon1">Data da Devolução Prevista</span>
+								<form:input path="dataDevolucaoProgramadaFormatada" cssClass="form-control required" placeholder="Digite a data de devolução" aria-describedby="basic-addon1" size="20" disabled="false" />
 							</div>
 						</div>
 						

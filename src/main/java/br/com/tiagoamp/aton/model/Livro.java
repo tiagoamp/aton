@@ -1,7 +1,6 @@
 package br.com.tiagoamp.aton.model;
 
 import java.nio.file.Path;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -196,13 +195,7 @@ public class Livro implements Comparable<Livro> {
 		return dataAquisicaoFormatada;
 	}
 	public void setDataAquisicaoFormatada(String dataAquisicaoFormatada) {
-		this.dataAquisicaoFormatada = dataAquisicaoFormatada;
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			this.dataAquisicao = sdf.parse(dataAquisicaoFormatada);
-		} catch (ParseException e) {
-			e.printStackTrace(); // validado no controller
-		}
+		this.dataAquisicaoFormatada = dataAquisicaoFormatada;		
 	}
 		
 }
