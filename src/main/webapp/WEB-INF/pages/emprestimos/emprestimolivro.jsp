@@ -6,12 +6,12 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <html>
 	<head>
-		<jsp:include page = "comum/cabecalho.jsp" />		
+		<jsp:include page = "../comum/cabecalho.jsp" />		
 	</head>
 	
 <body>
 
-	<jsp:include page = "comum/menu.jsp" />
+	<jsp:include page = "../comum/menu.jsp" />
 	
 	<!-- Begin page content -->
     <div class="" style="margin: 10px;">
@@ -19,7 +19,7 @@
     </div>
     
     <!-- MENSAGENS -->
-    <jsp:include page = "comum/mensagens.jsp" />
+    <jsp:include page = "../comum/mensagens.jsp" />
         
     <div class="panel panel-default" style="margin: 10px;">
 		<div class="panel-heading">
@@ -151,7 +151,7 @@
 	  	</div>
 	</div>
 
-	<jsp:include page = "comum/rodape.jsp" />
+	<jsp:include page = "../comum/rodape.jsp" />
 
 </body>
 </html>

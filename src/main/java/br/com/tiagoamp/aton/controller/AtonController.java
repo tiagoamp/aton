@@ -308,7 +308,7 @@ public class AtonController {
 	    return "livros";
 	}
 
-	@RequestMapping("/emprestimolivro")
+	@RequestMapping("emprestimolivro")
 	public String emprestarLivro(HttpServletRequest request,  
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
@@ -326,7 +326,7 @@ public class AtonController {
 		}		
 		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), null, null);
 		model.addAttribute("emprestimo", emprestimo);
-		return "emprestimos";
+		return "emprestimos/emprestimolivro";
 	}
 	
 	@RequestMapping(value = "consultapessoaemprestimo", method = RequestMethod.POST)
@@ -350,7 +350,7 @@ public class AtonController {
 		}				
 		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), null, null);
 		model.addAttribute("emprestimo", emprestimo);
-		return "emprestimos";
+		return "emprestimos/emprestimolivro";
 	}
 	
 	@RequestMapping(value = "emprestimoselecionarpessoa", method = RequestMethod.POST)
@@ -374,7 +374,7 @@ public class AtonController {
 		
 		Emprestimo emprestimo = new Emprestimo(livro, pessoa, new Date(), new Date(calendar.getTimeInMillis()), null);
 		model.addAttribute("emprestimo", emprestimo);
-		return "emprestimos";	
+		return "emprestimos/emprestimolivro";	
 	}
 	
 	private List<Pessoa> pesquisarPessoasPorParametros(String email, String param) throws AtonBOException {
@@ -441,7 +441,7 @@ public class AtonController {
 		} 
 		if (hasErrors) {
 			model.addAttribute("emprestimo", emprestimo);
-			return "emprestimos";
+			return "emprestimos/emprestimolivro";
 		}
 		
 		try {			
@@ -452,7 +452,7 @@ public class AtonController {
 			logger.error("Erro: " + e);
 			model.addAttribute("emprestimo", emprestimo);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
-			return "emprestimos";
+			return "emprestimos/emprestimolivro";
 		}	
 		return "livros";
 	}
