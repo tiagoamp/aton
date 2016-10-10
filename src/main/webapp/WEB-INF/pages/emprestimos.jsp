@@ -27,10 +27,10 @@
 	    	<h3 class="panel-title">Pesquisa de Emprestimos</h3>
 	  	</div>
 	  	<div class="panel-body">
-	  		<form id="formConsultaLivros" class="navbar-form navbar-left" method="POST" action="consultaemprestimo" role="search">
+	  		<form id="formConsultaEmprestimos" class="navbar-form navbar-left" method="POST" action="consultaemprestimo" role="search">
 				<div class="input-group">
 					<span class="input-group-addon" id="basic-addon1">Consulta por Livro</span> 
-					<input type="text" name="tLivro" class="form-control" placeholder="Digite o título ou autor do livro" aria-describedby="basic-addon1">				
+					<input type="text" name="tLivro" size="40" class="form-control" placeholder="Digite o título ou autor do livro" aria-describedby="basic-addon1">				
 				</div>
 				<button type="submit" class="btn btn-default">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar
@@ -38,7 +38,7 @@
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<div class="input-group">
 					<span class="input-group-addon" id="basic-addon1">Consulta por Leitor</span> 
-					<input type="text" name="tPessoa" class="form-control" placeholder="Digite Título ou Autor do livro" aria-describedby="basic-addon1">					
+					<input type="text" name="tPessoa" size="40" class="form-control" placeholder="Digite o nome do leitor" aria-describedby="basic-addon1">					
 				</div>
 				<button type="submit" class="btn btn-default">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar
@@ -75,13 +75,14 @@
 						<form id="formAcoes">
 							<input type="hidden" id ="acao" name="acao">
 							<input type="hidden" id ="identificador" name="identificador">
-							<c:forEach items="${listalivros}" var="livro">
+							<c:forEach items="${listaemprestimos}" var="emprestimo">
 								<li class="list-group-item">				
 									&nbsp;&nbsp; <a href="javascript:carregarAcoes('consultar',${emprestimo.id},'cadastroemprestimo');" title="Consultar"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
 									&nbsp;&nbsp; <a href="javascript:carregarAcoes('devolver',${emprestimo.id},'devolucaolivro');" title="Devolver"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a>
 									&nbsp;&nbsp;&nbsp;&nbsp;
-									<c:out value="${emprestimo.livro.titulo}" /> - 
-									<c:out value="${emprestimo.pessoa.nome}" />							
+									Livro: <c:out value="${emprestimo.livro.titulo}" /> - 
+									Leitor: <c:out value="${emprestimo.pessoa.nome}" />	-
+									Data Empréstimo: <c:out value="${emprestimo.dataEmprestimoFormatada}" />
 								</li>
 							</c:forEach>
 						</form>

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -259,18 +260,37 @@ public class AtonService {
 		}
 	}
 	
+	private Emprestimo popularEmprestimo(Emprestimo emp) throws AtonBOException {
+		emp.setLivro(this.consultarLivro(emp.getLivro().getId()));
+		emp.setPessoa(this.consultarPessoa(emp.getPessoa().getId()));
+		return emp;
+	}
+	
+	private List<Emprestimo> popularEmprestimos(List<Emprestimo> lista) throws AtonBOException {
+		List<Emprestimo> result = new ArrayList<>();
+		if (!lista.isEmpty()) {
+			for (Emprestimo emp : lista) {
+				emp = popularEmprestimo(emp);
+				result.add(emp);
+			}
+		}
+		return result;
+	}
+	
 	public Emprestimo consultarEmprestimo(int id) throws AtonBOException {
 		try {
-			return empDao.findById(id);
+			Emprestimo emprestimo = empDao.findById(id);
+			return popularEmprestimo(emprestimo);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public List<Emprestimo> consultarEmprestimos(int idLivro, int idPessoa, Date dataEmprestimo, Date dataDevolucao) throws AtonBOException {
+	public List<Emprestimo> consultarEmprestimos(Integer idLivro, Integer idPessoa, Date dataEmprestimo, Date dataDevolucao) throws AtonBOException {
 		try {
-			return empDao.find(idLivro, idPessoa, dataEmprestimo, dataDevolucao);
+			List<Emprestimo> lista = empDao.find(idLivro, idPessoa, dataEmprestimo, dataDevolucao);
+			return popularEmprestimos(lista);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
@@ -279,7 +299,8 @@ public class AtonService {
 	
 	public List<Emprestimo> consultarEmprestimos() throws AtonBOException {
 		try {
-			return empDao.findAll();
+			List<Emprestimo> lista = empDao.findAll();
+			return popularEmprestimos(lista);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new AtonBOException("Erro durante acesso no banco de dados!", e);

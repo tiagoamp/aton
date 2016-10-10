@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -460,6 +461,45 @@ public class AtonController {
 			return "emprestimos/emprestimolivro";
 		}	
 		return "livros";
+	}
+	
+	@RequestMapping(value = "consultaemprestimo", method = RequestMethod.POST)
+	public String consultarEmprestimo(HttpServletRequest request,  
+	        @RequestParam(value="tLivro", required=false) String pLivro, 
+	        @RequestParam(value="tPessoa", required=false) String pPessoa, 
+	        Model model){
+		List<Emprestimo> lista = new ArrayList<>();
+		try {
+			if (pLivro != null && !pLivro.isEmpty()) { // CAMPO DE PESQ LIVRO PREENCHIDO
+				pLivro = pLivro.trim().toUpperCase();
+				List<Livro> livros = new ArrayList<>();
+				livros.addAll(service.consultarLivrosPorTituloAproximado(pLivro));
+				livros.addAll(service.consultarLivrosPorAutorAproximado(pLivro));
+				for (int i = 0; i < livros.size(); i++) {
+					Livro livro = livros.get(i);
+					lista = service.consultarEmprestimos(livro.getId(), null, null, null);
+				}
+			} else { // CAMPO DE LEITOR(PESSOA) PREENCHIDO
+				if (pPessoa != null && !pPessoa.isEmpty()) {
+					pPessoa = pPessoa.trim().toUpperCase();
+					List<Pessoa> pessoas = new ArrayList<>();
+					pessoas.addAll(service.consultarPessoasPorNomeAproximado(pPessoa));
+					for (int i = 0; i < pessoas.size(); i++) {
+						Pessoa pessoa = pessoas.get(i);
+						lista = service.consultarEmprestimos(null, pessoa.getId(), null, null);
+					}
+				}
+			}
+			if (lista.isEmpty()) {
+				throw new AtonBOException("Consulta sem resultados!");
+			}
+			Collections.sort(lista);
+			model.addAttribute("listaemprestimos", lista);
+		} catch (AtonBOException e) {
+			logger.error("Erro: " + e);
+			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+		}
+		return "emprestimos";		
 	}
 	
 }

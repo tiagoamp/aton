@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Emprestimo {
+public class Emprestimo implements Comparable<Emprestimo> {
 	
 	public Emprestimo() {
 	}
@@ -36,6 +36,11 @@ public class Emprestimo {
     		return "Emprestimo > Livro: " + livro.getTitulo() + " para: " + pessoa.getNome();
     	}
     	return "Emprestimo > Livro: " + livro.getTitulo();
+    }
+    
+    @Override
+    public int compareTo(Emprestimo o) {
+    	return this.getDataEmprestimo().compareTo(o.getDataEmprestimo());
     }
     
     
