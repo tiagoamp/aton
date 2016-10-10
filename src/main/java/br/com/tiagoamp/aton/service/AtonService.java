@@ -306,6 +306,16 @@ public class AtonService {
 			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
+	
+	public List<Emprestimo> consultarEmprestimosEmAberto() throws AtonBOException {
+		try {
+			List<Emprestimo> lista = empDao.findAllEmAberto();
+			return popularEmprestimos(lista);
+		} catch (SQLException e) {
+			logger.error("Erro durante acesso no banco de dados! " + e);
+			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
+		}
+	}
 
 	
 	public PessoaDAO getPessoaDao() {

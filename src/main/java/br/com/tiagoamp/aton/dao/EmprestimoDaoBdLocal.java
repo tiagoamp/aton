@@ -226,6 +226,30 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 		}
 	}
 	
+	@Override
+	public List<Emprestimo> findAllEmAberto() throws SQLException {
+		logger.debug("Consultando todos 'emprestimos' em aberto");
+		List<Emprestimo> lista = new ArrayList<>();
+		try {			
+			conn = DriverManager.getConnection(URL_DB);
+			StringBuilder sql = new StringBuilder("SELECT * FROM EMPRESTIMOS WHERE DT_DEVOLUCAO IS NULL");
+			pstmt = conn.prepareStatement(sql.toString());
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Emprestimo emp = carregarObjeto(rs);
+				lista.add(emp);
+			}
+		    rs.close();
+			logger.debug("Consulta concluída!");
+			return lista;
+		} catch (SQLException e) {
+			logger.error(e);
+			throw e;			
+		} finally {
+			if (!pstmt.isClosed()) pstmt.close();
+			if (!conn.isClosed()) conn.close();
+		}
+	}
 	
 	public String getPATH_DB() {
 		return PATH_DB;

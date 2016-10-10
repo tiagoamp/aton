@@ -30,7 +30,7 @@
 	  		<form id="formConsultaEmprestimos" class="navbar-form navbar-left" method="POST" action="consultaemprestimo" role="search">
 				<div class="input-group">
 					<span class="input-group-addon" id="basic-addon1">Consulta por Livro</span> 
-					<input type="text" name="tLivro" size="40" class="form-control" placeholder="Digite o título ou autor do livro" aria-describedby="basic-addon1">				
+					<input type="text" name="tLivro" size="32" class="form-control" placeholder="Digite o título ou autor do livro" aria-describedby="basic-addon1">				
 				</div>
 				<button type="submit" class="btn btn-default">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar
@@ -38,7 +38,7 @@
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<div class="input-group">
 					<span class="input-group-addon" id="basic-addon1">Consulta por Leitor</span> 
-					<input type="text" name="tPessoa" size="40" class="form-control" placeholder="Digite o nome do leitor" aria-describedby="basic-addon1">					
+					<input type="text" name="tPessoa" size="32" class="form-control" placeholder="Digite o nome do leitor" aria-describedby="basic-addon1">					
 				</div>
 				<button type="submit" class="btn btn-default">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar
@@ -47,7 +47,7 @@
 	  	</div>
 	</div>
 	
-	<!-- INCLUSÃO -->
+	<!-- LISTAGEM -->
     <div class="panel panel-default" style="margin: 10px;">
 		<div class="panel-heading">
 	    	<h3 class="panel-title">Empréstimos</h3>
@@ -55,8 +55,13 @@
 	  	<div class="panel-body">
 	  		<form class="navbar-form" role="redirect">
 				<div class="btn-group" role="group" aria-label="">
+					<button type="button" class="btn btn-default" onClick="location.href='listaemprestimosabertos'">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Listar Empréstimos em aberto
+					</button>	
+				</div>
+				<div class="btn-group" role="group" aria-label="">
 					<button type="button" class="btn btn-default" onClick="location.href='listaemprestimos'">
-						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Listar Emprestimos
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Listar todos os Empréstimos
 					</button>	
 				</div>
 			</form>
@@ -81,8 +86,8 @@
 									&nbsp;&nbsp;&nbsp;&nbsp;
 									Livro: <c:out value="${emprestimo.livro.titulo}" /> - 
 									Leitor: <c:out value="${emprestimo.pessoa.nome}" />	-
-									Data Empréstimo: <c:out value="${emprestimo.dataEmprestimoFormatada}" /> - 
-									Data Devolução Programada: <c:out value="${emprestimo.dataDevolucaoProgramadaFormatada}" />
+									Empréstimo: <c:out value="${emprestimo.dataEmprestimoFormatada}" /> - 
+									Devolução Progr.: <c:out value="${emprestimo.dataDevolucaoProgramadaFormatada}" />																		
 								</li>
 							</c:forEach>
 						</form>

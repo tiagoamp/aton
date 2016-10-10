@@ -64,5 +64,12 @@ public interface EmprestimoDAO {
 	 * @throws SQLException
 	 */
 	List<Emprestimo> findAll() throws SQLException;
+	
+	/**
+	 * Consulta todos os emprestimos em aberto (sem data de devolucao) da base de dados.
+	 * @return List<Emprestimo>
+	 * @throws SQLException
+	 */
+	List<Emprestimo> findAllEmAberto() throws SQLException;
 
 }

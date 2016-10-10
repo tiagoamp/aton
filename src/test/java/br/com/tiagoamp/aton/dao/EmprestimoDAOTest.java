@@ -106,5 +106,15 @@ public class EmprestimoDAOTest {
 		List<Emprestimo> lista = dao.findAll();
 		assertTrue(!lista.isEmpty());
 	}
+	
+	@Test
+	public void testFindAllEmAberto() throws SQLException {
+		// criando massa de dados
+		emp.setDataDevolucao(null);
+		dao.create(emp);
+		// teste
+		List<Emprestimo> lista = dao.findAllEmAberto();
+		assertTrue(!lista.isEmpty());
+	}
 
 }

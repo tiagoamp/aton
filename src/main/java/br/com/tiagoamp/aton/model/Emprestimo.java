@@ -29,6 +29,7 @@ public class Emprestimo implements Comparable<Emprestimo> {
 
     private Date dataDevolucao;
     private String dataDevolucaoFormatada;
+   
     
     @Override
     public String toString() {
@@ -40,7 +41,8 @@ public class Emprestimo implements Comparable<Emprestimo> {
     
     @Override
     public int compareTo(Emprestimo o) {
-    	return this.getDataEmprestimo().compareTo(o.getDataEmprestimo());
+    	// ordem decrescente de data de emprestimo
+    	return o.getDataEmprestimo().compareTo(this.getDataEmprestimo());
     }
     
     

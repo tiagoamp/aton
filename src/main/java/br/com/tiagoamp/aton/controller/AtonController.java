@@ -506,4 +506,65 @@ public class AtonController {
 		return "emprestimos";		
 	}
 	
+	@RequestMapping("listaemprestimos")
+	public String listarEmprestimos(HttpServletRequest request, Model model) {
+		List<Emprestimo> lista = new ArrayList<>();
+		try {		
+			lista = service.consultarEmprestimos();
+			if (lista.isEmpty()) {
+				throw new AtonBOException("Consulta sem resultados!");
+			}
+			Collections.sort(lista);			
+			model.addAttribute("listaemprestimos", lista);
+		} catch (AtonBOException e) {
+			logger.error("Erro: " + e);
+			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));			
+		}		
+	    return "emprestimos";
+	}
+	
+	@RequestMapping("listaemprestimosabertos")
+	public String listarEmprestimosEmAberto(HttpServletRequest request, Model model) {
+		List<Emprestimo> lista = new ArrayList<>();
+		try {		
+			lista = service.consultarEmprestimosEmAberto();
+			if (lista.isEmpty()) {
+				throw new AtonBOException("Consulta sem resultados!");
+			}
+			Collections.sort(lista);			
+			model.addAttribute("listaemprestimos", lista);
+		} catch (AtonBOException e) {
+			logger.error("Erro: " + e);
+			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));			
+		}		
+	    return "emprestimos";
+	}
+	
+	@RequestMapping("devolucaolivro")
+	public String DevolverLivro(HttpServletRequest request,  
+	        @RequestParam(value="acao", required=false) String pAcao, 
+	        @RequestParam(value="identificador", required=false) String pId, 
+	        Model model) {		
+		Emprestimo emprestimo = null;				
+		if (pId != null && !pId.isEmpty()) {
+			try {		
+				emprestimo = service.consultarEmprestimo(Integer.parseInt(pId));
+				emprestimo.setDataDevolucao(new Date());
+				service.atualizarEmprestimo(emprestimo);
+				Livro livro = emprestimo.getLivro();
+				livro.setSituacao(Situacao.DISPONIVEL);
+				service.atualizarLivro(livro);
+				model.addAttribute("mensagem",new MensagemTO("Devolução com sucesso: " + emprestimo.toString(), TipoMensagem.SUCESSO));
+				logger.info("Emprestimo devolvido: " + emprestimo);
+			} catch (AtonBOException e) {
+				logger.error("Erro: " + e);
+				model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+				return "emprestimos";
+			}
+			model.addAttribute("acao",pAcao);
+		}		
+		model.addAttribute("emprestimo", emprestimo);
+		return "emprestimos";
+	}
+	
 }

@@ -418,4 +418,20 @@ public class AtonServiceTest {
 		service.consultarEmprestimos();	
 	}
 	
+	@Test
+	public void testConsultarEmprestimosEmAberto_shouldReturnValidOutput() throws SQLException, AtonBOException {
+		List<Emprestimo> lista = new ArrayList<>();
+		when(emprestimoDAOMock.findAllEmAberto()).thenReturn(lista);
+		lista = service.consultarEmprestimosEmAberto();
+		assertTrue(lista != null);
+		verify(emprestimoDAOMock).findAllEmAberto();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test(expected = AtonBOException.class)
+	public void testConsultarEmprestimosEmAberto_shouldThrowException() throws SQLException, AtonBOException {
+		when(emprestimoDAOMock.findAllEmAberto()).thenThrow(SQLException.class);
+		service.consultarEmprestimosEmAberto();	
+	}
+	
 }
