@@ -84,10 +84,11 @@
 								<li class="list-group-item">				
 									&nbsp;&nbsp; <a href="javascript:carregarAcoes('devolver',${emprestimo.id},'devolucaolivro');" title="Devolver"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span></a>
 									&nbsp;&nbsp;&nbsp;&nbsp;
+									Data: <c:out value="${emprestimo.dataEmprestimoFormatada}" /> -
 									Livro: <c:out value="${emprestimo.livro.titulo}" /> - 
-									Leitor: <c:out value="${emprestimo.pessoa.nome}" />	-
-									Empréstimo: <c:out value="${emprestimo.dataEmprestimoFormatada}" /> - 
-									Devolução Progr.: <c:out value="${emprestimo.dataDevolucaoProgramadaFormatada}" />																		
+									Leitor: <c:out value="${emprestimo.pessoa.nome}" />	-									 
+									Devolução Progr.: <c:out value="${emprestimo.dataDevolucaoProgramadaFormatada}" /> - 
+									Devolução: <c:out value="${emprestimo.dataDevolucaoFormatada}" />																		
 								</li>
 							</c:forEach>
 						</form>
