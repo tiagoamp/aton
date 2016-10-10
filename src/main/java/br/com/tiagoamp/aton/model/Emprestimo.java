@@ -44,6 +44,16 @@ public class Emprestimo implements Comparable<Emprestimo> {
     }
     
     
+    public Boolean isAtrasado() {
+    	boolean result = false;
+    	if (dataDevolucao != null) {
+    		int i = dataDevolucao.compareTo(dataDevolucaoProgramada);
+    		if (i > 0) result = true;
+    	}
+    	return result;
+    }
+    
+    
 	public Integer getId() {
 		return id;
 	}

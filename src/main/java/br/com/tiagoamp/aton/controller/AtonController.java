@@ -29,6 +29,7 @@ import br.com.tiagoamp.aton.model.Emprestimo;
 import br.com.tiagoamp.aton.model.Livro;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Pessoa;
+import br.com.tiagoamp.aton.model.Situacao;
 import br.com.tiagoamp.aton.model.TipoMensagem;
 import br.com.tiagoamp.aton.model.to.MensagemTO;
 import br.com.tiagoamp.aton.service.AtonService;
@@ -452,6 +453,9 @@ public class AtonController {
 		
 		try {			
 			service.inserirEmprestimo(emprestimo);
+			Livro livro = emprestimo.getLivro();
+			livro.setSituacao(Situacao.EMPRESTADO);
+			service.atualizarLivro(livro);			
 			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + emprestimo.toString(), TipoMensagem.SUCESSO));
 			logger.info("Emprestimo cadastrado: " + emprestimo);
 		} catch (AtonBOException e) {

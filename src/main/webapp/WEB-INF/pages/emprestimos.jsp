@@ -77,12 +77,12 @@
 							<input type="hidden" id ="identificador" name="identificador">
 							<c:forEach items="${listaemprestimos}" var="emprestimo">
 								<li class="list-group-item">				
-									&nbsp;&nbsp; <a href="javascript:carregarAcoes('consultar',${emprestimo.id},'cadastroemprestimo');" title="Consultar"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-									&nbsp;&nbsp; <a href="javascript:carregarAcoes('devolver',${emprestimo.id},'devolucaolivro');" title="Devolver"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a>
+									&nbsp;&nbsp; <a href="javascript:carregarAcoes('devolver',${emprestimo.id},'devolucaolivro');" title="Devolver"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span></a>
 									&nbsp;&nbsp;&nbsp;&nbsp;
 									Livro: <c:out value="${emprestimo.livro.titulo}" /> - 
 									Leitor: <c:out value="${emprestimo.pessoa.nome}" />	-
-									Data Empréstimo: <c:out value="${emprestimo.dataEmprestimoFormatada}" />
+									Data Empréstimo: <c:out value="${emprestimo.dataEmprestimoFormatada}" /> - 
+									Data Devolução Programada: <c:out value="${emprestimo.dataDevolucaoProgramadaFormatada}" />
 								</li>
 							</c:forEach>
 						</form>
