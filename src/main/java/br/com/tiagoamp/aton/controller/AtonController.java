@@ -307,6 +307,11 @@ public class AtonController {
 		}		
 	    return "livros";
 	}
+	
+	@RequestMapping("emprestimos")
+	public String pageEmprestimos() {
+	    return "emprestimos";
+	}
 
 	@RequestMapping("emprestimolivro")
 	public String emprestarLivro(HttpServletRequest request,  
