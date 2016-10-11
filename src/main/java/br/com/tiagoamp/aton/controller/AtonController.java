@@ -577,6 +577,10 @@ public class AtonController {
 	
 	@RequestMapping("efetuarlogin")
 	public String efetuarLogin(Pessoa pessoa, BindingResult result, Model model, HttpSession session) {
+		if (pessoa.getEmail().isEmpty() || pessoa.getSenha().isEmpty()) {
+			model.addAttribute("mensagem",new MensagemTO("Campos não preenchidos!", TipoMensagem.ERRO));
+			return "login";
+		}
 		Pessoa pessoaBD = null;
 		try {
 			pessoaBD = service.consultarPessoaPorEmail(pessoa.getEmail());
