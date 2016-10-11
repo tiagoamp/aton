@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -572,6 +573,27 @@ public class AtonController {
 		Pessoa pessoa = new Pessoa();
 		model.addAttribute("pessoa", pessoa);
 	    return "login";
+	}
+	
+	@RequestMapping("efetuarlogin")
+	public String efetuarLogin(Pessoa pessoa, BindingResult result, Model model, HttpSession session) {
+		Pessoa pessoaBD = null;
+		try {
+			pessoaBD = service.consultarPessoaPorEmail(pessoa.getEmail());
+			if (pessoaBD == null) {
+				model.addAttribute("mensagem",new MensagemTO("Usuário inexistente!", TipoMensagem.ERRO));
+				return "login";
+			}
+		} catch (AtonBOException e) {
+			logger.error("Erro: " + e);
+			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+			return "emprestimos";
+		}
+			
+		//TO DO: IMPLEMENTAR
+		
+		model.addAttribute("pessoa", pessoa);		
+	    return "aton";
 	}
 	
 }
