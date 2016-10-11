@@ -39,4 +39,24 @@ public class AutorizacaoFuncionalidades {
 		return to;
 	}
 	
+	/**
+	 * Regras de autorização para Pessoas.
+	 * 
+	 * @param usuario
+	 * @param acao
+	 * @return AutorizacaoResultadoTO
+	 */
+	public static AutorizacaoResultadoTO autorizarManutencaoPessoas(Pessoa usuario, String acao) {
+		AutorizacaoResultadoTO to = null;
+		if (acao == null || acao.equals("alterar") || acao.equals("excluir")) { // ADMIN
+			if (usuario == null) {
+				to = new AutorizacaoResultadoTO("autorizacao", null);
+			} else {
+				if (usuario.getPerfil() != Perfil.ADMINISTRADOR) {
+					to = new AutorizacaoResultadoTO("pessoas", "Ação autorizada somente para perfil 'Administrador'.");
+				}
+			}
+		} 
+		return to;
+	}
 }

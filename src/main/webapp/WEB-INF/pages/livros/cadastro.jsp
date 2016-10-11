@@ -190,7 +190,7 @@
 				<form id="formAcoes">
 					<input type="hidden" id ="acao" name="acao">
 					<input type="hidden" id ="identificador" name="identificador">
-					<button type="button" class="btn btn-default" onClick="javascript:carregarAcoes('emprestar',${livro.id},'emprestimolivro');">
+					<button type="button" class="btn btn-default" onClick="javascript:carregarAcoes('emprestar',${livro.id},'emprestimolivro');" disabled="${livro.situacao != 'DISPONIVEL'}">
 						<span class="glyphicon glyphicon-home" aria-hidden="true"></span> Emprestar Livro
 					</button>
 				</form>					
