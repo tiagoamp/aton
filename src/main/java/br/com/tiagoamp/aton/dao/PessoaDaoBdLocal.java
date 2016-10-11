@@ -63,7 +63,7 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 			pstmt.setString(2, pessoa.getNome().toUpperCase());
 			pstmt.setString(3, pessoa.getTelefone());
 			pstmt.setString(4, pessoa.getPerfil().toString());
-			pstmt.setString(5, pessoa.getSenha() != null ? pessoa.getSenha() : null);
+			pstmt.setString(5, pessoa.getSenha() != null ? pessoa.getSenha().toUpperCase() : null);
 			result = pstmt.executeUpdate();
 			logger.debug("Inserção executada!");
 			return result;
@@ -88,7 +88,7 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 			pstmt.setString(2, pessoa.getNome().toUpperCase());
 			pstmt.setString(3, pessoa.getTelefone());
 			pstmt.setString(4, pessoa.getPerfil().toString());
-			pstmt.setString(5, pessoa.getSenha() != null ? pessoa.getSenha() : null);
+			pstmt.setString(5, pessoa.getSenha() != null ? pessoa.getSenha().toUpperCase() : null);
 			pstmt.setInt(6, pessoa.getId());
 			result = pstmt.executeUpdate();
 			logger.debug("Atualização executada!");

@@ -587,17 +587,21 @@ public class AtonController {
 			if (pessoaBD == null) {
 				model.addAttribute("mensagem",new MensagemTO("Usuário inexistente!", TipoMensagem.ERRO));
 				return "login";
+			} else if (pessoaBD.getSenha().isEmpty()) {
+				model.addAttribute("mensagem",new MensagemTO("Usuário sem acesso cadastrado.", TipoMensagem.ERRO));
+				return "login";
 			}
+			// verificando credenciais
+			if (pessoaBD.getSenha().equals(pessoa.getSenha().toUpperCase())) {
+				pessoaBD.setSenha(null); // por seguranca, pra setar na sessao
+				session.setAttribute("usuario", pessoaBD);
+			}						
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
 			return "emprestimos";
 		}
-			
-		//TO DO: IMPLEMENTAR
-		
-		model.addAttribute("pessoa", pessoa);		
-	    return "aton";
+		return "aton";
 	}
 	
 }
