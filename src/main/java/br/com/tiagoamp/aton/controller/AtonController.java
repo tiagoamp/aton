@@ -593,13 +593,13 @@ public class AtonController {
 			}
 			// verificando credenciais
 			if (pessoaBD.getSenha().equals(pessoa.getSenha().toUpperCase())) {
-				pessoaBD.setSenha(null); // por seguranca, pra setar na sessao
+				pessoaBD.setSenha(null); // null por seguranca, pra setar obj na sessao
 				session.setAttribute("usuario", pessoaBD);
-			}						
+			}
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
-			return "emprestimos";
+			return "login";
 		}
 		return "aton";
 	}
