@@ -48,5 +48,9 @@
   <mvc:resources mapping="/resources/**" location="/resources/" />
   <mvc:resources mapping="/database/**" location="/database/" />
   <mvc:annotation-driven/>
+  
+  <mvc:interceptors>
+  	<bean class="br.com.tiagoamp.aton.service.interceptor.AutorizadorInterceptor" />
+  </mvc:interceptors>
 
 </beans>

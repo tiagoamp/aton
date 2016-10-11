@@ -610,4 +610,11 @@ public class AtonController {
 		return "aton";
 	}
 	
+	@RequestMapping("logout")
+	public String logout(HttpSession session, HttpServletRequest request, Model model) {
+		session.invalidate();
+		model.addAttribute("mensagem",new MensagemTO("Logout concluído!", TipoMensagem.SUCESSO));
+	    return "aton";
+	}
+	
 }

@@ -23,7 +23,7 @@
 	      <ul class="nav navbar-nav navbar-right">
 	      	<li><a href="#"></a></li>	 
 	      	<li><a href="login">Login</a></li>       
-	        <li><a href="#">Sair</a></li>	        
+	        <li><a href="logout">Sair</a></li>	        
 	      </ul>
 	      
 	      <c:if test="${empty usuario}">
