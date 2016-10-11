@@ -592,15 +592,21 @@ public class AtonController {
 				return "login";
 			}
 			// verificando credenciais
-			if (pessoaBD.getSenha().equals(pessoa.getSenha().toUpperCase())) {
+			pessoa.setSenha(DigestUtils.sha1Hex(pessoa.getSenha()).toUpperCase());
+			if (pessoaBD.getSenha().equals(pessoa.getSenha())) {
 				pessoaBD.setSenha(null); // null por seguranca, pra setar obj na sessao
 				session.setAttribute("usuario", pessoaBD);
+				logger.info("Usuario autenticado: " + pessoaBD);
+			} else {
+				model.addAttribute("mensagem",new MensagemTO("Credenciais inválidas!", TipoMensagem.ERRO));
+				return "login";
 			}
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
 			return "login";
 		}
+		model.addAttribute("mensagem",new MensagemTO("Usuário autenticado!", TipoMensagem.SUCESSO));
 		return "aton";
 	}
 	

@@ -38,13 +38,13 @@
 	  			<div class="form-group">
     				<div class="input-group">
 						<span class="input-group-addon" id="basic-addon1">E-mail</span> 
-						<form:input path="email" cssClass="form-control required" placeholder="Digite o e-mail" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}" />						
+						<form:input path="email" cssClass="form-control required" placeholder="Digite o e-mail" aria-describedby="basic-addon1" size="40" />						
 					</div>
   				</div>
   				<div id="divSenha" class="form-group" style="display: block;">
 					<div class="input-group">
 						<span class="input-group-addon" id="basic-addon1">Senha</span> 
-						<form:password id="tSenha" path="senha" cssClass="form-control required" placeholder="Digite a senha" aria-describedby="basic-addon1" size="50"/>						
+						<form:password id="tSenha" path="senha" cssClass="form-control required" placeholder="Digite a senha" aria-describedby="basic-addon1" size="40"/>						
 					</div>					
 				</div>
 				<button type="submit" class="btn btn-default">

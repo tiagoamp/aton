@@ -1,3 +1,5 @@
+	<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 	<nav class="navbar navbar-default">
 	  	<div class="container-fluid">
 	    	<!-- Brand and toggle get grouped for better mobile display -->
@@ -23,7 +25,13 @@
 	      	<li><a href="login">Login</a></li>       
 	        <li><a href="#">Sair</a></li>	        
 	      </ul>
-	      <p class="navbar-text navbar-right"><a href="#" class="navbar-link">Usuário não autenticado</a></p>
+	      
+	      <c:if test="${empty usuario}">
+	      		<p class="navbar-text navbar-right"><a href="#" class="navbar-link">Usuário não autenticado</a></p>
+	      </c:if>
+	      <c:if test="${not empty usuario}">
+	      		<p class="navbar-text navbar-right"><a href="#" class="navbar-link"> ${usuario.nome} </a></p>
+	   	  </c:if>
 	    </div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
 	</nav>

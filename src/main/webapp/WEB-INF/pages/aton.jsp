@@ -12,6 +12,9 @@
 
 	<jsp:include page = "comum/menu.jsp" />
 	
+	<!-- MENSAGENS -->
+    <jsp:include page = "comum/mensagens.jsp" />
+	
 	<!-- Begin page content -->
     <div class="container">
       <div class="page-header">
