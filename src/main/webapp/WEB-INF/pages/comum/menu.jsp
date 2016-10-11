@@ -21,8 +21,10 @@
 	        <li><a href="sobre.jsp">Sobre</a></li>	        
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">
-	      	<li><a href="#"></a></li>	 
-	      	<li><a href="login">Login</a></li>       
+	      	<li><a href="#"></a></li>	
+	      	<c:if test="${empty usuario}"> 
+	      		<li><a href="login">Login</a></li>
+	      	</c:if>       
 	        <li><a href="logout">Sair</a></li>	        
 	      </ul>
 	      

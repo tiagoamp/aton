@@ -321,9 +321,8 @@ public class AtonController {
 			if (lista.isEmpty()) {
 				throw new AtonBOException("Consulta sem resultados!");
 			}
-			Set<Livro> listaOrdenada = new TreeSet<>();
-			listaOrdenada.addAll(lista);
-			model.addAttribute("listalivros", listaOrdenada);
+			Collections.sort(lista);
+			model.addAttribute("listalivros", lista);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));

@@ -85,12 +85,17 @@
 									&nbsp;&nbsp; <a href="javascript:carregarAcoes('consultar',${livro.id},'cadastrolivro');" title="Consultar"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
 									&nbsp;&nbsp; <a href="javascript:carregarAcoes('alterar',${livro.id},'cadastrolivro');" title="Alterar"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a> 
 									&nbsp;&nbsp; <a href="javascript:carregarAcoes('excluir',${livro.id},'cadastrolivro');" title="Excluir"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a>
-									&nbsp;&nbsp; <a href="javascript:carregarAcoes('emprestar',${livro.id},'emprestimolivro');" title="Emprestar"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span></a>
+									&nbsp;&nbsp; <c:if test="${livro.situacao == 'DISPONIVEL'}"> <a href="javascript:carregarAcoes('emprestar',${livro.id},'emprestimolivro');" title="Emprestar"> </c:if> <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span></a>
 									&nbsp;&nbsp;&nbsp;&nbsp;
 									<c:out value="${livro.isbn}" /> - 
 									<c:out value="${livro.titulo}" /> - 
 									<c:out value="${livro.autoresAgrupados}" /> -
-									(<c:out value="${livro.situacao}" />) 							
+									<c:if test="${livro.situacao == 'DISPONIVEL'}">
+										<span class="label label-success"><c:out value="${livro.situacao}" /></span>
+									</c:if>
+									<c:if test="${livro.situacao != 'DISPONIVEL'}">
+										<span class="label label-danger"><c:out value="${livro.situacao}" /></span>
+									</c:if>						
 								</li>
 							</c:forEach>
 						</form>
