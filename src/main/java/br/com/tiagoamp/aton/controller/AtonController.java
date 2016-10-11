@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -32,8 +33,10 @@ import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Pessoa;
 import br.com.tiagoamp.aton.model.Situacao;
 import br.com.tiagoamp.aton.model.TipoMensagem;
+import br.com.tiagoamp.aton.model.to.AutorizacaoResultadoTO;
 import br.com.tiagoamp.aton.model.to.MensagemTO;
 import br.com.tiagoamp.aton.service.AtonService;
+import br.com.tiagoamp.aton.service.AutorizacaoFuncionalidades;
 
 @Controller
 public class AtonController {
@@ -194,7 +197,13 @@ public class AtonController {
 		HttpSession session = request.getSession();
 		usuario = (Pessoa) session.getAttribute("usuario");
 		
-		if (pAcao == null || pAcao.equals("alterar") || pAcao.equals("excluir")) { // ADMIN
+		AutorizacaoResultadoTO autTO = AutorizacaoFuncionalidades.autorizarManutencaoLivros(usuario, pAcao);
+		if (autTO != null) {
+			if (autTO.getMsgErro() != null) model.addAttribute("mensagem",new MensagemTO(autTO.getMsgErro(), TipoMensagem.ERRO));
+			return autTO.getUrlRedirect();
+		}
+		
+		/*if (pAcao == null || pAcao.equals("alterar") || pAcao.equals("excluir")) { // ADMIN
 			if (usuario == null) {
 				return "autorizacao";
 			} else {
@@ -204,13 +213,13 @@ public class AtonController {
 				}
 			}
 		} else { // BIBLIOTECARIO  
-			if (pAcao.equals("emprestar")) {
+			if (pAcao.equals("emprestar") && usuario != null) {
 				if (usuario.getPerfil() != Perfil.ADMINISTRADOR || usuario.getPerfil() != Perfil.BIBLIOTECARIO) {
 					model.addAttribute("mensagem",new MensagemTO("Ação autorizada somente para perfil 'Bibliotecário'.", TipoMensagem.ERRO));
 					return "livros";
 				}
 			}
-		}
+		}*/
 				
 		Livro livro = new Livro();
 		if (pId != null && !pId.isEmpty()) {

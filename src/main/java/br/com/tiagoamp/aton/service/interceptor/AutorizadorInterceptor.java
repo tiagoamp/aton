@@ -11,7 +11,8 @@ public class AutorizadorInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object controller) throws Exception {
 		String uri = request.getRequestURI();
 		if ( uri.endsWith("emprestimos") || uri.endsWith("emprestimolivro") || 
-				uri.endsWith("pessoas") ) { // pages que precisam de autenticacao
+				uri.endsWith("pessoas") ||
+				uri.endsWith("livrocadastrado") ) { // pages que precisam de autenticacao
 			if (request.getSession().getAttribute("usuario") == null) {
 				response.sendRedirect("autorizacao");				
 				return false;
