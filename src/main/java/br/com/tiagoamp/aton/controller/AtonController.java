@@ -39,7 +39,7 @@ public class AtonController {
 	
 	Logger logger = Logger.getLogger(AtonController.class);
 	
-	AtonService service = new AtonService();
+	private AtonService service = new AtonService();
 	
 	@RequestMapping("/aton")
 	public String pageInicial() {
@@ -565,6 +565,13 @@ public class AtonController {
 		}		
 		model.addAttribute("emprestimo", emprestimo);
 		return "emprestimos";
+	}
+	
+	@RequestMapping("login")
+	public String pageLogin(HttpServletRequest request, Model model) {
+		Pessoa pessoa = new Pessoa();
+		model.addAttribute("pessoa", pessoa);
+	    return "login";
 	}
 	
 }

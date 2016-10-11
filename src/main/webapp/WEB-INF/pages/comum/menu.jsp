@@ -19,10 +19,11 @@
 	        <li><a href="sobre.jsp">Sobre</a></li>	        
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">
-	      	<li><a href="#"></a></li>	        
+	      	<li><a href="#"></a></li>	 
+	      	<li><a href="login">Login</a></li>       
 	        <li><a href="#">Sair</a></li>	        
 	      </ul>
-	      <p class="navbar-text navbar-right"><a href="#" class="navbar-link">Tiago Albuquerque</a></p>
+	      <p class="navbar-text navbar-right"><a href="#" class="navbar-link">Usuário não autenticado</a></p>
 	    </div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
 	</nav>
