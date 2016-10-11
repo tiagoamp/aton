@@ -41,6 +41,7 @@ public class AtonController {
 	Logger logger = Logger.getLogger(AtonController.class);
 	
 	private AtonService service = new AtonService();
+	private Pessoa usuario;
 	
 	@RequestMapping("/aton")
 	public String pageInicial() {
@@ -189,9 +190,29 @@ public class AtonController {
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
 	        Model model) {
+		// Autorização
+		HttpSession session = request.getSession();
+		usuario = (Pessoa) session.getAttribute("usuario");
 		
-		Livro livro = new Livro();
+		if (pAcao == null || pAcao.equals("alterar") || pAcao.equals("excluir")) { // ADMIN
+			if (usuario == null) {
+				return "autorizacao";
+			} else {
+				if (usuario.getPerfil() != Perfil.ADMINISTRADOR) {
+					model.addAttribute("mensagem",new MensagemTO("Ação autorizada somente para perfil 'Administrador'.", TipoMensagem.ERRO));
+					return "livros";
+				}
+			}
+		} else { // BIBLIOTECARIO  
+			if (pAcao.equals("emprestar")) {
+				if (usuario.getPerfil() != Perfil.ADMINISTRADOR || usuario.getPerfil() != Perfil.BIBLIOTECARIO) {
+					model.addAttribute("mensagem",new MensagemTO("Ação autorizada somente para perfil 'Bibliotecário'.", TipoMensagem.ERRO));
+					return "livros";
+				}
+			}
+		}
 				
+		Livro livro = new Livro();
 		if (pId != null && !pId.isEmpty()) {
 			try {		
 				livro = service.consultarLivro(Integer.parseInt(pId));				 				
@@ -593,7 +614,7 @@ public class AtonController {
 			}
 			// verificando credenciais
 			pessoa.setSenha(DigestUtils.sha1Hex(pessoa.getSenha()).toUpperCase());
-			if (pessoaBD.getSenha().equals(pessoa.getSenha())) {
+			if (pessoaBD.getSenha().equals(pessoa.getSenha()) && pessoaBD.getPerfil() != Perfil.LEITOR) {
 				pessoaBD.setSenha(null); // null por seguranca, pra setar obj na sessao
 				session.setAttribute("usuario", pessoaBD);
 				logger.info("Usuario autenticado: " + pessoaBD);
@@ -615,6 +636,11 @@ public class AtonController {
 		session.invalidate();
 		model.addAttribute("mensagem",new MensagemTO("Logout concluído!", TipoMensagem.SUCESSO));
 	    return "aton";
+	}
+	
+	@RequestMapping("autorizacao")
+	public String pageAutorizacao() {
+	    return "autorizacao";
 	}
 	
 }
