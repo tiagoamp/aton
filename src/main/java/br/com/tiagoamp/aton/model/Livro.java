@@ -13,7 +13,9 @@ public class Livro implements Comparable<Livro> {
 	public Livro() {
 		this.dataCadastro = new Date();
 		this.situacao = Situacao.DISPONIVEL;
-		this.tipoAquisicao = TipoAquisicao.COMPRA;
+		this.tipoAquisicao = TipoAquisicao.DOACAO;
+		this.qtdExemplares = 1;
+		this.qtdDisponiveis = 1;
 	}
 		
 	private Integer id;
@@ -42,6 +44,8 @@ public class Livro implements Comparable<Livro> {
     private String autoresAgrupados;
     private Date dataAquisicao;
     private String dataAquisicaoFormatada;
+    private Integer qtdExemplares;
+    private Integer qtdDisponiveis;
     
     @Override
     public String toString() {
@@ -196,6 +200,18 @@ public class Livro implements Comparable<Livro> {
 	}
 	public void setDataAquisicaoFormatada(String dataAquisicaoFormatada) {
 		this.dataAquisicaoFormatada = dataAquisicaoFormatada;		
+	}
+	public Integer getQtdExemplares() {
+		return qtdExemplares;
+	}
+	public void setQtdExemplares(Integer qtdExemplares) {
+		this.qtdExemplares = qtdExemplares;
+	}
+	public Integer getQtdDisponiveis() {
+		return qtdDisponiveis;
+	}
+	public void setQtdDisponiveis(Integer qtdDisponiveis) {
+		this.qtdDisponiveis = qtdDisponiveis;
 	}
 		
 }

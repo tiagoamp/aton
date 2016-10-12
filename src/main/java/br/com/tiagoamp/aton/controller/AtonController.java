@@ -31,6 +31,7 @@ import br.com.tiagoamp.aton.model.Livro;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Pessoa;
 import br.com.tiagoamp.aton.model.Situacao;
+import br.com.tiagoamp.aton.model.TipoAquisicao;
 import br.com.tiagoamp.aton.model.TipoMensagem;
 import br.com.tiagoamp.aton.model.to.MensagemTO;
 import br.com.tiagoamp.aton.service.AtonService;
@@ -262,6 +263,10 @@ public class AtonController {
 			result.reject("dataAquisicaoFormatada", "Campo obrigatório não preenchido: Data de Aquisição.");
 			hasErrors = true;
 		}
+		if (livro.getTipoAquisicao() == TipoAquisicao.COMPRA && !livro.getNomeDoador().isEmpty()) {
+			result.reject("tipoAquisicao", "Tipo de aquisição 'COMPRA' não permite cadastro de doador.");
+			hasErrors = true;
+		}
 		if (hasErrors) {
 			livro.setTipoAquisicao(null);
 			model.addAttribute("livro", livro);
@@ -275,8 +280,13 @@ public class AtonController {
 				livro.setPathFotoCapa(path);
 			}			
 			if (livro.getId() == null) {
+				livro.setQtdDisponiveis(livro.getQtdExemplares());
 				service.inserirLivro(livro); // insert				
 			} else {
+				if (livro.getPathFotoCapa() == null) {
+					Livro l = service.consultarLivro(livro.getId());
+					if (l.getPathFotoCapa() != null) livro.setPathFotoCapa(l.getPathFotoCapa());	
+				}				
 				service.atualizarLivro(livro); // update
 			}
 			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + livro.toString(), TipoMensagem.SUCESSO));

@@ -25,7 +25,7 @@ import br.com.tiagoamp.aton.model.TipoAquisicao;
 
 public class LivroDaoBdLocal implements LivroDAO {
 	
-	Logger logger = Logger.getLogger(LivroDaoBdLocal.class);
+	private Logger logger = Logger.getLogger(LivroDaoBdLocal.class);
 	
 	public LivroDaoBdLocal(){
 		InputStream istream = this.getClass().getResourceAsStream("config.properties");
@@ -70,6 +70,8 @@ public class LivroDaoBdLocal implements LivroDAO {
 		l.setPessoaCadastradora(pessoa);
 		l.setSituacao(Situacao.valueOf(rs.getString("SITUACAO")));
 		l.setAutoresAgrupados(rs.getString("AUTOR"));
+		l.setQtdExemplares(rs.getInt("QTD_EXEMPLARES"));
+		l.setQtdDisponiveis(rs.getInt("QTD_DISPONIVEIS"));
 		return l;
 	}
 	
@@ -82,8 +84,8 @@ public class LivroDaoBdLocal implements LivroDAO {
 			String sql = "INSERT INTO LIVROS(TITULO, SUBTITULO, DT_CADASTRO, ISBN,"
 					+ "EDITORA, LOCAL_PUBLICACAO, ANO_PUBLICACAO, NRO_PAGINAS, GENERO,"
 					+ "CLASSIFICACAO, PUBLICO_ALVO, PATH_FOTO_CAPA, DT_AQUISICAO, TIPO_AQUISICAO,"
-					+ "NM_DOADOR, ID_PESSOA_CADASTRADORA, SITUACAO, AUTOR) "
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					+ "NM_DOADOR, ID_PESSOA_CADASTRADORA, SITUACAO, AUTOR, QTD_EXEMPLARES, QTD_DISPONIVEIS) "
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);			
 			pstmt.setString(1, livro.getTitulo().toUpperCase());
 			pstmt.setString(2, livro.getSubtitulo().toUpperCase());
@@ -103,6 +105,8 @@ public class LivroDaoBdLocal implements LivroDAO {
 			pstmt.setObject(16, livro.getPessoaCadastradora() != null ? livro.getPessoaCadastradora().getId() : null);
 			pstmt.setObject(17, livro.getSituacao() != null ? livro.getSituacao().toString() : null );
 			pstmt.setString(18, livro.getAutoresAgrupados().toUpperCase());
+			pstmt.setInt(19, livro.getQtdExemplares());
+			pstmt.setInt(20, livro.getQtdDisponiveis());
 			result = pstmt.executeUpdate();
 			logger.debug("Inserção concluída!");
 			return result;
@@ -125,7 +129,8 @@ public class LivroDaoBdLocal implements LivroDAO {
 					+ "TITULO = ?, SUBTITULO = ?, DT_CADASTRO = ?, ISBN = ?,"
 					+ "EDITORA = ?, LOCAL_PUBLICACAO = ?, ANO_PUBLICACAO = ?, NRO_PAGINAS = ?, GENERO = ?,"
 					+ "CLASSIFICACAO = ?, PUBLICO_ALVO = ?, PATH_FOTO_CAPA = ?, DT_AQUISICAO = ?, TIPO_AQUISICAO = ?,"
-					+ "NM_DOADOR = ?, ID_PESSOA_CADASTRADORA = ?, SITUACAO = ?, AUTOR = ? "
+					+ "NM_DOADOR = ?, ID_PESSOA_CADASTRADORA = ?, SITUACAO = ?, AUTOR = ?, "
+					+ "QTD_EXEMPLARES = ?, QTD_DISPONIVEIS = ?"
 					+ "	WHERE ID = ?";
 			pstmt = conn.prepareStatement(sql);			
 			pstmt.setString(1, livro.getTitulo().toUpperCase());
@@ -146,7 +151,9 @@ public class LivroDaoBdLocal implements LivroDAO {
 			pstmt.setInt(16, livro.getPessoaCadastradora() != null ? livro.getPessoaCadastradora().getId() : 0);
 			pstmt.setString(17, livro.getSituacao().toString());
 			pstmt.setString(18, livro.getAutoresAgrupados().toUpperCase());
-			pstmt.setInt(19, livro.getId());
+			pstmt.setInt(19, livro.getQtdExemplares());
+			pstmt.setInt(20, livro.getQtdDisponiveis());
+			pstmt.setInt(21, livro.getId());
 			result = pstmt.executeUpdate();
 			logger.debug("Atualização concluída!");
 			return result;

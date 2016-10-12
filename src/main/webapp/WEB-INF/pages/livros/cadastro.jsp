@@ -122,6 +122,17 @@
 				<div class="panel panel-default">
 					<div class="panel-body">
 						<div class="form-group">
+		    				<div class="input-group navbar-left">
+								<span class="input-group-addon" id="basic-addon1">Exemplares</span> 
+								<form:input path="qtdExemplares" cssClass="form-control required" placeholder="Digite a quantidade de exemplares do livro." aria-describedby="basic-addon1" size="30" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
+								<c:if test="${acao eq 'consultar' or acao eq 'excluir' or acao eq 'alterar'}">
+									<span class="input-group-addon" id="basic-addon1">Disponível</span> 
+									<form:input path="qtdDisponiveis" cssClass="form-control required" placeholder="Digite a quantidade de exemplares disponíveis do livro" aria-describedby="basic-addon1" size="30" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
+								</c:if>
+							</div>							
+						</div>
+						&nbsp;
+						<div class="form-group">
 		    				<div class="input-group">
 								<span class="input-group-addon" id="basic-addon1">Data de Aquisição</span> 
 								<form:input path="dataAquisicaoFormatada" cssClass="form-control required" placeholder="Digite a data de aquisição do livro no formato 'dd/mm/aaaa' " aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}" />								
@@ -154,19 +165,22 @@
 								<form:input path="observacoes" cssClass="form-control required" placeholder="Digite alguma informação complementar do livro, se houver" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
 							</div>
 						</div>
-						<div class="form-group">
-		    				<div class="input-group">
-								<span class="input-group-addon" id="basic-addon1">Foto do livro</span>
+						<div class="panel panel-default">
+							<div class="panel-heading">Foto do Livro</div>
+							<div class="panel-body">
+								<div class="input-group">
+									<span class="input-group-addon" id="basic-addon1">Arquivo selecionado</span>
 								<c:if test="${acao != 'consultar' && acao != 'excluir'}"> 
 									<input type="file" name="file" id="file" value="Escolher arquivo..." />
 								</c:if>
-								<c:if test="${acao eq 'consultar'}">
+								<c:if test="${acao eq 'consultar' or acao eq 'alterar'}">
 									<c:if test="${not empty livro.pathFotoCapa}">
 										<img src="${livro.pathFotoCapa}" width="150px" height="200px" />
 									</c:if>
 								</c:if>
+								</div><!-- /input-group -->
 							</div>
-						</div>
+						</div>						
 					</div>
 				</div>
 						
@@ -186,11 +200,11 @@
 				</c:if>			
 			</form:form>
 						
-			<c:if test="${acao eq 'consultar'}">
+			<c:if test="${acao eq 'consultar' && livro.situacao == 'DISPONIVEL'}">
 				<form id="formAcoes">
 					<input type="hidden" id ="acao" name="acao">
 					<input type="hidden" id ="identificador" name="identificador">
-					<button type="button" class="btn btn-default" onClick="javascript:carregarAcoes('emprestar',${livro.id},'emprestimolivro');" disabled="${livro.situacao != 'DISPONIVEL'}">
+					<button type="button" class="btn btn-default" onClick="javascript:carregarAcoes('emprestar',${livro.id},'emprestimolivro');" >
 						<span class="glyphicon glyphicon-home" aria-hidden="true"></span> Emprestar Livro
 					</button>
 				</form>					
