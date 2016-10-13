@@ -95,7 +95,9 @@
 									</c:if>
 									<c:if test="${livro.situacao != 'DISPONIVEL'}">
 										<span class="label label-danger"><c:out value="${livro.situacao}" /></span>
-									</c:if>						
+									</c:if>
+									<span class="badge"><c:out value="${livro.qtdDisponiveis}" /></span>  
+									<span class="badge"><c:out value="${livro.qtdExemplares}" /></span>
 								</li>
 							</c:forEach>
 						</form>

@@ -29,24 +29,12 @@
     <property name="basename" value="/WEB-INF/ValidationMessages" />
   </bean>
   
-  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
- 		<!-- setting maximum upload size -->
+  <!-- <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+ 		setting maximum upload size
 		<property name="maxUploadSize" value="100000000" />
-   </bean>
-   
-   <!-- adicionado para file upload linha abaixo -->
-   <!-- <bean class="br.com.tiagoamp.aton.controller.FileUploadController">
-		<property name="formView" value="livros/cadastro" />
-		<property name="successView" value="livros/cadastro" />
-		Map a validator
-		<property name="validator">
-			<bean class="br.com.tiagoamp.aton.controller.FileUploadValidator" />
-		</property>
-	</bean> -->
-	
-  
+   </bean> -->
+        
   <mvc:resources mapping="/resources/**" location="/resources/" />
-  <mvc:resources mapping="/database/**" location="/database/" />
   <mvc:annotation-driven/>
   
   <mvc:interceptors>

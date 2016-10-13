@@ -61,7 +61,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 		l.setGenero(rs.getString("GENERO"));
 		l.setClassificacao(rs.getString("CLASSIFICACAO"));
 		l.setPublicoAlvo(rs.getString("PUBLICO_ALVO"));
-		l.setPathFotoCapa(Paths.get(rs.getString("PATH_FOTO_CAPA")));
+		//l.setPathFotoCapa(Paths.get(rs.getString("PATH_FOTO_CAPA"))); // FIXME
 		l.setDataAquisicao(rs.getDate("DT_AQUISICAO"));
 		l.setTipoAquisicao(TipoAquisicao.valueOf(rs.getString("TIPO_AQUISICAO")));
 		l.setNomeDoador(rs.getString("NM_DOADOR"));
@@ -83,9 +83,9 @@ public class LivroDaoBdLocal implements LivroDAO {
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "INSERT INTO LIVROS(TITULO, SUBTITULO, DT_CADASTRO, ISBN,"
 					+ "EDITORA, LOCAL_PUBLICACAO, ANO_PUBLICACAO, NRO_PAGINAS, GENERO,"
-					+ "CLASSIFICACAO, PUBLICO_ALVO, PATH_FOTO_CAPA, DT_AQUISICAO, TIPO_AQUISICAO,"
+					+ "CLASSIFICACAO, PUBLICO_ALVO, DT_AQUISICAO, TIPO_AQUISICAO,"
 					+ "NM_DOADOR, ID_PESSOA_CADASTRADORA, SITUACAO, AUTOR, QTD_EXEMPLARES, QTD_DISPONIVEIS) "
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);			
 			pstmt.setString(1, livro.getTitulo().toUpperCase());
 			pstmt.setString(2, livro.getSubtitulo().toUpperCase());
@@ -98,15 +98,15 @@ public class LivroDaoBdLocal implements LivroDAO {
 			pstmt.setString(9, livro.getGenero());
 			pstmt.setString(10, livro.getClassificacao().toUpperCase());
 			pstmt.setString(11, livro.getPublicoAlvo().toUpperCase());
-			pstmt.setObject(12, livro.getPathFotoCapa() != null ? livro.getPathFotoCapa().toString() : null);
-			pstmt.setDate(13, new java.sql.Date(livro.getDataAquisicao().getTime()));
-			pstmt.setObject(14, livro.getTipoAquisicao() != null ? livro.getTipoAquisicao().toString() : null);
-			pstmt.setString(15, livro.getNomeDoador().toUpperCase());
-			pstmt.setObject(16, livro.getPessoaCadastradora() != null ? livro.getPessoaCadastradora().getId() : null);
-			pstmt.setObject(17, livro.getSituacao() != null ? livro.getSituacao().toString() : null );
-			pstmt.setString(18, livro.getAutoresAgrupados().toUpperCase());
-			pstmt.setInt(19, livro.getQtdExemplares());
-			pstmt.setInt(20, livro.getQtdDisponiveis());
+			//pstmt.setObject(xx, livro.getPathFotoCapa() != null ? livro.getPathFotoCapa().toString() : null); //FIXME
+			pstmt.setDate(12, new java.sql.Date(livro.getDataAquisicao().getTime()));
+			pstmt.setObject(13, livro.getTipoAquisicao() != null ? livro.getTipoAquisicao().toString() : null);
+			pstmt.setString(14, livro.getNomeDoador().toUpperCase());
+			pstmt.setObject(15, livro.getPessoaCadastradora() != null ? livro.getPessoaCadastradora().getId() : null);
+			pstmt.setObject(16, livro.getSituacao() != null ? livro.getSituacao().toString() : null );
+			pstmt.setString(17, livro.getAutoresAgrupados().toUpperCase());
+			pstmt.setInt(18, livro.getQtdExemplares());
+			pstmt.setInt(19, livro.getQtdDisponiveis());
 			result = pstmt.executeUpdate();
 			logger.debug("Inserção concluída!");
 			return result;
@@ -128,7 +128,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 			String sql = "UPDATE LIVROS SET "
 					+ "TITULO = ?, SUBTITULO = ?, DT_CADASTRO = ?, ISBN = ?,"
 					+ "EDITORA = ?, LOCAL_PUBLICACAO = ?, ANO_PUBLICACAO = ?, NRO_PAGINAS = ?, GENERO = ?,"
-					+ "CLASSIFICACAO = ?, PUBLICO_ALVO = ?, PATH_FOTO_CAPA = ?, DT_AQUISICAO = ?, TIPO_AQUISICAO = ?,"
+					+ "CLASSIFICACAO = ?, PUBLICO_ALVO = ?, DT_AQUISICAO = ?, TIPO_AQUISICAO = ?,"
 					+ "NM_DOADOR = ?, ID_PESSOA_CADASTRADORA = ?, SITUACAO = ?, AUTOR = ?, "
 					+ "QTD_EXEMPLARES = ?, QTD_DISPONIVEIS = ?"
 					+ "	WHERE ID = ?";
@@ -144,16 +144,16 @@ public class LivroDaoBdLocal implements LivroDAO {
 			pstmt.setString(9, livro.getGenero().toUpperCase());
 			pstmt.setString(10, livro.getClassificacao().toUpperCase());
 			pstmt.setString(11, livro.getPublicoAlvo().toUpperCase());
-			pstmt.setString(12, livro.getPathFotoCapa().toString());
-			pstmt.setDate(13, new java.sql.Date(livro.getDataAquisicao().getTime()));
-			pstmt.setString(14, livro.getTipoAquisicao().toString());
-			pstmt.setString(15, livro.getNomeDoador().toUpperCase());
-			pstmt.setInt(16, livro.getPessoaCadastradora() != null ? livro.getPessoaCadastradora().getId() : 0);
-			pstmt.setString(17, livro.getSituacao().toString());
-			pstmt.setString(18, livro.getAutoresAgrupados().toUpperCase());
-			pstmt.setInt(19, livro.getQtdExemplares());
-			pstmt.setInt(20, livro.getQtdDisponiveis());
-			pstmt.setInt(21, livro.getId());
+			//pstmt.setString(XX, livro.getPathFotoCapa().toString()); //FIXME
+			pstmt.setDate(12, new java.sql.Date(livro.getDataAquisicao().getTime()));
+			pstmt.setString(13, livro.getTipoAquisicao().toString());
+			pstmt.setString(14, livro.getNomeDoador().toUpperCase());
+			pstmt.setInt(15, livro.getPessoaCadastradora() != null ? livro.getPessoaCadastradora().getId() : 0);
+			pstmt.setString(16, livro.getSituacao().toString());
+			pstmt.setString(17, livro.getAutoresAgrupados().toUpperCase());
+			pstmt.setInt(18, livro.getQtdExemplares());
+			pstmt.setInt(19, livro.getQtdDisponiveis());
+			pstmt.setInt(20, livro.getId());
 			result = pstmt.executeUpdate();
 			logger.debug("Atualização concluída!");
 			return result;

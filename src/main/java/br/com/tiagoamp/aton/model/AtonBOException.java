@@ -16,10 +16,12 @@ public class AtonBOException extends Exception {
 	
 	public AtonBOException(Throwable exceptionCause){
 		super(exceptionCause);
+		this.msg = exceptionCause.getMessage();
 	}
 	
 	public AtonBOException(String msg, Throwable exceptionCause){
 		super(msg, exceptionCause);
+		this.msg = msg;
 	}
 
 	private static final long serialVersionUID = 4147593836582665366L;

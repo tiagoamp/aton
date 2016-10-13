@@ -1,6 +1,5 @@
 package br.com.tiagoamp.aton.controller;
 
-import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Emprestimo;
@@ -245,8 +243,8 @@ public class AtonController {
 	}
 		
 	@RequestMapping(value="livrocadastrado", method = RequestMethod.POST)
-	public String salvarLivro(@Valid Livro livro, BindingResult result, Model model, 
-			HttpServletRequest request, @RequestParam(value="file", required=false) MultipartFile pFile) {
+	public String salvarLivro(@Valid Livro livro, BindingResult result, Model model, HttpServletRequest request
+			/*@, RequestParam(value="file", required=false) MultipartFile pFile*/) {
 		boolean hasErrors = false;
 		if(result.hasErrors()) {
 			hasErrors = true;
@@ -267,26 +265,33 @@ public class AtonController {
 			result.reject("tipoAquisicao", "Tipo de aquisição 'COMPRA' não permite cadastro de doador.");
 			hasErrors = true;
 		}
+		if (livro.getQtdDisponiveis() > livro.getQtdExemplares()) {
+			result.reject("qtdExemplares", "Quantidade de exemplares disponíveis deve ser menor que quantidade total.");
+			model.addAttribute("acao","alterar");
+			hasErrors = true;
+		}
 		if (hasErrors) {
 			livro.setTipoAquisicao(null);
 			model.addAttribute("livro", livro);
 			return "livros/cadastro";
 		}
 		
-		MultipartFile mFile = pFile;
-		try {			
-			if (!mFile.isEmpty()) {  // capa do livro
+		//MultipartFile mFile = pFile;
+		try {
+				//FIXME : Implementar e refatorar gravação de figura de capa do livro (  shame on me  :-(   )
+			/*if (!mFile.isEmpty()) {  // capa do livro
 				Path path = service.inserirFotoCapaLivro(mFile, livro.getIsbn());
 				livro.setPathFotoCapa(path);
-			}			
+			}*/			
 			if (livro.getId() == null) {
 				livro.setQtdDisponiveis(livro.getQtdExemplares());
 				service.inserirLivro(livro); // insert				
 			} else {
-				if (livro.getPathFotoCapa() == null) {
+				/*if (livro.getPathFotoCapa() == null) {
 					Livro l = service.consultarLivro(livro.getId());
 					if (l.getPathFotoCapa() != null) livro.setPathFotoCapa(l.getPathFotoCapa());	
-				}				
+				}*/				
+					//FIXME Implementar e refatorar gravação de figura de capa do livro
 				service.atualizarLivro(livro); // update
 			}
 			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + livro.toString(), TipoMensagem.SUCESSO));
@@ -316,6 +321,27 @@ public class AtonController {
 			return "livros";
 		}		
 	    return "livros";
+	}
+	
+	@RequestMapping("exclusaolivro")
+	public String excluirLivro(HttpServletRequest request,  
+	        @RequestParam(value="acao", required=false) String pAcao, 
+	        @RequestParam(value="identificador", required=false) String pId, 
+	        Model model) {		
+		Livro livro;
+		try {		
+			livro = service.consultarLivro(Integer.parseInt(pId));
+			if (livro == null) {
+				throw new AtonBOException("Erro na exclusão de pessoa: Identificador inválido!");
+			}
+			service.apagarLivro(livro.getId());
+			model.addAttribute("mensagem",new MensagemTO("Exclusão com sucesso: " + livro.toString(), TipoMensagem.SUCESSO));
+			logger.info("Livro excluído: " + livro);
+		} catch (AtonBOException e) {
+			logger.error("Erro: " + e);
+			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));			
+		}		
+		return "livros";
 	}
 	
 	@RequestMapping("emprestimos")

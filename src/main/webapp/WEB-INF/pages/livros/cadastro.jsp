@@ -49,7 +49,7 @@
 	    	<h3 class="panel-title">Cadastro de Livros</h3>
 	  	</div>
 	  	<div class="panel-body">
-	  		<form:form id="formCadLivros" method="POST" cssClass="navbar" action="livrocadastrado" modelAttribute="livro" enctype="multipart/form-data">
+	  		<form:form id="formCadLivros" method="POST" cssClass="navbar" action="livrocadastrado" modelAttribute="livro"> <%-- enctype="multipart/form-data" --%>
 	  			<form:hidden path="id" />
 	  			<div class="panel panel-default">
 					<div class="panel-body">
@@ -165,7 +165,7 @@
 								<form:input path="observacoes" cssClass="form-control required" placeholder="Digite alguma informação complementar do livro, se houver" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
 							</div>
 						</div>
-						<div class="panel panel-default">
+						<%-- <div class="panel panel-default">  //FIXME !!!
 							<div class="panel-heading">Foto do Livro</div>
 							<div class="panel-body">
 								<div class="input-group">
@@ -180,7 +180,7 @@
 								</c:if>
 								</div><!-- /input-group -->
 							</div>
-						</div>						
+						</div> --%>						
 					</div>
 				</div>
 						
