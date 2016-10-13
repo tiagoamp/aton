@@ -30,6 +30,7 @@ public class Emprestimo implements Comparable<Emprestimo> {
     private Date dataDevolucao;
     private String dataDevolucaoFormatada;
    
+    private boolean atrasado;
     
     @Override
     public String toString() {
@@ -45,17 +46,7 @@ public class Emprestimo implements Comparable<Emprestimo> {
     	return o.getDataEmprestimo().compareTo(this.getDataEmprestimo());
     }
     
-    
-    public Boolean isAtrasado() {
-    	boolean result = false;
-    	if (dataDevolucao != null) {
-    		int i = dataDevolucao.compareTo(dataDevolucaoProgramada);
-    		if (i > 0) result = true;
-    	}
-    	return result;
-    }
-    
-    
+        
 	public Integer getId() {
 		return id;
 	}
@@ -125,9 +116,23 @@ public class Emprestimo implements Comparable<Emprestimo> {
 		}
 		return dataDevolucaoFormatada;
 	}
-
 	public void setDataDevolucaoFormatada(String dataDevolucaoFormatada) {
 		this.dataDevolucaoFormatada = dataDevolucaoFormatada;
+	}
+	public void setAtrasado(boolean atrasado) {
+		this.atrasado = atrasado;
+	}
+	public boolean getAtrasado() {
+		this.atrasado = false;
+    	if (dataDevolucao != null) { // jah devolveu
+    		int i = dataDevolucao.compareTo(dataDevolucaoProgramada);
+    		if (i > 0) atrasado = true;
+    	} else { // ainda nao devolveu
+    		Date hoje = new Date();
+    		int i = hoje.compareTo(dataDevolucaoProgramada);
+    		if (i > 0) atrasado = true;
+    	}    	
+    	return atrasado;
 	}
 
 }

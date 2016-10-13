@@ -30,6 +30,11 @@ public class AtonBOException extends Exception {
 	private String msg;
 	
 	
+	@Override
+	public String toString() {
+		return "Exception: " + msg + " - " + super.toString(); 
+	}
+	
 	public String getMsg() {
 		return msg;
 	}

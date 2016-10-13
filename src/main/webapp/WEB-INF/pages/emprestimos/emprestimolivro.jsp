@@ -33,7 +33,7 @@
 						<!-- BOX DE LIVRO -->
 						<div class="col-sm-6 col-md-6">
 							<div class="thumbnail">
-								<img src="${emprestimo.livro.pathFotoCapa}" alt="[Sem capa cadastrada]" width="180px" height="200px">
+								<%-- <img src="${emprestimo.livro.pathFotoCapa}" alt="[Sem capa cadastrada]" width="180px" height="200px"> --%>
 								<div class="caption">
 									<h4>Título: ${emprestimo.livro.titulo}</h4>
 									<p>${emprestimo.livro.subtitulo}</p>

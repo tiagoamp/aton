@@ -96,8 +96,9 @@
 									<c:if test="${livro.situacao != 'DISPONIVEL'}">
 										<span class="label label-danger"><c:out value="${livro.situacao}" /></span>
 									</c:if>
-									<span class="badge"><c:out value="${livro.qtdDisponiveis}" /></span>  
-									<span class="badge"><c:out value="${livro.qtdExemplares}" /></span>
+									<!-- aparece na ordem inversa os badges -->
+									<span class="badge"><c:out value="${livro.qtdExemplares}" /></span> 
+									<span class="badge"><c:out value="${livro.qtdDisponiveis}" /></span>
 								</li>
 							</c:forEach>
 						</form>

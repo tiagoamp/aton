@@ -28,7 +28,6 @@ import br.com.tiagoamp.aton.model.Emprestimo;
 import br.com.tiagoamp.aton.model.Livro;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Pessoa;
-import br.com.tiagoamp.aton.model.Situacao;
 import br.com.tiagoamp.aton.model.TipoAquisicao;
 import br.com.tiagoamp.aton.model.TipoMensagem;
 import br.com.tiagoamp.aton.model.to.MensagemTO;
@@ -350,7 +349,7 @@ public class AtonController {
 	}
 
 	@RequestMapping("emprestimolivro")
-	public String emprestarLivro(HttpServletRequest request,  
+	public String carregarEmprestimoLivro(HttpServletRequest request,  
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
 	        Model model) {		
@@ -454,18 +453,16 @@ public class AtonController {
 		}
 		try { // recuperando livro e pessoa
 			emprestimo.setLivro(service.consultarLivro(emprestimo.getLivro().getId()));
+			if (emprestimo.getPessoa() == null || emprestimo.getPessoa().getId() == null) throw new AtonBOException("Pessoa não selecionada para empréstimo do livro!");
 			emprestimo.setPessoa(service.consultarPessoa(emprestimo.getPessoa().getId()));			
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
-		}
-		
-		if (emprestimo.getPessoa() == null || emprestimo.getPessoa().getId() == null) {
-			result.reject("pessoa.nome", "Pessoa não selecionada para fazer empréstimo do livro.");
-			hasErrors = true;
+			model.addAttribute("emprestimo", emprestimo);
+			return "emprestimos/emprestimolivro";
 		}
 		if (emprestimo.getDataEmprestimoFormatada().isEmpty()) {
-			result.reject("dataEmprestimoFormatada", "Campo obrigatório não preenchido: Data de Empresstimo.");
+			result.reject("dataEmprestimoFormatada", "Campo obrigatório não preenchido: Data de Empréstimo.");
 			hasErrors = true;
 		} else if (emprestimo.getDataDevolucaoProgramadaFormatada().isEmpty()) {
 			result.reject("dataDevolucaoProgramadaFormatada", "Campo obrigatório não preenchido: Data de Devolução.");
@@ -488,7 +485,7 @@ public class AtonController {
 		try {			
 			service.inserirEmprestimo(emprestimo);
 			Livro livro = emprestimo.getLivro();
-			livro.setSituacao(Situacao.EMPRESTADO);
+			livro.setQtdDisponiveis(livro.getQtdDisponiveis() - 1);
 			service.atualizarLivro(livro);			
 			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + emprestimo.toString(), TipoMensagem.SUCESSO));
 			logger.info("Emprestimo cadastrado: " + emprestimo);
@@ -586,7 +583,7 @@ public class AtonController {
 				emprestimo.setDataDevolucao(new Date());
 				service.atualizarEmprestimo(emprestimo);
 				Livro livro = emprestimo.getLivro();
-				livro.setSituacao(Situacao.DISPONIVEL);
+				livro.setQtdDisponiveis(livro.getQtdDisponiveis() + 1);
 				service.atualizarLivro(livro);
 				model.addAttribute("mensagem",new MensagemTO("Devolução com sucesso: " + emprestimo.toString(), TipoMensagem.SUCESSO));
 				logger.info("Emprestimo devolvido: " + emprestimo);

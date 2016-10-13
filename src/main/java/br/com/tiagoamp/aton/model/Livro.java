@@ -212,6 +212,11 @@ public class Livro implements Comparable<Livro> {
 	}
 	public void setQtdDisponiveis(Integer qtdDisponiveis) {
 		this.qtdDisponiveis = qtdDisponiveis;
+		if (this.qtdDisponiveis == 0) {
+			this.situacao = Situacao.EMPRESTADO; 
+		} else {
+			this.situacao = Situacao.DISPONIVEL;
+		}
 	}
 		
 }

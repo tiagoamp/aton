@@ -90,11 +90,17 @@
 										<span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> 
 									</c:if>									
 									&nbsp;&nbsp;&nbsp;&nbsp;
-									Data: <c:out value="${emprestimo.dataEmprestimoFormatada}" /> -
-									Livro: <c:out value="${emprestimo.livro.titulo}" /> - 
-									Leitor: <c:out value="${emprestimo.pessoa.nome}" />	-									 
-									Devolução Progr.: <c:out value="${emprestimo.dataDevolucaoProgramadaFormatada}" /> - 
-									Devolução: <c:out value="${emprestimo.dataDevolucaoFormatada}" />																		
+									<strong>Data:</strong> <c:out value="${emprestimo.dataEmprestimoFormatada}" /> -
+									<strong>Livro:</strong> <c:out value="${emprestimo.livro.titulo}" /> - 
+									<strong>Leitor:</strong> <c:out value="${emprestimo.pessoa.nome}" />	-									 
+									<strong>Devolução: </strong> Progr: <c:out value="${emprestimo.dataDevolucaoProgramadaFormatada}" /> - 
+									Realizada: <c:out value="${emprestimo.dataDevolucaoFormatada}" /> - 
+									<c:if test="${not emprestimo.atrasado}">
+										<span class="label label-success">Sem atraso</span>
+									</c:if>
+									<c:if test="${emprestimo.atrasado}">
+										<span class="label label-danger">Atrasado</span>
+									</c:if>																		
 								</li>
 							</c:forEach>
 						</form>
