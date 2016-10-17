@@ -15,8 +15,8 @@ Aton - Simple Library Management System
 ------------------------------------------------
 
 
-Usuário inicial do sistema / Initial user :
+Usuário inicial do sistema para login / Initial user :
 
-User = admin
+User e-mail = admin@email.com
 password = admin
 role = ADMINISTRADOR
