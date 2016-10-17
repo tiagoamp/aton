@@ -10,3 +10,13 @@ Contribuições e evoluções são bem-vindas, é uma versão inicial com vária
 ------------------------------------------------
 
 Aton - Simple Library Management System
+
+
+------------------------------------------------
+
+
+Usuário inicial do sistema / Initial user :
+
+User = admin
+password = admin
+role = ADMINISTRADOR

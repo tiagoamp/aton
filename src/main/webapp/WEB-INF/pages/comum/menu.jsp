@@ -17,8 +17,7 @@
 	      	<li><a href="livros">Livros</a></li>
 	        <li><a href="pessoas">Pessoas</a></li>
 	        <li><a href="emprestimos">Emprestimos</a></li>
-	        <li><a href="admin.jsp">Administração</a></li>
-	        <li><a href="sobre.jsp">Sobre</a></li>	        
+	        <li><a href="sobre">Sobre</a></li>	        
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">
 	      	<li><a href="#"></a></li>	

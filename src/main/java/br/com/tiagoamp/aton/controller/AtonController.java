@@ -652,4 +652,9 @@ public class AtonController {
 	    return "autorizacao";
 	}
 	
+	@RequestMapping("sobre")
+	public String pageSobre() {
+		return "sobre";
+	}
+	
 }
