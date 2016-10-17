@@ -34,10 +34,21 @@ public class Emprestimo implements Comparable<Emprestimo> {
     
     @Override
     public String toString() {
-    	if (pessoa != null) {
-    		return "Emprestimo > Livro: " + livro.getTitulo() + " para: " + pessoa.getNome();
+    	String str = "Emprestimo > Livro: ";
+    	
+    	if (livro != null) {
+    		str += "livro.getTitulo() ";
+    	} else {
+    		str += "[livro apagado] ";
     	}
-    	return "Emprestimo > Livro: " + livro.getTitulo();
+    	    	
+    	str += "> Leitor: ";
+    	if (pessoa != null) {
+    		str += "pessoa.getNome()";
+    	} else {
+    		str += "[pessoa apagada]";
+    	}
+    	return str;
     }
     
     @Override
