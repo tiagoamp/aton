@@ -44,7 +44,7 @@ public class Emprestimo implements Comparable<Emprestimo> {
     	    	
     	str += "> Leitor: ";
     	if (pessoa != null) {
-    		str += "pessoa.getNome()";
+    		str += pessoa.getNome();
     	} else {
     		str += "[pessoa apagada]";
     	}
