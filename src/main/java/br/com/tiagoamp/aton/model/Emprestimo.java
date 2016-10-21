@@ -37,16 +37,16 @@ public class Emprestimo implements Comparable<Emprestimo> {
     	String str = "Emprestimo > Livro: ";
     	
     	if (livro != null) {
-    		str += "livro.getTitulo() ";
+    		str += livro.getTitulo();
     	} else {
-    		str += "[livro apagado] ";
+    		str += " [livro apagado] ";
     	}
     	    	
-    	str += "> Leitor: ";
+    	str += " > Leitor: ";
     	if (pessoa != null) {
     		str += pessoa.getNome();
     	} else {
-    		str += "[pessoa apagada]";
+    		str += " [pessoa apagada] ";
     	}
     	return str;
     }
