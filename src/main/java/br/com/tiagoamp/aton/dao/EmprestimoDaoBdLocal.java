@@ -82,8 +82,8 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 			logger.error(e);
 			throw e;			
 		} finally {
-			if (!pstmt.isClosed()) pstmt.close();
-			if (!conn.isClosed()) conn.close();			
+			if (pstmt != null && !pstmt.isClosed()) pstmt.close();
+			if (conn != null && !conn.isClosed()) conn.close();			
 		}
 	}
 
@@ -109,8 +109,8 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 			logger.error(e);
 			throw e;			
 		} finally {
-			if (!pstmt.isClosed()) pstmt.close();
-			if (!conn.isClosed()) conn.close();
+			if (pstmt != null && !pstmt.isClosed()) pstmt.close();
+			if (conn != null && !conn.isClosed()) conn.close();
 		}
 
 	}
@@ -131,8 +131,8 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 			logger.error(e);
 			throw e;			
 		} finally {
-			if (!pstmt.isClosed()) pstmt.close();
-			if (!conn.isClosed()) conn.close();
+			if (pstmt != null && !pstmt.isClosed()) pstmt.close();
+			if (conn != null && !conn.isClosed()) conn.close();
 		}
 	}
 
@@ -156,8 +156,8 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 			logger.error(e);
 			throw e;			
 		} finally {
-			if (!pstmt.isClosed()) pstmt.close();
-			if (!conn.isClosed()) conn.close();
+			if (pstmt != null && !pstmt.isClosed()) pstmt.close();
+			if (conn != null && !conn.isClosed()) conn.close();
 		}
 	}
 
@@ -196,8 +196,8 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 			logger.error(e);
 			throw e;			
 		} finally {
-			if (!pstmt.isClosed()) pstmt.close();
-			if (!conn.isClosed()) conn.close();
+			if (pstmt != null && !pstmt.isClosed()) pstmt.close();
+			if (conn != null && !conn.isClosed()) conn.close();
 		}
 	}
 
@@ -221,8 +221,8 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 			logger.error(e);
 			throw e;			
 		} finally {
-			if (!pstmt.isClosed()) pstmt.close();
-			if (!conn.isClosed()) conn.close();
+			if (pstmt != null && !pstmt.isClosed()) pstmt.close();
+			if (conn != null && !conn.isClosed()) conn.close();
 		}
 	}
 	
@@ -246,8 +246,8 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 			logger.error(e);
 			throw e;			
 		} finally {
-			if (!pstmt.isClosed()) pstmt.close();
-			if (!conn.isClosed()) conn.close();
+			if (pstmt != null && !pstmt.isClosed()) pstmt.close();
+			if (conn != null && !conn.isClosed()) conn.close();
 		}
 	}
 	
