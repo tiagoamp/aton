@@ -1,10 +1,15 @@
 package br.com.tiagoamp.aton.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+@Entity
 public class Pessoa implements Comparable<Pessoa> {
 	
 	public Pessoa() {
@@ -17,7 +22,8 @@ public class Pessoa implements Comparable<Pessoa> {
 		this.perfil = perfil;
 	}
 	
-	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	
 	@NotEmpty(message = "{NotEmpty.pessoa.email}")

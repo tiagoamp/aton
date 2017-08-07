@@ -9,34 +9,31 @@ import br.com.tiagoamp.aton.model.Pessoa;
 public interface PessoaDAO {
 	
 	/**
-	 * Insere uma pessoa no base de dados.
+	 * Inserts the entity in the database.
 	 * 
 	 * @param pessoa
 	 * @throws SQLException 
-	 * @return int number of rows inserted
 	 */
-	int create(Pessoa pessoa) throws SQLException;
+	void create(Pessoa pessoa) throws SQLException;
 	
 	/**
-	 * Atualiza uma pessoa na base de dados.
+	 * Updates the entity in the database.
 	 * 
 	 * @param pessoa
-	 * @throws SQLException
-	 * @return int number of rows updated 
+	 * @throws SQLException 
 	 */
-	int update(Pessoa pessoa) throws SQLException;
+	void update(Pessoa pessoa) throws SQLException;
 	
 	/**
-	 * Apaga uma pessoa na base de dados.
+	 * Deletes the entity in the database.
 	 * 
 	 * @param id 
-	 * @throws SQLException 
-	 * @return int number of rows deleted
+	 * @throws SQLException
 	 */
-	int delete(int id) throws SQLException;
+	void delete(int id) throws SQLException;
 	
 	/**
-	 * Consulta uma pessoa pelo id.
+	 * Search the entity by 'id' in the database.
 	 * 
 	 * @param id Identificador da pessoa.
 	 * @return Pessoa Instância da pessoa ou null se não existir.
@@ -45,7 +42,7 @@ public interface PessoaDAO {
 	Pessoa findById(int id) throws SQLException;
 	
 	/**
-	 * Consulta uma pessoa pelo e-mail.
+	 * Search the entity by 'e-mail' in the database.
 	 * 
 	 * @param email
 	 * @return Pessoa Instância da pessoa ou null se não existir.
@@ -54,28 +51,28 @@ public interface PessoaDAO {
 	Pessoa findByEmail(String email) throws SQLException;
 	
 	/**
-	 * Consulta pessoas na base de dados por nome aproximado.
+	 * Search the entity by 'name-like' in the database.
 	 * 
 	 * @param nome
-	 * @return List<Pessoa> lista de pessoas
+	 * @return List<Pessoa> List of entity
 	 * @throws SQLException
 	 */
 	List<Pessoa> findByNomeAproximado(String nome) throws SQLException;
 	
 	/**
-	 * Consulta pessoas na base de dados conforme parâmetros informados.
+	 * Search the entity by given parameters in the database.
 	 * 
 	 * @param nome
 	 * @param telefone
 	 * @param perfil
-	 * @return List<Pessoa> lista de pessoas
+	 * @return List<Pessoa> List of entity
 	 * @throws SQLException
 	 */
 	List<Pessoa> find(String nome, String telefone, Perfil perfil) throws SQLException;
 	
 	/**
 	 * Consulta e retorna todas as 'pessoas' na base de dados
-	 * @return List<Pessoa> Lista de pessoas
+	 * @return List<Pessoa> List of entity
 	 * @throws SQLException
 	 */
 	List<Pessoa> findAll() throws SQLException;

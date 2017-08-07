@@ -1,6 +1,6 @@
 package br.com.tiagoamp.aton.dao;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -11,24 +11,135 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.com.tiagoamp.aton.TestHelper;
+import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Pessoa;
 
 public class PessoaDAOTest {
 	
 	private PessoaDAO dao;
-	private Pessoa pessoa;
+	
 	
 	@Before
 	public void setup() throws ClassNotFoundException {
-		dao = new PessoaDaoBdLocal();
-		((PessoaDaoBdLocal)dao).setURL_DB("jdbc:sqlite:" + ((PessoaDaoBdLocal)dao).getPATH_DB() + "atondbtests");
-		pessoa = TestHelper.getPessoaTeste();
+		instanciateDaoForTests("jpa");	
+		limparBaseDeDadosDeTeste();
 	}
 	
 	@After
 	public void teardown() {
-		limparBaseDeDadosDeTeste();
 		dao = null;		
+	}
+	
+	
+	@Test
+	public void testCreate_shouldInsertEntity() throws SQLException {
+		Pessoa pessoa = TestHelper.getPessoaTeste(); 
+		dao.create(pessoa);
+		
+		Pessoa pessoaRetrieved = dao.findByEmail(pessoa.getEmail());
+		assertEquals("Must retrieve inserted entity.", pessoa.getEmail(), pessoaRetrieved.getEmail());		
+	}
+	
+	@Test(expected=Exception.class)
+	public void testCreate_existingId_shouldThrowsException() throws SQLException {
+		Pessoa pessoaRetrieved = insertPessoaInDataBaseForTests();
+		
+		dao.create(pessoaRetrieved); // same id should throw exception		
+	}
+	
+	@Test
+	public void testUpdate_shouldUpdateEntity() throws SQLException {
+		Pessoa pessoaRetrieved = insertPessoaInDataBaseForTests();  // transient --> managed --> detached
+		String newNome = "Nome Alterado 2".toUpperCase();
+		pessoaRetrieved.setNome(newNome);
+		
+		dao.update(pessoaRetrieved);
+		Pessoa pessoaAfterUpdate = dao.findById(pessoaRetrieved.getId());
+		assertNotNull(pessoaAfterUpdate);
+		assertEquals("'Nome' should be updated.", newNome, pessoaAfterUpdate.getNome());
+	}
+	
+	@Test
+	public void testDelete_shouldDeleteEntity() throws SQLException {
+		Pessoa pessoaRetrieved = insertPessoaInDataBaseForTests();  // transient --> managed --> detached
+		int id = pessoaRetrieved.getId();
+		dao.delete(id);
+		
+		pessoaRetrieved = dao.findById(id);
+		assertNull("Entity must be deleted.", pessoaRetrieved);
+	}
+	
+	@Test
+	public void testFindById_shouldReturnValidOutput() throws SQLException {
+		Pessoa pessoaInserted = insertPessoaInDataBaseForTests();
+		
+		Pessoa pessoaRetrievedById = dao.findById(pessoaInserted.getId());
+		assertEquals("Must retrieve the entity by Id.", pessoaInserted.getId(), pessoaRetrievedById.getId());		
+	}
+	
+	@Test
+	public void testFindAll_emptyDataBase_shouldReturnEmptyList() throws SQLException {
+		List<Pessoa> list = dao.findAll();
+		assertTrue("Must not retrieve entities.", list.isEmpty());
+	}
+	
+	@Test
+	public void testFindAll_shouldReturnValidOutput() throws SQLException {
+		insertPessoaListInDataBaseForTestes();
+		
+		List<Pessoa> list = dao.findAll();
+		assertNotNull("Must return entities previously inserted.", list);
+		assertEquals("Should return 3 entities.", 3, list.size());
+	}
+	
+	@Test
+	public void testFindByEmail_shouldReturnValidOutput() throws SQLException {
+		Pessoa pessoa = insertPessoaInDataBaseForTests();
+		String email = pessoa.getEmail();
+		
+		Pessoa pessoaRetrievedByEmail = dao.findByEmail(email);
+		assertNotNull("Must return searched entity.", pessoaRetrievedByEmail);
+		assertEquals("Must have same e-mail value." , email, pessoaRetrievedByEmail.getEmail());		
+	}
+	
+	@Test
+	public void testFindByNomeAproximado_shouldReturnValidOutput() throws SQLException {
+		Pessoa pessoa = insertPessoaInDataBaseForTests();
+		String partialNome = pessoa.getNome().substring(5);
+		
+		List<Pessoa> list = dao.findByNomeAproximado(partialNome);
+		assertNotNull("Must return entity by partial 'nome'." , list);
+		assertTrue("Must contain entity by partial 'nome'." ,list.contains(pessoa));  // TO DO: DEPURAR
+		
+	}
+	
+	
+	
+	/*
+	
+	@Test
+	public void testFindStringStringString() throws SQLException {
+		// criando massa de dados
+		dao.create(pessoa);
+		// teste
+		List<Pessoa> lista = dao.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
+		assertTrue(!lista.isEmpty());
+		assertTrue(lista.size() == 1);
+	}
+		
+	*/
+	
+	
+	// HELPER METHODS
+	private void instanciateDaoForTests(String type) {
+		if (type == null) throw new IllegalArgumentException("JDBC or JPA should be informed as argument!");
+		if (type.equals("jdbc")) {
+			dao = new PessoaDaoSqliteJdbc();
+			((PessoaDaoSqliteJdbc)dao).setURL_DB("jdbc:sqlite:" + ((PessoaDaoSqliteJdbc)dao).getPATH_DB() + "atondbtests");			
+		} else if(type.equals("jpa")) {     // JPA
+			dao = new PessoaDaoSqliteJpa();
+			((PessoaDaoSqliteJpa)dao).setEntityManager(new JPAUtil().getMyTestsEntityManager());
+		}	
 	}
 	
 	private void limparBaseDeDadosDeTeste() {
@@ -42,90 +153,25 @@ public class PessoaDAOTest {
 			e.printStackTrace();
 		}
 	}
-
-	@Test
-	public void testCreate() throws SQLException {
-		int result = dao.create(pessoa);
-		assertTrue(result == 1);	
-	}
-
-	@Test
-	public void testUpdate() throws SQLException {
-		// criando massa de dados
+	
+	private Pessoa insertPessoaInDataBaseForTests() throws SQLException {
+		Pessoa pessoa = TestHelper.getPessoaTeste();
 		dao.create(pessoa);
-		List<Pessoa> lista = dao.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
-		pessoa = lista.get(0);
-		String nmAlterado = "Nome Alterado 2";
-		pessoa.setNome(nmAlterado);
-		// teste
-		int result = dao.update(pessoa);
-		assertTrue(result == 1);
-		lista = dao.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
-		pessoa = lista.get(0);
-		assertTrue(nmAlterado.toUpperCase().equals(pessoa.getNome()));
-	}
-
-	@Test
-	public void testFindById() throws SQLException{
-		// criando massa de dados
-		dao.create(pessoa);
-		List<Pessoa> lista = dao.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
-		int id = lista.get(0).getId();
-		// teste
-		Pessoa pessoa2 = dao.findById(id);
-		assertTrue(id == pessoa2.getId());		
+		pessoa = dao.findByEmail(pessoa.getEmail());
+		return pessoa;
 	}
 	
-	@Test
-	public void testFindByEmail() throws SQLException {
-		// criando massa de dados
-		dao.create(pessoa);
-		List<Pessoa> lista = dao.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
-		String email = lista.get(0).getEmail();
-		// teste
-		Pessoa pessoa2 = dao.findByEmail(email);
-		assertTrue(email.equals(pessoa2.getEmail()));		
-	}
+	private List<Pessoa> insertPessoaListInDataBaseForTestes() throws SQLException {
+		Pessoa pessoa1 = new Pessoa("email1@email.com", "Nome 01", "111-222", Perfil.ADMINISTRADOR);
+		Pessoa pessoa2 = new Pessoa("email2@email.com", "Nome 02", "111-222", Perfil.ADMINISTRADOR);
+		Pessoa pessoa3 = new Pessoa("email3@email.com", "Nome 03", "111-222", Perfil.ADMINISTRADOR);
 		
-	@Test
-	public void testFindByNomeAproximado() throws SQLException {
-		// criando massa de dados
-		dao.create(pessoa);
-		// teste
-		List<Pessoa> lista = dao.findByNomeAproximado(pessoa.getNome().substring(3));
-		assertTrue(!lista.isEmpty());
-		assertTrue(lista.contains(pessoa));
-	}
-
-	@Test
-	public void testFindStringStringString() throws SQLException {
-		// criando massa de dados
-		dao.create(pessoa);
-		// teste
-		List<Pessoa> lista = dao.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
-		assertTrue(!lista.isEmpty());
-		assertTrue(lista.size() == 1);
-	}
-	
-	@Test
-	public void testFindAll() throws SQLException {
-		// criando massa de dados
-		dao.create(pessoa);
-		// teste
-		List<Pessoa> lista = dao.findAll();
-		assertTrue(!lista.isEmpty());
-	}
-	
-	@Test
-	public void testDelete() throws SQLException {
-		// criando massa de dados
-		dao.create(pessoa);
-		List<Pessoa> lista = dao.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
-		pessoa = lista.get(0);
-		// teste
-		int result = dao.delete(pessoa.getId());
-		assertTrue(result == 1);			
+		dao.create(pessoa1);
+		dao.create(pessoa2);
+		dao.create(pessoa3);
 		
+		return dao.findAll();
 	}
+	
 
 }

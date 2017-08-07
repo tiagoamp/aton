@@ -14,7 +14,7 @@ public class TestHelper {
 	
 	public static Pessoa getPessoaTeste() {
 		Pessoa pessoa = new Pessoa("TESTE@TESTEMAIL.COM", "NOME DE TESTE", "11-1111-1111", Perfil.ADMINISTRADOR);
-		pessoa.setSenha("123");
+		pessoa.setSenha("1234");
 		return pessoa;
 	}
 		

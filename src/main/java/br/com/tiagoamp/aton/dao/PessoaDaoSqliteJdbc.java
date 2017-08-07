@@ -16,11 +16,11 @@ import org.apache.log4j.Logger;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Pessoa;
 
-public class PessoaDaoBdLocal implements PessoaDAO {
+public class PessoaDaoSqliteJdbc implements PessoaDAO {
 	
-	Logger logger = Logger.getLogger(PessoaDaoBdLocal.class);
+	Logger logger = Logger.getLogger(PessoaDaoSqliteJdbc.class);
 	
-	public PessoaDaoBdLocal() {
+	public PessoaDaoSqliteJdbc() {
 		InputStream istream = this.getClass().getResourceAsStream("config.properties");
 		Properties prop = new Properties();
 		try {
@@ -52,9 +52,8 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 	}
 	
 	@Override
-	public int create(Pessoa pessoa) throws SQLException {
+	public void create(Pessoa pessoa) throws SQLException {
 		logger.debug("Inserindo : " + pessoa);
-		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "INSERT INTO PESSOAS(EMAIL, NOME, TELEFONE, PERFIL, SENHA) VALUES (?, ?, ?, ?, ?)";
@@ -64,9 +63,8 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 			pstmt.setString(3, pessoa.getTelefone());
 			pstmt.setString(4, pessoa.getPerfil().toString());
 			pstmt.setString(5, pessoa.getSenha() != null ? pessoa.getSenha().toUpperCase() : null);
-			result = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			logger.debug("Inserção executada!");
-			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
@@ -77,9 +75,8 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 	}
 
 	@Override
-	public int update(Pessoa pessoa) throws SQLException {
+	public void update(Pessoa pessoa) throws SQLException {
 		logger.debug("Atualizando: " + pessoa);
-		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "UPDATE PESSOAS SET EMAIL = ?, NOME = ?, TELEFONE = ?, PERFIL = ?, SENHA = ? WHERE ID = ?";
@@ -90,9 +87,8 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 			pstmt.setString(4, pessoa.getPerfil().toString());
 			pstmt.setString(5, pessoa.getSenha() != null ? pessoa.getSenha().toUpperCase() : null);
 			pstmt.setInt(6, pessoa.getId());
-			result = pstmt.executeUpdate();
-			logger.debug("Atualização executada!");
-			return result;
+			pstmt.executeUpdate();
+			logger.debug("Atualização executada!");			
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
@@ -103,17 +99,15 @@ public class PessoaDaoBdLocal implements PessoaDAO {
 	}
 
 	@Override
-	public int delete(int id) throws SQLException {
+	public void delete(int id) throws SQLException {
 		logger.debug("Apagando id: " + id);
-		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "DELETE FROM PESSOAS WHERE ID = ?";
 			pstmt = conn.prepareStatement(sql);			
 			pstmt.setInt(1, id);
-			result = pstmt.executeUpdate();
-			logger.debug("Exclusão concluída!");
-			return result;
+			pstmt.executeUpdate();
+			logger.debug("Exclusão concluída!");			
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
