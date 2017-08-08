@@ -73,7 +73,7 @@ public class PessoaDaoJpa implements PessoaDAO {
 		
 		Root<Pessoa> root = query.from(Pessoa.class);
 		Path<String> nomePath = root.<String>get("nome");		
-		Predicate nomeLike = criteriaBuilder.like(nomePath, nome);		
+		Predicate nomeLike = criteriaBuilder.like(nomePath, "%" + nome + "%");		
 		query.where(nomeLike);
 		
 		TypedQuery<Pessoa> typedQuery = em.createQuery(query);				
@@ -92,7 +92,7 @@ public class PessoaDaoJpa implements PessoaDAO {
 		
 		List<Predicate> predicates = new ArrayList<>();		
 		if (nome != null && !nome.isEmpty()) {
-			Predicate nomeLike = criteriaBuilder.like(nomePath, nome);
+			Predicate nomeLike = criteriaBuilder.like(nomePath, "%" + nome + "%");
 			predicates.add(nomeLike);
 		}
 		if (telefone != null && !telefone.isEmpty()) {
@@ -103,7 +103,7 @@ public class PessoaDaoJpa implements PessoaDAO {
 			Predicate perfilEqual = criteriaBuilder.equal(perfilPath, perfil);
 			predicates.add(perfilEqual);
 		}		
-		query.where((Predicate[]) predicates.toArray());
+		query.where((Predicate[]) predicates.toArray(new Predicate[0]));
 		
 		TypedQuery<Pessoa> typedQuery = em.createQuery(query);				
 		return typedQuery.getResultList();		

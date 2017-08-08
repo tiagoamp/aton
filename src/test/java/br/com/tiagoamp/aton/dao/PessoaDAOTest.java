@@ -24,12 +24,12 @@ public class PessoaDAOTest {
 		
 	@Before
 	public void setup() throws ClassNotFoundException {
-		instanciateDaoForTests("jpa");		
+		instanciateDaoForTests("jpa");
+		limparBaseDeDadosDeTeste();
 	}
 	
 	@After
-	public void teardown() {
-		limparBaseDeDadosDeTeste();
+	public void teardown() {		
 		dao = null;		
 	}
 	
@@ -46,7 +46,9 @@ public class PessoaDAOTest {
 	@Test(expected=Exception.class)
 	public void testCreate_existingId_shouldThrowsException() throws SQLException {
 		Pessoa pessoaRetrieved = insertPessoaInDataBaseForTests();
-		
+		dao = null;
+		dao = new PessoaDaoJpa(new JPAUtil().getMyTestsEntityManager());  // new dao with new entity manager
+				
 		dao.create(pessoaRetrieved); // same id should throw exception		
 	}
 	
@@ -108,7 +110,7 @@ public class PessoaDAOTest {
 	@Test
 	public void testFindByNomeAproximado_shouldReturnValidOutput() throws SQLException {
 		Pessoa pessoa = insertPessoaInDataBaseForTests();
-		String partialNome = pessoa.getNome().substring(5);
+		String partialNome = pessoa.getNome().substring(4);
 		
 		List<Pessoa> list = dao.findByNomeAproximado(partialNome);
 		assertNotNull("Must return entity by partial 'nome'." , list);
