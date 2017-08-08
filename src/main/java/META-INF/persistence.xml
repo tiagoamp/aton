@@ -3,13 +3,13 @@
 	version="2.0">
 
 	<persistence-unit name="PU_ATON">
-
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
 		<class>br.com.tiagoamp.aton.model.Pessoa</class>
+		<class>br.com.tiagoamp.aton.model.Livro</class>
+		<class>br.com.tiagoamp.aton.model.Emprestimo</class>
 
 		<properties>
-
 			<!-- Propriedades JDBC -->
 			<property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:sqlite:database/AtonDB.db" />
@@ -21,20 +21,18 @@
 			<!-- property name="dialect" value="org.hibernate.dialect.SQLiteDialect" /> -->
 			<property name="hibernate.hbm2ddl.auto" value="update" />
 			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-			
-		</properties>
-		
+			<property name="hibernate.format_sql" value="true" />			
+		</properties>		
 	</persistence-unit>
 	
 	<persistence-unit name="PU_ATON_TESTS">
-
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
 		<class>br.com.tiagoamp.aton.model.Pessoa</class>
+		<class>br.com.tiagoamp.aton.model.Livro</class>
+		<class>br.com.tiagoamp.aton.model.Emprestimo</class>
 
 		<properties>
-
 			<!-- Propriedades JDBC -->
 			<property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:sqlite:database/AtonDBtest.db" />
@@ -46,10 +44,8 @@
 			<!-- property name="dialect" value="org.hibernate.dialect.SQLiteDialect" /> -->
 			<property name="hibernate.hbm2ddl.auto" value="update" />
 			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-			
-		</properties>
-		
+			<property name="hibernate.format_sql" value="true" />			
+		</properties>		
 	</persistence-unit>
 
 </persistence>

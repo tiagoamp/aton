@@ -16,7 +16,7 @@ import br.com.tiagoamp.aton.dao.EmprestimoDaoBdLocal;
 import br.com.tiagoamp.aton.dao.LivroDAO;
 import br.com.tiagoamp.aton.dao.LivroDaoBdLocal;
 import br.com.tiagoamp.aton.dao.PessoaDAO;
-import br.com.tiagoamp.aton.dao.PessoaDaoSqliteJdbc;
+import br.com.tiagoamp.aton.dao.PessoaDaoJdbc;
 import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Emprestimo;
 import br.com.tiagoamp.aton.model.Livro;
@@ -33,7 +33,7 @@ public class AtonService {
 	Logger logger = Logger.getLogger(AtonService.class);
 	
 	public AtonService() {		
-		this.pessoaDao = new PessoaDaoSqliteJdbc();
+		this.pessoaDao = new PessoaDaoJdbc();
 		this.livroDao = new LivroDaoBdLocal();
 		this.empDao = new EmprestimoDaoBdLocal();		
 	}

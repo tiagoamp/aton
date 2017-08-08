@@ -6,8 +6,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
+@Entity
+@Table(name="LIVROS")
 public class Livro implements Comparable<Livro> {
 	
 	public Livro() {
@@ -18,34 +31,86 @@ public class Livro implements Comparable<Livro> {
 		this.qtdDisponiveis = 1;
 	}
 		
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="ID")
 	private Integer id;
 	
 	@NotEmpty(message = "{NotEmpty.livro.isbn}")
+	@Column(name="ISBN")
 	private String isbn;
 	
 	@NotEmpty(message = "{NotEmpty.livro.titulo}")
+	@Column(name="TITULO")
     private String titulo;
+	
+	@Column(name="SUBTITULO")
     private String subtitulo;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="DATA_CADASTRO")
 	private Date dataCadastro;
+    
+    @Column(name="EDITORA")
     private String editora;
+    
+    @Column(name="LOCAL_PUBLICACAO")
     private String localPublicacao;
+    
+    @Column(name="ANO_PUBLICACAO")
     private Integer anoPublicacao;
+    
+    @Column(name="NU_PAGINAS")
     private Integer nroPaginas;
+    
+    @Column(name="GENERO")
     private String genero;
+    
+    @Column(name="CLASSIFICACAO")
     private String classificacao;
+    
+    @Column(name="PUBLICO_ALVO")
     private String publicoAlvo;
+    
+    @Column(name="IMG_CAPA")
     private Path pathFotoCapa;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name="TIPO_AQUISICAO")
     private TipoAquisicao tipoAquisicao;
+    
+    @Column(name="NOME_DOADOR")
     private String nomeDoador;
+    
+    @Column(name="CADASTRADOR")
     private Pessoa pessoaCadastradora;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name="SITUACAO")
     private Situacao situacao;
+    
+    @Column(name="OBSERVACOES")
     private String observacoes;
+    
+    @Column(name="AUTORES")
     private List<String> autores;
-    private String autoresAgrupados;
+    
+    //private String autoresAgrupados;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="DATA_AQUISICAO")
     private Date dataAquisicao;
-    private String dataAquisicaoFormatada;
+    
+    @Column(name="QTD_EXEMPLARES")
     private Integer qtdExemplares;
+    
+    @Column(name="QTD_DISPONIVEIS")
     private Integer qtdDisponiveis;
+    
+    
+    //private String dataAquisicaoFormatada;
+    
     
     @Override
     public String toString() {

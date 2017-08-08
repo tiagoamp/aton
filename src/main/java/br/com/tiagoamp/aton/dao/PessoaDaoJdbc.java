@@ -16,11 +16,11 @@ import org.apache.log4j.Logger;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Pessoa;
 
-public class PessoaDaoSqliteJdbc implements PessoaDAO {
+public class PessoaDaoJdbc implements PessoaDAO {
 	
-	Logger logger = Logger.getLogger(PessoaDaoSqliteJdbc.class);
+	Logger logger = Logger.getLogger(PessoaDaoJdbc.class);
 	
-	public PessoaDaoSqliteJdbc() {
+	public PessoaDaoJdbc() {
 		InputStream istream = this.getClass().getResourceAsStream("config.properties");
 		Properties prop = new Properties();
 		try {

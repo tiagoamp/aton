@@ -4,6 +4,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+@Entity
+@Table(name="EMPRESTIMOS")
 public class Emprestimo implements Comparable<Emprestimo> {
 	
 	public Emprestimo() {
@@ -17,20 +30,39 @@ public class Emprestimo implements Comparable<Emprestimo> {
 		this.dataDevolucao = dataDevolucao;
 	}
 	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="ID")
 	private Integer id;
+	
+	@ManyToOne
+	@Column(name="ID_LIVRO")
     private Livro livro;
+    
+	@ManyToOne
+	@Column(name="ID_PESSOA")
     private Pessoa pessoa;
     
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="DATA_EMPRESTIMO")
     private Date dataEmprestimo;
-    private String dataEmprestimoFormatada;
     
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="DATA_DEVOLUCAO_PROGRAMADA")
     private Date dataDevolucaoProgramada;
-    private String dataDevolucaoProgramadaFormatada;
-
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="DATA_DEVOLUCAO")
     private Date dataDevolucao;
-    private String dataDevolucaoFormatada;
-   
+    
+     @Transient
     private boolean atrasado;
+     
+     
+     //private String dataDevolucaoProgramadaFormatada;
+     //private String dataEmprestimoFormatada;
+     //private String dataDevolucaoFormatada;
+    
     
     @Override
     public String toString() {
@@ -88,7 +120,7 @@ public class Emprestimo implements Comparable<Emprestimo> {
 	public void setDataDevolucaoProgramada(Date dataDevolucao) {
 		this.dataDevolucaoProgramada = dataDevolucao;
 	}
-	public String getDataEmprestimoFormatada() {
+	/*public String getDataEmprestimoFormatada() {
 		if (dataEmprestimo != null) {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			dataEmprestimoFormatada = sdf.format(dataEmprestimo);
@@ -113,14 +145,14 @@ public class Emprestimo implements Comparable<Emprestimo> {
 	}
 	public void setDataDevolucaoProgramadaFormatada(String dataDevolucaoProgramadaFormatada) {
 		this.dataDevolucaoProgramadaFormatada = dataDevolucaoProgramadaFormatada;		
-	}
+	}*/
 	public Date getDataDevolucao() {
 		return dataDevolucao;
 	}
 	public void setDataDevolucao(Date dataDevolucao) {
 		this.dataDevolucao = dataDevolucao;
 	}
-	public String getDataDevolucaoFormatada() {
+	/*public String getDataDevolucaoFormatada() {
 		if (dataDevolucao != null) {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			dataDevolucaoFormatada = sdf.format(dataDevolucao);
@@ -129,7 +161,7 @@ public class Emprestimo implements Comparable<Emprestimo> {
 	}
 	public void setDataDevolucaoFormatada(String dataDevolucaoFormatada) {
 		this.dataDevolucaoFormatada = dataDevolucaoFormatada;
-	}
+	}*/
 	public void setAtrasado(boolean atrasado) {
 		this.atrasado = atrasado;
 	}

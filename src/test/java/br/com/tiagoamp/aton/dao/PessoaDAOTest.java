@@ -1,6 +1,9 @@
 package br.com.tiagoamp.aton.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -18,15 +21,15 @@ public class PessoaDAOTest {
 	
 	private PessoaDAO dao;
 	
-	
+		
 	@Before
 	public void setup() throws ClassNotFoundException {
-		instanciateDaoForTests("jpa");	
-		limparBaseDeDadosDeTeste();
+		instanciateDaoForTests("jpa");		
 	}
 	
 	@After
 	public void teardown() {
+		limparBaseDeDadosDeTeste();
 		dao = null;		
 	}
 	
@@ -153,11 +156,10 @@ public class PessoaDAOTest {
 	private void instanciateDaoForTests(String type) {
 		if (type == null) throw new IllegalArgumentException("JDBC or JPA should be informed as argument!");
 		if (type.equals("jdbc")) {
-			dao = new PessoaDaoSqliteJdbc();
-			((PessoaDaoSqliteJdbc)dao).setURL_DB("jdbc:sqlite:" + ((PessoaDaoSqliteJdbc)dao).getPATH_DB() + "atondbtests");			
-		} else if(type.equals("jpa")) {     // JPA
-			dao = new PessoaDaoSqliteJpa();
-			((PessoaDaoSqliteJpa)dao).setEntityManager(new JPAUtil().getMyTestsEntityManager());
+			dao = new PessoaDaoJdbc();
+			((PessoaDaoJdbc)dao).setURL_DB("jdbc:sqlite:" + ((PessoaDaoJdbc)dao).getPATH_DB() + "atondbtests");			
+		} else if(type.equals("jpa")) {    
+			dao = new PessoaDaoJpa(new JPAUtil().getMyTestsEntityManager());
 		}	
 	}
 	
@@ -192,5 +194,4 @@ public class PessoaDAOTest {
 		return dao.findAll();
 	}
 	
-
 }

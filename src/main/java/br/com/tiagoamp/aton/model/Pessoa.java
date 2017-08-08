@@ -1,15 +1,20 @@
 package br.com.tiagoamp.aton.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
+@Table(name="PESSOAS")
 public class Pessoa implements Comparable<Pessoa> {
 	
 	public Pessoa() {
@@ -22,22 +27,30 @@ public class Pessoa implements Comparable<Pessoa> {
 		this.perfil = perfil;
 	}
 	
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="ID")
 	private Integer id;
 	
 	@NotEmpty(message = "{NotEmpty.pessoa.email}")
 	@Email
+	@Column(name="EMAIL")
 	private String email;
 	
 	@NotEmpty(message = "{NotEmpty.pessoa.nome}")
+	@Column(name="NOME")
 	private String nome;
 	
+	@Column(name="TELEFONE")
 	private String telefone;
 	
 	@NotNull(message = "{NotNull.pessoa.perfil}")
+	@Enumerated(EnumType.STRING)
+	@Column(name="PERFIL")
 	private Perfil perfil;
 	
+	@Column(name="SENHA")
 	private String senha;
     
 	
