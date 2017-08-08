@@ -143,7 +143,7 @@ public class PessoaDaoSqliteJdbc implements PessoaDAO {
 	}
 	
 	@Override
-	public List<Pessoa> find(String nome, String telefone, Perfil perfil) throws SQLException {
+	public List<Pessoa> findByFields(String nome, String telefone, Perfil perfil) throws SQLException {
 		logger.debug("Consultando com parametros: " + nome +","+ telefone +","+ perfil);
 		List<Pessoa> lista = new ArrayList<>();
 		try {

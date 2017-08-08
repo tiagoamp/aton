@@ -83,21 +83,36 @@ public class PessoaDaoSqliteJpa implements PessoaDAO {
 		instanciateEntityManager();
 		
 		Query query = em.createQuery("SELECT p from Pessoa p WHERE p.nome like :pNome");
-		query.setParameter("pNome", nome);		
+		query.setParameter("pNome", "%" + nome + "%");		
 		List<Pessoa> list = query.getResultList();
 		
 		closeEntityManager();
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Pessoa> find(String nome, String telefone, Perfil perfil) throws SQLException {
+	public List<Pessoa> findByFields(String nome, String telefone, Perfil perfil) throws SQLException {
 		instanciateEntityManager();
 		
-		 // TO DO: IMPLEMENTAR VERIFICANDO SE PARAMETROS SÃO IGUAIS A NULL
+		StringBuilder sql = new StringBuilder("SELECT p FROM Pessoa p ");
+		if (nome != null || telefone != null || perfil != null) {
+			sql.append(" WHERE p.id IS NOT NULL ");
+		}
 		
-		return null;
+		if (nome != null) sql.append("AND p.nome = :pNome ");
+		if (telefone != null) sql.append("AND p.telefone = :pTelefone ");
+		if (perfil != null) sql.append("AND p.perfil = :pPerfil ");
 		
+		Query query = em.createQuery(sql.toString());
+		if (nome != null) query.setParameter("pNome", nome.toUpperCase());
+		if (telefone != null) query.setParameter("pTelefone", telefone.toUpperCase());
+		if (perfil != null) query.setParameter("pPerfil", perfil);
+				
+		List<Pessoa> list = query.getResultList();
+		
+		closeEntityManager();
+		return list;		
 	}
 
 	@SuppressWarnings("unchecked")

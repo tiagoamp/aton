@@ -68,10 +68,11 @@ public interface PessoaDAO {
 	 * @return List<Pessoa> List of entity
 	 * @throws SQLException
 	 */
-	List<Pessoa> find(String nome, String telefone, Perfil perfil) throws SQLException;
+	List<Pessoa> findByFields(String nome, String telefone, Perfil perfil) throws SQLException;
 	
 	/**
-	 * Consulta e retorna todas as 'pessoas' na base de dados
+	 * Retrieve all entities from the database.
+	 * 
 	 * @return List<Pessoa> List of entity
 	 * @throws SQLException
 	 */

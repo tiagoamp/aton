@@ -155,16 +155,16 @@ public class AtonServiceTest {
 	@Test
 	public void testConsultarPessoasParametros_shouldReturnValidOutput() throws SQLException, AtonBOException {
 		List<Pessoa> lista = new ArrayList<>();
-		when(pessoaDAOMock.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil())).thenReturn(lista);
+		when(pessoaDAOMock.findByFields(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil())).thenReturn(lista);
 		lista = service.consultarPessoas(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
 		assertTrue(lista != null);
-		verify(pessoaDAOMock).find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
+		verify(pessoaDAOMock).findByFields(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test(expected = AtonBOException.class)
 	public void testConsultarPessoasParametros_shouldThrowException() throws SQLException, AtonBOException {
-		when(pessoaDAOMock.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil())).thenThrow(SQLException.class);
+		when(pessoaDAOMock.findByFields(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil())).thenThrow(SQLException.class);
 		service.consultarPessoas(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());	
 	}
 		

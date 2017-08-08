@@ -94,7 +94,7 @@ public class AtonService {
 	
 	public List<Pessoa> consultarPessoas(String nome, String telefone, Perfil perfil) throws AtonBOException {
 		try {
-			return pessoaDao.find(nome, telefone, perfil);			
+			return pessoaDao.findByFields(nome, telefone, perfil);			
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new AtonBOException("Erro durante acesso no banco de dados!", e);

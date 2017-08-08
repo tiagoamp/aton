@@ -109,27 +109,46 @@ public class PessoaDAOTest {
 		
 		List<Pessoa> list = dao.findByNomeAproximado(partialNome);
 		assertNotNull("Must return entity by partial 'nome'." , list);
-		assertTrue("Must contain entity by partial 'nome'." ,list.contains(pessoa));  // TO DO: DEPURAR
-		
+		assertTrue("Must contain entity by partial 'nome'." ,list.contains(pessoa));				
 	}
-	
-	
-	
-	/*
 	
 	@Test
-	public void testFindStringStringString() throws SQLException {
-		// criando massa de dados
-		dao.create(pessoa);
-		// teste
-		List<Pessoa> lista = dao.find(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
-		assertTrue(!lista.isEmpty());
-		assertTrue(lista.size() == 1);
+	public void testFindByFields_allFieldsMatch_shouldReturnValidOutput() throws SQLException {
+		Pessoa pessoa = insertPessoaInDataBaseForTests();
+		
+		List<Pessoa> list = dao.findByFields(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
+		assertTrue(!list.isEmpty());
+		assertTrue(list.size() == 1);
+	}
+	
+	@Test
+	public void testFindByFields_byNome_shouldReturnValidOutput() throws SQLException {
+		Pessoa pessoa = insertPessoaInDataBaseForTests();
+		
+		List<Pessoa> list = dao.findByFields(pessoa.getNome(), null, null);
+		assertTrue(!list.isEmpty());
+		assertTrue(list.size() == 1);
+	}
+	
+	@Test
+	public void testFindByFields_byTelefone_shouldReturnValidOutput() throws SQLException {
+		Pessoa pessoa = insertPessoaInDataBaseForTests();
+		
+		List<Pessoa> list = dao.findByFields(null, pessoa.getTelefone(), null);
+		assertTrue(!list.isEmpty());
+		assertTrue(list.size() == 1);
+	}
+	
+	@Test
+	public void testFindByFields_byPerfil_shouldReturnValidOutput() throws SQLException {
+		Pessoa pessoa = insertPessoaInDataBaseForTests();
+		
+		List<Pessoa> list = dao.findByFields(null, null, pessoa.getPerfil());
+		assertTrue(!list.isEmpty());
+		assertTrue(list.size() == 1);
 	}
 		
-	*/
-	
-	
+		
 	// HELPER METHODS
 	private void instanciateDaoForTests(String type) {
 		if (type == null) throw new IllegalArgumentException("JDBC or JPA should be informed as argument!");
