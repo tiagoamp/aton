@@ -13,13 +13,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import br.com.tiagoamp.aton.dao.EmprestimoDAO;
 import br.com.tiagoamp.aton.dao.EmprestimoDaoBdLocal;
-import br.com.tiagoamp.aton.dao.LivroDAO;
-import br.com.tiagoamp.aton.dao.LivroDaoBdLocal;
+import br.com.tiagoamp.aton.dao.BookDAO;
+import br.com.tiagoamp.aton.dao.BookDaoJdbc;
 import br.com.tiagoamp.aton.dao.PersonDAO;
 import br.com.tiagoamp.aton.dao.PessoaDaoJdbc;
 import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Emprestimo;
-import br.com.tiagoamp.aton.model.Livro;
+import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Person;
 
@@ -34,12 +34,12 @@ public class AtonService {
 	
 	public AtonService() {		
 		this.pessoaDao = new PessoaDaoJdbc();
-		this.livroDao = new LivroDaoBdLocal();
+		this.livroDao = new BookDaoJdbc();
 		this.empDao = new EmprestimoDaoBdLocal();		
 	}
 	
 	private PersonDAO pessoaDao;
-	private LivroDAO livroDao;
+	private BookDAO livroDao;
 	private EmprestimoDAO empDao;
 	
 	public boolean inserirPessoa(Person pessoa) throws AtonBOException {
@@ -119,9 +119,9 @@ public class AtonService {
 		}
 	}
 	
-	public boolean inserirLivro(Livro livro) throws AtonBOException {
+	public boolean inserirLivro(Book livro) throws AtonBOException {
 		try {
-			Livro l = livroDao.findByIsbn(livro.getIsbn());
+			Book l = livroDao.findByIsbn(livro.getIsbn());
 			if (l != null) throw new AtonBOException("ISBN já cadastrado!");			
 			int result = livroDao.create(livro);
 			return result == 1;
@@ -156,7 +156,7 @@ public class AtonService {
 		return path != null ? Paths.get("database", "pics", nomeArquivo) : null;
 	}
 	
-	public boolean atualizarLivro(Livro livro) throws AtonBOException {
+	public boolean atualizarLivro(Book livro) throws AtonBOException {
 		try {
 			int result = livroDao.update(livro);
 			return result == 1;
@@ -176,7 +176,7 @@ public class AtonService {
 		}
 	}
 	
-	public Livro consultarLivro(int id) throws AtonBOException {
+	public Book consultarLivro(int id) throws AtonBOException {
 		try {
 			return livroDao.findById(id);
 		} catch (SQLException e) {
@@ -185,7 +185,7 @@ public class AtonService {
 		}
 	}
 	
-	public Livro consultarLivroPorIsbn(String isbn) throws AtonBOException {
+	public Book consultarLivroPorIsbn(String isbn) throws AtonBOException {
 		try {
 			return livroDao.findByIsbn(isbn);
 		} catch (SQLException e) {
@@ -194,16 +194,16 @@ public class AtonService {
 		}
 	}
 	
-	public List<Livro> consultarLivros(String titulo, String autor, String isbn, String classificacao, String publico) throws AtonBOException {
+	public List<Book> consultarLivros(String titulo, String autor, String isbn, String classificacao, String publico) throws AtonBOException {
 		try {
-			return livroDao.find(titulo, autor, isbn, classificacao, publico);
+			return livroDao.findByFields(titulo, autor, isbn, classificacao, publico);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public List<Livro> consultarLivros() throws AtonBOException {
+	public List<Book> consultarLivros() throws AtonBOException {
 		try {
 			return livroDao.findAll();
 		} catch (SQLException e) {
@@ -212,18 +212,18 @@ public class AtonService {
 		}
 	}
 	
-	public List<Livro> consultarLivrosPorAutorAproximado(String autor) throws AtonBOException {
+	public List<Book> consultarLivrosPorAutorAproximado(String autor) throws AtonBOException {
 		try {
-			return livroDao.findByAutorAproximado(autor);			
+			return livroDao.findByAuthorNameLike(autor);			
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public List<Livro> consultarLivrosPorTituloAproximado(String titulo) throws AtonBOException {
+	public List<Book> consultarLivrosPorTituloAproximado(String titulo) throws AtonBOException {
 		try {
-			return livroDao.findByTituloAproximado(titulo);			
+			return livroDao.findByTitleLike(titulo);			
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
@@ -324,10 +324,10 @@ public class AtonService {
 	public void setPessoaDao(PersonDAO pessoaDao) {
 		this.pessoaDao = pessoaDao;
 	}
-	public LivroDAO getLivroDao() {
+	public BookDAO getLivroDao() {
 		return livroDao;
 	}
-	public void setLivroDao(LivroDAO livroDao) {
+	public void setLivroDao(BookDAO livroDao) {
 		this.livroDao = livroDao;
 	}
 	public EmprestimoDAO getEmpDao() {

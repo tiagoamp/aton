@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Emprestimo;
-import br.com.tiagoamp.aton.model.Livro;
+import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Person;
-import br.com.tiagoamp.aton.model.TipoAquisicao;
+import br.com.tiagoamp.aton.model.TypeOfAcquisition;
 import br.com.tiagoamp.aton.model.TipoMensagem;
 import br.com.tiagoamp.aton.model.to.MensagemTO;
 import br.com.tiagoamp.aton.service.AtonService;
@@ -125,7 +125,7 @@ public class AtonController {
 		if(result.hasErrors()) {
 			hasErrors = true;
 		}
-		if (pessoa.getPerfil() != null && pessoa.getPerfil() != Perfil.LEITOR && pessoa.getSenha().equals("")) {
+		if (pessoa.getPerfil() != null && pessoa.getPerfil() != Perfil.READER && pessoa.getSenha().equals("")) {
 			result.reject("senha", "Senha deve ser preenchida para perfil 'Administrador' ou 'Bibliotecário'.");
 			hasErrors = true;
 		}
@@ -187,7 +187,7 @@ public class AtonController {
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
 	        Model model) {
-		Livro livro = new Livro();
+		Book livro = new Book();
 		if (pId != null && !pId.isEmpty()) {
 			try {		
 				livro = service.consultarLivro(Integer.parseInt(pId));				 				
@@ -212,11 +212,11 @@ public class AtonController {
 	        @RequestParam(value="tISBN", required=false) String pISBN, 
 	        @RequestParam(value="tDados", required=false) String pDados, 
 	        Model model){
-		List<Livro> lista = new ArrayList<>();
+		List<Book> lista = new ArrayList<>();
 		try {
 			if (pISBN != null && !pISBN.isEmpty()) { // CAMPO DE PESQ ISBN PREENCHIDO
 				// pesquisa por isbn
-				Livro l = service.consultarLivroPorIsbn(pISBN.trim().toUpperCase());
+				Book l = service.consultarLivroPorIsbn(pISBN.trim().toUpperCase());
 				if (l != null)
 					lista.add(l);
 			} else { // CAMPO DE PESQ DADOS PREENCHIDO
@@ -242,7 +242,7 @@ public class AtonController {
 	}
 		
 	@RequestMapping(value="livrocadastrado", method = RequestMethod.POST)
-	public String salvarLivro(@Valid Livro livro, BindingResult result, Model model, HttpServletRequest request
+	public String salvarLivro(@Valid Book livro, BindingResult result, Model model, HttpServletRequest request
 			/*@, RequestParam(value="file", required=false) MultipartFile pFile*/) {
 		boolean hasErrors = false;
 		if(result.hasErrors()) {
@@ -260,7 +260,7 @@ public class AtonController {
 			result.reject("dataAquisicaoFormatada", "Campo obrigatório não preenchido: Data de Aquisição.");
 			hasErrors = true;
 		}
-		if (livro.getTipoAquisicao() == TipoAquisicao.COMPRA && !livro.getNomeDoador().isEmpty()) {
+		if (livro.getTipoAquisicao() == TypeOfAcquisition.COMPRA && !livro.getNomeDoador().isEmpty()) {
 			result.reject("tipoAquisicao", "Tipo de aquisição 'COMPRA' não permite cadastro de doador.");
 			hasErrors = true;
 		}
@@ -306,7 +306,7 @@ public class AtonController {
 	
 	@RequestMapping("listalivros")
 	public String listarLivros(HttpServletRequest request, Model model) {
-		List<Livro> lista = new ArrayList<>();
+		List<Book> lista = new ArrayList<>();
 		try {		
 			lista = service.consultarLivros();
 			if (lista.isEmpty()) {
@@ -327,7 +327,7 @@ public class AtonController {
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
 	        Model model) {		
-		Livro livro;
+		Book livro;
 		try {		
 			livro = service.consultarLivro(Integer.parseInt(pId));
 			if (livro == null) {
@@ -353,7 +353,7 @@ public class AtonController {
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
 	        Model model) {		
-		Livro livro = new Livro();				
+		Book livro = new Book();				
 		if (pId != null && !pId.isEmpty()) {
 			try {		
 				livro = service.consultarLivro(Integer.parseInt(pId));				 				
@@ -376,7 +376,7 @@ public class AtonController {
 	        @RequestParam(value="tIdLivro", required=false) String pIdLivro,
 	        Model model){
 		List<Person> lista = new ArrayList<>();
-		Livro livro = null;
+		Book livro = null;
 		try {
 			livro = service.consultarLivro(Integer.parseInt(pIdLivro)); // recarregando livro
 			lista = this.pesquisarPessoasPorParametros(pEmail, pDados); 
@@ -399,7 +399,7 @@ public class AtonController {
 	        @RequestParam(value="identificador", required=false) String pId,
 	        @RequestParam(value="idLivro", required=false) String pIdLivro,
 	        Model model){
-		Livro livro = null;
+		Book livro = null;
 		Person pessoa = null;
 		try {
 			livro = service.consultarLivro(Integer.parseInt(pIdLivro)); 
@@ -484,7 +484,7 @@ public class AtonController {
 		
 		try {			
 			service.inserirEmprestimo(emprestimo);
-			Livro livro = emprestimo.getLivro();
+			Book livro = emprestimo.getLivro();
 			livro.setQtdDisponiveis(livro.getQtdDisponiveis() - 1);
 			service.atualizarLivro(livro);			
 			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + emprestimo.toString(), TipoMensagem.SUCESSO));
@@ -507,11 +507,11 @@ public class AtonController {
 		try {
 			if (pLivro != null && !pLivro.isEmpty()) { // CAMPO DE PESQ LIVRO PREENCHIDO
 				pLivro = pLivro.trim().toUpperCase();
-				List<Livro> livros = new ArrayList<>();
+				List<Book> livros = new ArrayList<>();
 				livros.addAll(service.consultarLivrosPorTituloAproximado(pLivro));
 				livros.addAll(service.consultarLivrosPorAutorAproximado(pLivro));
 				for (int i = 0; i < livros.size(); i++) {
-					Livro livro = livros.get(i);
+					Book livro = livros.get(i);
 					lista = service.consultarEmprestimos(livro.getId(), null, null, null);
 				}
 			} else { // CAMPO DE LEITOR(PESSOA) PREENCHIDO
@@ -582,7 +582,7 @@ public class AtonController {
 				emprestimo = service.consultarEmprestimo(Integer.parseInt(pId));
 				emprestimo.setDataDevolucao(new Date());
 				service.atualizarEmprestimo(emprestimo);
-				Livro livro = emprestimo.getLivro();
+				Book livro = emprestimo.getLivro();
 				livro.setQtdDisponiveis(livro.getQtdDisponiveis() + 1);
 				service.atualizarLivro(livro);
 				model.addAttribute("mensagem",new MensagemTO("Devolução com sucesso: " + emprestimo.toString(), TipoMensagem.SUCESSO));
@@ -623,7 +623,7 @@ public class AtonController {
 			}
 			// verificando credenciais
 			pessoa.setSenha(DigestUtils.sha1Hex(pessoa.getSenha()).toUpperCase());
-			if (pessoaBD.getSenha().equals(pessoa.getSenha()) && pessoaBD.getPerfil() != Perfil.LEITOR) {
+			if (pessoaBD.getSenha().equals(pessoa.getSenha()) && pessoaBD.getPerfil() != Perfil.READER) {
 				pessoaBD.setSenha(null); // null por seguranca, pra setar obj na sessao
 				session.setAttribute("usuario", pessoaBD);
 				logger.info("Usuario autenticado: " + pessoaBD);

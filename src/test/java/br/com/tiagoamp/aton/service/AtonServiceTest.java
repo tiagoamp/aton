@@ -21,11 +21,11 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import br.com.tiagoamp.aton.TestHelper;
 import br.com.tiagoamp.aton.dao.EmprestimoDAO;
-import br.com.tiagoamp.aton.dao.LivroDAO;
+import br.com.tiagoamp.aton.dao.BookDAO;
 import br.com.tiagoamp.aton.dao.PersonDAO;
 import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Emprestimo;
-import br.com.tiagoamp.aton.model.Livro;
+import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Person;
 
 public class AtonServiceTest {
@@ -33,7 +33,7 @@ public class AtonServiceTest {
 	@Mock
 	private PersonDAO pessoaDAOMock;
 	@Mock
-	private LivroDAO livroDAOMock;
+	private BookDAO livroDAOMock;
 	@Mock
 	private EmprestimoDAO emprestimoDAOMock;
 	
@@ -41,7 +41,7 @@ public class AtonServiceTest {
 	private AtonService service;
 	
 	private Person pessoa;
-	private Livro livro;
+	private Book livro;
 	private Emprestimo emprestimo;
 	
 	private static int ID = 100;
@@ -53,7 +53,7 @@ public class AtonServiceTest {
 		
 		service = new AtonService();
 		pessoa = TestHelper.getPersonForTest();
-		livro = TestHelper.getLivroTeste();
+		livro = TestHelper.getBookForTest();
 		emprestimo = TestHelper.getEmprestimoTeste();
 		
 		service.setPessoaDao(pessoaDAOMock);
@@ -296,23 +296,23 @@ public class AtonServiceTest {
 	
 	@Test
 	public void testConsultarLivrosParametros_shouldReturnValidOutput() throws SQLException, AtonBOException {
-		List<Livro> lista = new ArrayList<>();
-		when(livroDAOMock.find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo())).thenReturn(lista);
+		List<Book> lista = new ArrayList<>();
+		when(livroDAOMock.findByFields(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo())).thenReturn(lista);
 		lista = service.consultarLivros(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
 		assertTrue(lista != null);
-		verify(livroDAOMock).find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
+		verify(livroDAOMock).findByFields(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test(expected = AtonBOException.class)
 	public void testConsultarLivrosParametros_shouldThrowException() throws SQLException, AtonBOException {
-		when(livroDAOMock.find(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo())).thenThrow(SQLException.class);
+		when(livroDAOMock.findByFields(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo())).thenThrow(SQLException.class);
 		service.consultarLivros(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());	
 	}
 
 	@Test
 	public void testConsultarLivros_shouldReturnValidOutput() throws SQLException, AtonBOException {
-		List<Livro> lista = new ArrayList<>();
+		List<Book> lista = new ArrayList<>();
 		when(livroDAOMock.findAll()).thenReturn(lista);
 		lista = service.consultarLivros();
 		assertTrue(lista != null);

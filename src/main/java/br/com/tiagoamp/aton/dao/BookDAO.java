@@ -63,7 +63,7 @@ public interface BookDAO {
 	 * @param targetAudience
 	 * @return List<Book> 
 	 */
-	List<Book> findByFields(String title, String author, String isbn, String classification, String targetAudience) throws SQLException;
+	List<Book> findByFields(String title, String authorsNameInline, String isbn, String classification, String targetAudience) throws SQLException;
 	
 	/**
 	 * Retrieve all entities from the database.

@@ -22,7 +22,7 @@ public class Emprestimo implements Comparable<Emprestimo> {
 	public Emprestimo() {
 	}
 	
-	public Emprestimo(Livro livro, Person pessoa, Date dataEmprestimo, Date dataDevolucaoProgramada, Date dataDevolucao) {
+	public Emprestimo(Book livro, Person pessoa, Date dataEmprestimo, Date dataDevolucaoProgramada, Date dataDevolucao) {
 		this.livro = livro;
 		this.pessoa = pessoa;
 		this.dataEmprestimo = dataEmprestimo;
@@ -37,7 +37,7 @@ public class Emprestimo implements Comparable<Emprestimo> {
 	
 	@ManyToOne
 	@Column(name="ID_LIVRO")
-    private Livro livro;
+    private Book livro;
     
 	@ManyToOne
 	@Column(name="ID_PESSOA")
@@ -96,10 +96,10 @@ public class Emprestimo implements Comparable<Emprestimo> {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Livro getLivro() {
+	public Book getLivro() {
 		return livro;
 	}
-	public void setLivro(Livro livro) {
+	public void setLivro(Book livro) {
 		this.livro = livro;
 	}
 	public Person getPessoa() {

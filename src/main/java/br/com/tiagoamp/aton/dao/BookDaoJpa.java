@@ -69,14 +69,14 @@ public class BookDaoJpa implements BookDAO {
 	}
 
 	@Override
-	public List<Book> findByFields(String title, String author, String isbn, String classification,	String targetAudience) throws SQLException {
+	public List<Book> findByFields(String title, String authorsNameInline, String isbn, String classification,	String targetAudience) throws SQLException {
 		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 		CriteriaQuery<Book> query = criteriaBuilder.createQuery(Book.class);
 		
 		Root<Book> root = query.from(Book.class);
 		Path<String> titlePath = root.<String>get("title");
 		
-		Path<String> authorPath = root.<String>get("authorNameFormattedBySemicolon");		
+		Path<String> authorPath = root.<String>get("authorsNameInline");		
 		Path<String> isbnPath = root.<String>get("isbn");
 		Path<String> classificationPath = root.<String>get("classification");
 		Path<String> targetPath = root.<String>get("targetAudience");
@@ -86,8 +86,8 @@ public class BookDaoJpa implements BookDAO {
 			Predicate titleLike = criteriaBuilder.like(titlePath, "%" + title + "%");
 			predicates.add(titleLike);
 		}
-		if (author != null && !author.isEmpty()) {
-			Predicate authorLike = criteriaBuilder.like(authorPath, "%" + author + "%");
+		if (authorsNameInline != null && !authorsNameInline.isEmpty()) {
+			Predicate authorLike = criteriaBuilder.like(authorPath, "%" + authorsNameInline + "%");
 			predicates.add(authorLike);
 		}
 		if (isbn != null && !isbn.isEmpty()) {
@@ -119,7 +119,7 @@ public class BookDaoJpa implements BookDAO {
 		CriteriaQuery<Book> query = criteriaBuilder.createQuery(Book.class);
 		
 		Root<Book> root = query.from(Book.class);
-		Path<String> authorPath = root.<String>get("authorNameFormattedBySemicolon");	
+		Path<String> authorPath = root.<String>get("authorsNameInline");	
 		Predicate authorLike = criteriaBuilder.like(authorPath, "%" + authorName + "%");		
 		query.where(authorLike);
 		

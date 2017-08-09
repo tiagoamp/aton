@@ -1,6 +1,5 @@
 package br.com.tiagoamp.aton.model;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,8 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -130,6 +127,23 @@ public class Book implements Comparable<Book> {
     	return this.title.compareTo(o.title) ;
     }
     
+    private void synchronizeAuthorsNameInFields() {
+    	if (authorsNameInline == null && authorsName != null) {
+    		StringBuilder sb = new StringBuilder();
+			int i;
+			for (i = 0; i < (authorsName.size()-1); i++) {
+				sb.append(authorsName.get(i) + " ; ");
+			}
+			sb.append(authorsName.get(i));  // last one without ';'
+			authorsNameInline = sb.toString();
+    	} else if (authorsName == null && authorsNameInline != null) {
+    		authorsName = new ArrayList<>();
+			String[] authorSplit = authorsNameInline.split(";");
+			for (int i = 0; i < authorSplit.length; i++) {
+				authorsName.add(authorSplit[i].trim());
+			}
+    	}
+    }
     
     public Integer getId() {
 		return id;
@@ -257,33 +271,20 @@ public class Book implements Comparable<Book> {
 	public void setNumberAvailable(Integer numberAvailable) {
 		this.numberAvailable = numberAvailable;
 	}
+	
 	public List<String> getAuthorsName() {
-		if (authorsName == null && authorsNameInline != null) {
-			authorsName = new ArrayList<>();
-			String[] authorSplit = authorsNameInline.split(";");
-			for (int i = 0; i < authorSplit.length; i++) {
-				authorsName.add(authorSplit[i].trim());
-			}			
-		}		
 		return authorsName;
 	}
 	public void setAuthorsName(List<String> authorsName) {
-		this.authorsName = authorsName;		
+		this.authorsName = authorsName;
+		synchronizeAuthorsNameInFields();
 	}
 	public String getAuthorsNameInline() {
-		if (authorsNameInline == null && authorsName != null) {
-			StringBuilder sb = new StringBuilder();
-			int i;
-			for (i = 0; i < (authorsName.size()-1); i++) {
-				sb.append(authorsName.get(i) + " ; ");
-			}
-			sb.append(authorsName.get(i));  // last one without ';'
-			authorsNameInline = sb.toString();
-		}
 		return authorsNameInline;
     }
-    public void setAuthorsNameInline(String authorNameFormattedBySemicolon) {
-		this.authorsNameInline = authorNameFormattedBySemicolon;
+    public void setAuthorsNameInline(String authorsNameInline) {
+		this.authorsNameInline = authorsNameInline;
+		synchronizeAuthorsNameInFields();
 	}
     
 }

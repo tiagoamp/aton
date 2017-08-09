@@ -55,7 +55,7 @@ public class PersonDAOTest {
 	@Test
 	public void testUpdate_shouldUpdateEntity() throws SQLException {
 		Person personRetrieved = insertPersonInDataBaseForTests();  // transient --> managed --> detached
-		String newName = "Nome Alterado 2".toUpperCase();
+		String newName = "Name Updated 2".toUpperCase();
 		personRetrieved.setName(newName);
 		
 		dao.update(personRetrieved);
@@ -114,8 +114,8 @@ public class PersonDAOTest {
 		String partialName = person.getName().substring(4);
 		
 		List<Person> list = dao.findByNameLike(partialName);
-		assertNotNull("Must return entity by partial 'nome'." , list);
-		assertTrue("Must contain entity by partial 'nome'." ,list.contains(person));				
+		assertNotNull("Must return entity by partial 'name'." , list);
+		assertTrue("Must contain entity by partial 'name'." ,list.contains(person));				
 	}
 	
 	@Test

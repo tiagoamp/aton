@@ -25,13 +25,13 @@ public class AutorizacaoFuncionalidades {
 			if (usuario == null) {
 				to = new AutorizacaoResultadoTO("autorizacao", null);
 			} else {
-				if (usuario.getPerfil() != Perfil.ADMINISTRADOR) {
+				if (usuario.getPerfil() != Perfil.ADMINISTRATOR) {
 					to = new AutorizacaoResultadoTO("livros", "Ação autorizada somente para perfil 'Administrador'.");
 				}
 			}
 		} else { // BIBLIOTECARIO  
 			if (acao.equals("emprestar") && usuario != null) {
-				if (usuario.getPerfil() != Perfil.ADMINISTRADOR || usuario.getPerfil() != Perfil.BIBLIOTECARIO) {
+				if (usuario.getPerfil() != Perfil.ADMINISTRATOR || usuario.getPerfil() != Perfil.LIBRARIAN) {
 					to = new AutorizacaoResultadoTO("livros", "Ação autorizada somente para perfil 'Bibliotecário'.");
 				}
 			}
@@ -52,7 +52,7 @@ public class AutorizacaoFuncionalidades {
 			if (usuario == null) {
 				to = new AutorizacaoResultadoTO("autorizacao", null);
 			} else {
-				if (usuario.getPerfil() != Perfil.ADMINISTRADOR) {
+				if (usuario.getPerfil() != Perfil.ADMINISTRATOR) {
 					to = new AutorizacaoResultadoTO("pessoas", "Ação autorizada somente para perfil 'Administrador'.");
 				}
 			}

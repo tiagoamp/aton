@@ -15,7 +15,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import br.com.tiagoamp.aton.model.Emprestimo;
-import br.com.tiagoamp.aton.model.Livro;
+import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Person;
 
 public class EmprestimoDaoBdLocal implements EmprestimoDAO {
@@ -49,7 +49,7 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 		Person pessoa = new Person();
 		pessoa.setId(rs.getInt("ID_PESSOA"));
 		emp.setPessoa(pessoa);
-		Livro livro = new Livro();
+		Book livro = new Book();
 		livro.setId(rs.getInt("ID_LIVRO"));
 		emp.setLivro(livro);
 		emp.setDataEmprestimo(rs.getDate("DT_EMPRESTIMO"));
