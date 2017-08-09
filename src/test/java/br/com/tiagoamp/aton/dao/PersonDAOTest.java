@@ -25,7 +25,7 @@ public class PersonDAOTest {
 	@Before
 	public void setup() throws ClassNotFoundException {
 		instanciateDaoForTests("jpa");
-		limparBaseDeDadosDeTeste();
+		cleanDatabaseDataForTests();
 	}
 	
 	@After
@@ -156,6 +156,7 @@ public class PersonDAOTest {
 		
 		
 	// HELPER METHODS
+	
 	private void instanciateDaoForTests(String type) {
 		if (type == null) throw new IllegalArgumentException("JDBC or JPA should be informed as argument!");
 		if (type.equals("jdbc")) {
@@ -166,10 +167,10 @@ public class PersonDAOTest {
 		}	
 	}
 	
-	private void limparBaseDeDadosDeTeste() {
+	private void cleanDatabaseDataForTests() {
 		try {
-			List<Person> lista = dao.findAll();
-			for (Iterator<Person> iterator = lista.iterator(); iterator.hasNext();) {
+			List<Person> list = dao.findAll();
+			for (Iterator<Person> iterator = list.iterator(); iterator.hasNext();) {
 				Person person = (Person) iterator.next();
 				dao.delete(person.getId());
 			}
@@ -186,9 +187,9 @@ public class PersonDAOTest {
 	}
 	
 	private List<Person> insertPeopleListInDataBaseForTests() throws SQLException {
-		Person person1 = new Person("email1@email.com", "Nome 01", "111-222", Perfil.ADMINISTRATOR);
-		Person person2 = new Person("email2@email.com", "Nome 02", "111-222", Perfil.ADMINISTRATOR);
-		Person person3 = new Person("email3@email.com", "Nome 03", "111-222", Perfil.ADMINISTRATOR);
+		Person person1 = new Person("email1@email.com", "Name 01", "111-222", Perfil.ADMINISTRATOR);
+		Person person2 = new Person("email2@email.com", "Name 02", "111-222", Perfil.ADMINISTRATOR);
+		Person person3 = new Person("email3@email.com", "Name 03", "111-222", Perfil.ADMINISTRATOR);
 		
 		dao.create(person1);
 		dao.create(person2);

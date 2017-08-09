@@ -1,11 +1,10 @@
 package br.com.tiagoamp.aton;
 
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Date;
 
-import br.com.tiagoamp.aton.model.Emprestimo;
 import br.com.tiagoamp.aton.model.Book;
+import br.com.tiagoamp.aton.model.Emprestimo;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Person;
 import br.com.tiagoamp.aton.model.Status;
@@ -19,12 +18,12 @@ public class TestHelper {
 		return person;
 	}
 		
-	public static Book getLivroTeste() {
+	public static Book getBookForTest() {
 		Book book = new Book();
 		book.setAuthorsName(Arrays.asList("Author Name 01", "Author Name 02"));
 		book.setClassification("Internal classification for tests");
 		book.setComments("Comments...");
-		book.setCoverImage(Paths.get("path/to/img.jpg"));
+		book.setCoverImage("path/to/img.jpg");
 		book.setDateOfAcquisition(new Date());
 		book.setDateOfRegistration(new Date());
 		book.setDonorName("Donor Name");
@@ -45,9 +44,9 @@ public class TestHelper {
 		return book;
 	}
 	
-	public static Emprestimo getEmprestimoTeste() {
+	public static Emprestimo getBorrowingForTest() {
 		Emprestimo emp = new Emprestimo();
-		Book livro = TestHelper.getLivroTeste();
+		Book livro = TestHelper.getBookForTest();
 		livro.setId(1);
 		emp.setLivro(livro);
 		Person pessoa = TestHelper.getPersonForTest();

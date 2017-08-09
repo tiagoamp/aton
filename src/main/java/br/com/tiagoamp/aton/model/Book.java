@@ -1,6 +1,7 @@
 package br.com.tiagoamp.aton.model;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -73,7 +78,7 @@ public class Book implements Comparable<Book> {
     private String targetAudience;
     
     @Column(name="COVER_IMG")
-    private Path coverImage;
+    private String coverImagePath;
     
     @Enumerated(EnumType.STRING)
     @Column(name="TYPE_ACQUISITION")
@@ -85,9 +90,6 @@ public class Book implements Comparable<Book> {
     
     @Column(name="DONOR_NAME")
     private String donorName;
-    
-    @Column(name="REGISTERER")
-    private Person registerer;
     
     @Enumerated(EnumType.STRING)
     @Column(name="STATUS")
@@ -102,11 +104,15 @@ public class Book implements Comparable<Book> {
     @Column(name="NUMBER_AVAILABLE")
     private Integer numberAvailable;
     
+    @ManyToOne
+    @JoinColumn(name="REGISTERER_ID")
+    private Person registerer;
+    
     @Transient
     private List<String> authorsName;
     
     @Column(name="AUTHORS")
-    private String authorNameFormattedBySemicolon;
+    private String authorsNameInline;
     
         
     @Override
@@ -114,14 +120,14 @@ public class Book implements Comparable<Book> {
     	StringBuilder sb = new StringBuilder(title);
     	if (authorsName !=  null) {
     		sb.append(" - ");
-    		sb.append(authorNameFormattedBySemicolon);
+    		sb.append(authorsNameInline);
     	}
     	return sb.toString();
     }
     
     @Override
     public int compareTo(Book o) {
-    	return this.title.compareTo(o.title);
+    	return this.title.compareTo(o.title) ;
     }
     
     
@@ -197,11 +203,11 @@ public class Book implements Comparable<Book> {
 	public void setTargetAudience(String targetAudience) {
 		this.targetAudience = targetAudience;
 	}
-	public Path getCoverImage() {
-		return coverImage;
+	public String getCoverImagePath() {
+		return coverImagePath;
 	}
-	public void setCoverImage(Path coverImage) {
-		this.coverImage = coverImage;
+	public void setCoverImage(String coverImagePath) {
+		this.coverImagePath = coverImagePath;
 	}
 	public TypeOfAcquisition getTypeOfAcquisition() {
 		return typeOfAcquisition;
@@ -252,24 +258,32 @@ public class Book implements Comparable<Book> {
 		this.numberAvailable = numberAvailable;
 	}
 	public List<String> getAuthorsName() {
+		if (authorsName == null && authorsNameInline != null) {
+			authorsName = new ArrayList<>();
+			String[] authorSplit = authorsNameInline.split(";");
+			for (int i = 0; i < authorSplit.length; i++) {
+				authorsName.add(authorSplit[i].trim());
+			}			
+		}		
 		return authorsName;
 	}
 	public void setAuthorsName(List<String> authorsName) {
-		this.authorsName = authorsName;
-		this.authorNameFormattedBySemicolon = getAuthorNameFormattedBySemicolon();
+		this.authorsName = authorsName;		
 	}
-	public String getAuthorNameFormattedBySemicolon() {
-		if (authorsName == null) return "";
-		StringBuilder sb = new StringBuilder();
-		int i;
-		for (i = 0; i < (authorsName.size()-1); i++) {
-			sb.append(authorsName.get(i) + " ; ");
+	public String getAuthorsNameInline() {
+		if (authorsNameInline == null && authorsName != null) {
+			StringBuilder sb = new StringBuilder();
+			int i;
+			for (i = 0; i < (authorsName.size()-1); i++) {
+				sb.append(authorsName.get(i) + " ; ");
+			}
+			sb.append(authorsName.get(i));  // last one without ';'
+			authorsNameInline = sb.toString();
 		}
-		sb.append(authorsName.get(i));  // last one without ';'
-    	return sb.toString();
+		return authorsNameInline;
     }
-    public void setAuthorNameFormattedBySemicolon(String authorNameFormattedBySemicolon) {
-		this.authorNameFormattedBySemicolon = authorNameFormattedBySemicolon;
+    public void setAuthorsNameInline(String authorNameFormattedBySemicolon) {
+		this.authorsNameInline = authorNameFormattedBySemicolon;
 	}
     
 }
