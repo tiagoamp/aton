@@ -1,51 +1,53 @@
 package br.com.tiagoamp.aton;
 
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Date;
 
 import br.com.tiagoamp.aton.model.Emprestimo;
-import br.com.tiagoamp.aton.model.Livro;
+import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Person;
-import br.com.tiagoamp.aton.model.Situacao;
-import br.com.tiagoamp.aton.model.TipoAquisicao;
+import br.com.tiagoamp.aton.model.Status;
+import br.com.tiagoamp.aton.model.TypeOfAcquisition;
 
 public class TestHelper {
 	
 	public static Person getPersonForTest() {
-		Person person = new Person("TESTE@TESTEMAIL.COM", "NOME DE TESTE", "11-1111-1111", Perfil.ADMINISTRADOR);
+		Person person = new Person("TEST@TESTEMAIL.COM", "NAME FOR TESTS", "11-1111-1111", Perfil.ADMINISTRATOR);
 		person.setPassword("1234");
 		return person;
 	}
 		
-	public static Livro getLivroTeste() {
-		Livro livro = new Livro();
-		livro.setAnoPublicacao(2016);
-		livro.setAutoresAgrupados("Autor de Teste 01, Autor de Teste 02");
-		livro.setClassificacao("Classificacao de Teste");
-		livro.setDataAquisicao(new Date());
-		livro.setDataCadastro(new Date());
-		livro.setEditora("Editora de Teste");
-		livro.setGenero("Genero de Teste");
-		Person pessoa = TestHelper.getPersonForTest();
-		pessoa.setId(1);
-		livro.setPessoaCadastradora(pessoa);
-		livro.setIsbn("ISBN");
-		livro.setLocalPublicacao("Local de Teste");
-		livro.setNomeDoador("Doador de Teste");
-		livro.setNroPaginas(100);
-		livro.setPathFotoCapa(Paths.get("/path/to/arquivo"));
-		livro.setPublicoAlvo("Publico de Teste");
-		livro.setSituacao(Situacao.DISPONIVEL);
-		livro.setSubtitulo("Subtitulo de Teste");
-		livro.setTipoAquisicao(TipoAquisicao.DOACAO);
-		livro.setTitulo("Titulo de Teste");
-		return livro;
+	public static Book getLivroTeste() {
+		Book book = new Book();
+		book.setAuthorsName(Arrays.asList("Author Name 01", "Author Name 02"));
+		book.setClassification("Internal classification for tests");
+		book.setComments("Comments...");
+		book.setCoverImage(Paths.get("path/to/img.jpg"));
+		book.setDateOfAcquisition(new Date());
+		book.setDateOfRegistration(new Date());
+		book.setDonorName("Donor Name");
+		book.setGenre("Horror");
+		book.setIsbn("ISBN-1234-567");
+		book.setNumberAvailable(2);
+		book.setNumberOfCopies(3);
+		book.setNumberOfPages(200);
+		book.setPublishingCity("São Paulo");
+		book.setPublishingCompany("Editors Test");
+		book.setPublishingYear(2000);
+		book.setStatus(Status.AVAILABLE);
+		book.setSubtitle("Subtitle of Book for Tests");
+		book.setTargetAudience("Adults");
+		book.setTitle("Title of Book For Tests");
+		book.setTypeOfAcquisition(TypeOfAcquisition.DONATION);
+		book.setRegisterer(getPersonForTest());
+		return book;
 	}
 	
 	public static Emprestimo getEmprestimoTeste() {
 		Emprestimo emp = new Emprestimo();
-		Livro livro = TestHelper.getLivroTeste();
+		Book livro = TestHelper.getLivroTeste();
 		livro.setId(1);
 		emp.setLivro(livro);
 		Person pessoa = TestHelper.getPersonForTest();

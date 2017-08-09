@@ -1,7 +1,7 @@
 package br.com.tiagoamp.aton.model;
 
-public enum TipoAquisicao {
+public enum TypeOfAcquisition {
 	
-	DOACAO, COMPRA;
+	DONATION, PURCHASE;
 
 }

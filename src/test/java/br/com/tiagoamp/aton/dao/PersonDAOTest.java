@@ -186,9 +186,9 @@ public class PersonDAOTest {
 	}
 	
 	private List<Person> insertPeopleListInDataBaseForTests() throws SQLException {
-		Person person1 = new Person("email1@email.com", "Nome 01", "111-222", Perfil.ADMINISTRADOR);
-		Person person2 = new Person("email2@email.com", "Nome 02", "111-222", Perfil.ADMINISTRADOR);
-		Person person3 = new Person("email3@email.com", "Nome 03", "111-222", Perfil.ADMINISTRADOR);
+		Person person1 = new Person("email1@email.com", "Nome 01", "111-222", Perfil.ADMINISTRATOR);
+		Person person2 = new Person("email2@email.com", "Nome 02", "111-222", Perfil.ADMINISTRATOR);
+		Person person3 = new Person("email3@email.com", "Nome 03", "111-222", Perfil.ADMINISTRATOR);
 		
 		dao.create(person1);
 		dao.create(person2);

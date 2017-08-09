@@ -62,9 +62,9 @@ public interface PersonDAO {
 	/**
 	 * Search the entity by given parameters in the database.
 	 * 
-	 * @param name
-	 * @param phone
-	 * @param role
+	 * @param name Name of the person (Uses 'like' for partial name search)
+	 * @param phone Phone number literal representation
+	 * @param role Role
 	 * @return List<Person> 
 	 * @throws SQLException
 	 */

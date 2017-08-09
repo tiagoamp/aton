@@ -1,8 +1,6 @@
 package br.com.tiagoamp.aton.model;
 
 import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,19 +14,20 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-//@Entity
-@Table(name="LIVROS")
-public class Livro implements Comparable<Livro> {
+@Entity
+@Table(name="BOOKS")
+public class Book implements Comparable<Book> {
 	
-	public Livro() {
-		this.dataCadastro = new Date();
-		this.situacao = Situacao.DISPONIVEL;
-		this.tipoAquisicao = TipoAquisicao.DOACAO;
-		this.qtdExemplares = 1;
-		this.qtdDisponiveis = 1;
+	public Book() {
+		this.dateOfRegistration = new Date();
+		this.status = Status.AVAILABLE;
+		this.typeOfAcquisition = TypeOfAcquisition.DONATION;
+		this.numberOfCopies = 1;
+		this.numberAvailable = 1;
 	}
 		
 	
@@ -42,109 +41,95 @@ public class Livro implements Comparable<Livro> {
 	private String isbn;
 	
 	@NotEmpty(message = "{NotEmpty.livro.titulo}")
-	@Column(name="TITULO")
-    private String titulo;
+	@Column(name="TITLE")
+    private String title;
 	
-	@Column(name="SUBTITULO")
-    private String subtitulo;
+	@Column(name="SUBTITLE")
+    private String subtitle;
     
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="DATA_CADASTRO")
-	private Date dataCadastro;
+    @Column(name="DATE_REGISTRATION")
+	private Date dateOfRegistration;
     
-    @Column(name="EDITORA")
-    private String editora;
+    @Column(name="PUBLISHING_COMPANY")
+    private String publishingCompany;
     
-    @Column(name="LOCAL_PUBLICACAO")
-    private String localPublicacao;
+    @Column(name="PUBLISHING_CITY")
+    private String publishingCity;
     
-    @Column(name="ANO_PUBLICACAO")
-    private Integer anoPublicacao;
+    @Column(name="PUBLISHING_YEAR")
+    private Integer publishingYear;
     
-    @Column(name="NU_PAGINAS")
-    private Integer nroPaginas;
+    @Column(name="PAGES")
+    private Integer numberOfPages;
     
-    @Column(name="GENERO")
-    private String genero;
+    @Column(name="GENRE")
+    private String genre;
     
-    @Column(name="CLASSIFICACAO")
-    private String classificacao;
+    @Column(name="CLASSIFICATION")
+    private String classification;
     
-    @Column(name="PUBLICO_ALVO")
-    private String publicoAlvo;
+    @Column(name="TARGET_AUDIENCE")
+    private String targetAudience;
     
-    @Column(name="IMG_CAPA")
-    private Path pathFotoCapa;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(name="TIPO_AQUISICAO")
-    private TipoAquisicao tipoAquisicao;
-    
-    @Column(name="NOME_DOADOR")
-    private String nomeDoador;
-    
-    @Column(name="CADASTRADOR")
-    private Person pessoaCadastradora;
+    @Column(name="COVER_IMG")
+    private Path coverImage;
     
     @Enumerated(EnumType.STRING)
-    @Column(name="SITUACAO")
-    private Situacao situacao;
-    
-    @Column(name="OBSERVACOES")
-    private String observacoes;
-    
-    @Column(name="AUTORES")
-    private List<String> autores;
-    
-    //private String autoresAgrupados;
+    @Column(name="TYPE_ACQUISITION")
+    private TypeOfAcquisition typeOfAcquisition;
     
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="DATA_AQUISICAO")
-    private Date dataAquisicao;
+    @Column(name="DATE_ACQUISITION")
+    private Date dateOfAcquisition;
     
-    @Column(name="QTD_EXEMPLARES")
-    private Integer qtdExemplares;
+    @Column(name="DONOR_NAME")
+    private String donorName;
     
-    @Column(name="QTD_DISPONIVEIS")
-    private Integer qtdDisponiveis;
+    @Column(name="REGISTERER")
+    private Person registerer;
     
+    @Enumerated(EnumType.STRING)
+    @Column(name="STATUS")
+    private Status status;
     
-    //private String dataAquisicaoFormatada;
+    @Column(name="COMMENTS")
+    private String comments;
     
+    @Column(name="NUMBER_COPIES")
+    private Integer numberOfCopies;
     
+    @Column(name="NUMBER_AVAILABLE")
+    private Integer numberAvailable;
+    
+    @Transient
+    private List<String> authorsName;
+    
+    @Column(name="AUTHORS")
+    private String authorNameFormattedBySemicolon;
+    
+        
     @Override
     public String toString() {
-    	return titulo + " - " + autoresAgrupados;
+    	StringBuilder sb = new StringBuilder(title);
+    	if (authorsName !=  null) {
+    		sb.append(" - ");
+    		sb.append(authorNameFormattedBySemicolon);
+    	}
+    	return sb.toString();
     }
     
     @Override
-    public int compareTo(Livro o) {
-    	return this.getTitulo().compareTo(o.getTitulo());
+    public int compareTo(Book o) {
+    	return this.title.compareTo(o.title);
     }
     
-	public Integer getId() {
+    
+    public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
-	}
-	public String getTitulo() {
-		return titulo;
-	}
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
-	public String getSubtitulo() {
-		return subtitulo;
-	}
-	public void setSubtitulo(String subtitulo) {
-		this.subtitulo = subtitulo;
-	}
-	public Date getDataCadastro() {
-		return dataCadastro;
-	}
-	public void setDataCadastro(Date dataCadastro) {
-		this.dataCadastro = dataCadastro;
 	}
 	public String getIsbn() {
 		return isbn;
@@ -152,136 +137,139 @@ public class Livro implements Comparable<Livro> {
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
 	}
-	public String getEditora() {
-		return editora;
+	public String getTitle() {
+		return title;
 	}
-	public void setEditora(String editora) {
-		this.editora = editora;
+	public void setTitle(String title) {
+		this.title = title;
 	}
-	public String getLocalPublicacao() {
-		return localPublicacao;
+	public String getSubtitle() {
+		return subtitle;
 	}
-	public void setLocalPublicacao(String localPublicacao) {
-		this.localPublicacao = localPublicacao;
+	public void setSubtitle(String subtitle) {
+		this.subtitle = subtitle;
 	}
-	public Integer getAnoPublicacao() {
-		return anoPublicacao;
+	public Date getDateOfRegistration() {
+		return dateOfRegistration;
 	}
-	public void setAnoPublicacao(Integer anoPublicacao) {
-		this.anoPublicacao = anoPublicacao;
+	public void setDateOfRegistration(Date registerDate) {
+		this.dateOfRegistration = registerDate;
 	}
-	public Integer getNroPaginas() {
-		return nroPaginas;
+	public String getPublishingCompany() {
+		return publishingCompany;
 	}
-	public void setNroPaginas(Integer nroPaginas) {
-		this.nroPaginas = nroPaginas;
+	public void setPublishingCompany(String publishingCompany) {
+		this.publishingCompany = publishingCompany;
 	}
-	public String getGenero() {
-		return genero;
+	public String getPublishingCity() {
+		return publishingCity;
 	}
-	public void setGenero(String genero) {
-		this.genero = genero;
+	public void setPublishingCity(String publishingCity) {
+		this.publishingCity = publishingCity;
 	}
-	public String getClassificacao() {
-		return classificacao;
+	public Integer getPublishingYear() {
+		return publishingYear;
 	}
-	public void setClassificacao(String classificacao) {
-		this.classificacao = classificacao;
+	public void setPublishingYear(Integer publishingYear) {
+		this.publishingYear = publishingYear;
 	}
-	public String getPublicoAlvo() {
-		return publicoAlvo;
+	public Integer getNumberOfPages() {
+		return numberOfPages;
 	}
-	public void setPublicoAlvo(String publicoAlvo) {
-		this.publicoAlvo = publicoAlvo;
+	public void setNumberOfPages(Integer numberOfPages) {
+		this.numberOfPages = numberOfPages;
 	}
-	public Date getDataAquisicao() {
-		return dataAquisicao;
+	public String getGenre() {
+		return genre;
 	}
-	public void setDataAquisicao(Date dataAquisicao) {
-		this.dataAquisicao = dataAquisicao;
+	public void setGenre(String genre) {
+		this.genre = genre;
 	}
-	public TipoAquisicao getTipoAquisicao() {
-		return tipoAquisicao;
+	public String getClassification() {
+		return classification;
 	}
-	public void setTipoAquisicao(TipoAquisicao tipoAquisicao) {
-		this.tipoAquisicao = tipoAquisicao;
+	public void setClassification(String classification) {
+		this.classification = classification;
 	}
-	public String getNomeDoador() {
-		return nomeDoador;
+	public String getTargetAudience() {
+		return targetAudience;
 	}
-	public void setNomeDoador(String nomeDoador) {
-		this.nomeDoador = nomeDoador;
+	public void setTargetAudience(String targetAudience) {
+		this.targetAudience = targetAudience;
 	}
-	public Person getPessoaCadastradora() {
-		return pessoaCadastradora;
+	public Path getCoverImage() {
+		return coverImage;
 	}
-	public void setPessoaCadastradora(Person pessoaCadastradora) {
-		this.pessoaCadastradora = pessoaCadastradora;
+	public void setCoverImage(Path coverImage) {
+		this.coverImage = coverImage;
 	}
-	public Situacao getSituacao() {
-		return situacao;
+	public TypeOfAcquisition getTypeOfAcquisition() {
+		return typeOfAcquisition;
 	}
-	public void setSituacao(Situacao situacao) {
-		this.situacao = situacao;
+	public void setTypeOfAcquisition(TypeOfAcquisition typeOfAcquisition) {
+		this.typeOfAcquisition = typeOfAcquisition;
 	}
-	public String getObservacoes() {
-		return observacoes;
+	public Date getDateOfAcquisition() {
+		return dateOfAcquisition;
 	}
-	public void setObservacoes(String observacoes) {
-		this.observacoes = observacoes;
+	public void setDateOfAcquisition(Date dateOfAcquisition) {
+		this.dateOfAcquisition = dateOfAcquisition;
 	}
-	public List<String> getAutores() {
-		if (autoresAgrupados != null && !autoresAgrupados.isEmpty()) {
-			autores = new ArrayList<>();
-			String[] autoresSplit = autoresAgrupados.split(";");
-			for (int i = 0; i < autoresSplit.length; i++) {
-				String autor = autoresSplit[i];
-				autores.add(autor);
-			}
+	public String getDonorName() {
+		return donorName;
+	}
+	public void setDonorName(String donorName) {
+		this.donorName = donorName;
+	}
+	public Person getRegisterer() {
+		return registerer;
+	}
+	public void setRegisterer(Person registerer) {
+		this.registerer = registerer;
+	}
+	public Status getStatus() {
+		return status;
+	}
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+	public String getComments() {
+		return comments;
+	}
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+	public Integer getNumberOfCopies() {
+		return numberOfCopies;
+	}
+	public void setNumberOfCopies(Integer numberOfCopies) {
+		this.numberOfCopies = numberOfCopies;
+	}
+	public Integer getNumberAvailable() {
+		return numberAvailable;
+	}
+	public void setNumberAvailable(Integer numberAvailable) {
+		this.numberAvailable = numberAvailable;
+	}
+	public List<String> getAuthorsName() {
+		return authorsName;
+	}
+	public void setAuthorsName(List<String> authorsName) {
+		this.authorsName = authorsName;
+		this.authorNameFormattedBySemicolon = getAuthorNameFormattedBySemicolon();
+	}
+	public String getAuthorNameFormattedBySemicolon() {
+		if (authorsName == null) return "";
+		StringBuilder sb = new StringBuilder();
+		int i;
+		for (i = 0; i < (authorsName.size()-1); i++) {
+			sb.append(authorsName.get(i) + " ; ");
 		}
-		return autores;
+		sb.append(authorsName.get(i));  // last one without ';'
+    	return sb.toString();
+    }
+    public void setAuthorNameFormattedBySemicolon(String authorNameFormattedBySemicolon) {
+		this.authorNameFormattedBySemicolon = authorNameFormattedBySemicolon;
 	}
-	public void setAutores(List<String> autores) {
-		this.autores = autores;
-	}
-	public String getAutoresAgrupados() {
-		return autoresAgrupados;
-	}
-	public void setAutoresAgrupados(String autoresAgrupados) {
-		this.autoresAgrupados = autoresAgrupados;
-	}
-	public Path getPathFotoCapa() {
-		return pathFotoCapa;
-	}
-	public void setPathFotoCapa(Path pathFotoCapa) {
-		this.pathFotoCapa = pathFotoCapa;
-	}
-	public String getDataAquisicaoFormatada() {
-		if (dataAquisicao != null) {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			dataAquisicaoFormatada = sdf.format(dataAquisicao);
-		}
-		return dataAquisicaoFormatada;
-	}
-	public void setDataAquisicaoFormatada(String dataAquisicaoFormatada) {
-		this.dataAquisicaoFormatada = dataAquisicaoFormatada;		
-	}
-	public Integer getQtdExemplares() {
-		return qtdExemplares;
-	}
-	public void setQtdExemplares(Integer qtdExemplares) {
-		this.qtdExemplares = qtdExemplares;
-	}
-	public Integer getQtdDisponiveis() {
-		return qtdDisponiveis;
-	}
-	public void setQtdDisponiveis(Integer qtdDisponiveis) {
-		this.qtdDisponiveis = qtdDisponiveis;
-		if (this.qtdDisponiveis == 0) {
-			this.situacao = Situacao.EMPRESTADO; 
-		} else {
-			this.situacao = Situacao.DISPONIVEL;
-		}
-	}
-		
+    
 }

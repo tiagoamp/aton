@@ -18,16 +18,16 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
-import br.com.tiagoamp.aton.model.Livro;
+import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Person;
-import br.com.tiagoamp.aton.model.Situacao;
-import br.com.tiagoamp.aton.model.TipoAquisicao;
+import br.com.tiagoamp.aton.model.Status;
+import br.com.tiagoamp.aton.model.TypeOfAcquisition;
 
-public class LivroDaoBdLocal implements LivroDAO {
+public class BookDaoJdbc implements BookDAO {
 	
-	private Logger logger = Logger.getLogger(LivroDaoBdLocal.class);
+	private Logger logger = Logger.getLogger(BookDaoJdbc.class);
 	
-	public LivroDaoBdLocal(){
+	public BookDaoJdbc(){
 		InputStream istream = this.getClass().getResourceAsStream("config.properties");
 		Properties prop = new Properties();
 		try {
@@ -47,8 +47,8 @@ public class LivroDaoBdLocal implements LivroDAO {
 	private String PATH_DB;
 	private String NAME_DB;
 	
-	private Livro carregarObjeto(ResultSet rs) throws SQLException {
-		Livro l = new Livro();
+	private Book carregarObjeto(ResultSet rs) throws SQLException {
+		Book l = new Book();
 		l.setId(rs.getInt("ID"));
 		l.setTitulo(rs.getString("TITULO"));
 		l.setSubtitulo(rs.getString("SUBTITULO"));
@@ -63,12 +63,12 @@ public class LivroDaoBdLocal implements LivroDAO {
 		l.setPublicoAlvo(rs.getString("PUBLICO_ALVO"));
 		//l.setPathFotoCapa(Paths.get(rs.getString("PATH_FOTO_CAPA"))); // FIXME
 		l.setDataAquisicao(rs.getDate("DT_AQUISICAO"));
-		l.setTipoAquisicao(TipoAquisicao.valueOf(rs.getString("TIPO_AQUISICAO")));
+		l.setTipoAquisicao(TypeOfAcquisition.valueOf(rs.getString("TIPO_AQUISICAO")));
 		l.setNomeDoador(rs.getString("NM_DOADOR"));
 		Person pessoa = new Person();
 		pessoa.setId(rs.getInt("ID_PESSOA_CADASTRADORA"));
 		l.setPessoaCadastradora(pessoa);
-		l.setSituacao(Situacao.valueOf(rs.getString("SITUACAO")));
+		l.setSituacao(Status.valueOf(rs.getString("SITUACAO")));
 		l.setAutoresAgrupados(rs.getString("AUTOR"));
 		l.setQtdExemplares(rs.getInt("QTD_EXEMPLARES"));
 		l.setQtdDisponiveis(rs.getInt("QTD_DISPONIVEIS"));
@@ -76,7 +76,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 	}
 	
 	@Override
-	public int create(Livro livro) throws SQLException {
+	public int create(Book livro) throws SQLException {
 		logger.debug("Inserindo: " + livro);
 		int result;
 		try {			
@@ -120,7 +120,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 	}
 
 	@Override
-	public int update(Livro livro) throws SQLException {
+	public int update(Book livro) throws SQLException {
 		logger.debug("Atualizando: " + livro);
 		int result;
 		try {			
@@ -189,9 +189,9 @@ public class LivroDaoBdLocal implements LivroDAO {
 	}
 
 	@Override
-	public Livro findById(int id) throws SQLException {
+	public Book findById(int id) throws SQLException {
 		logger.debug("Consultar com id: " + id);
-		Livro p = null;
+		Book p = null;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "SELECT * FROM LIVROS WHERE ID = ?";
@@ -214,9 +214,9 @@ public class LivroDaoBdLocal implements LivroDAO {
 	}
 
 	@Override
-	public List<Livro> find(String titulo, String autor, String isbn, String classificacao, String publico) throws SQLException {
+	public List<Book> findByFields(String titulo, String autor, String isbn, String classificacao, String publico) throws SQLException {
 		logger.debug("Consultando com parametros: " + titulo + " , " + autor + ", " + isbn + " , " + classificacao + " , " + publico);
-		List<Livro> lista = new ArrayList<>();
+		List<Book> lista = new ArrayList<>();
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			StringBuilder sql = new StringBuilder("SELECT * FROM LIVROS");
@@ -240,7 +240,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 						
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				Livro l = carregarObjeto(rs);
+				Book l = carregarObjeto(rs);
 				lista.add(l);
 			}
 		    rs.close();
@@ -256,16 +256,16 @@ public class LivroDaoBdLocal implements LivroDAO {
 	}
 
 	@Override
-	public List<Livro> findAll() throws SQLException {
+	public List<Book> findAll() throws SQLException {
 		logger.debug("Consultando todos 'livros'");
-		List<Livro> lista = new ArrayList<>();
+		List<Book> lista = new ArrayList<>();
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			StringBuilder sql = new StringBuilder("SELECT * FROM LIVROS");
 			pstmt = conn.prepareStatement(sql.toString());
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				Livro l = carregarObjeto(rs);
+				Book l = carregarObjeto(rs);
 				lista.add(l);
 			}
 		    rs.close();
@@ -281,9 +281,9 @@ public class LivroDaoBdLocal implements LivroDAO {
 	}
 
 	@Override
-	public Livro findByIsbn(String isbn) throws SQLException {
+	public Book findByIsbn(String isbn) throws SQLException {
 		logger.debug("Consultar com isbn: " + isbn);
-		Livro p = null;
+		Book p = null;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "SELECT * FROM LIVROS WHERE ISBN = ?";
@@ -333,9 +333,9 @@ public class LivroDaoBdLocal implements LivroDAO {
 	}
 
 	@Override
-	public List<Livro> findByAutorAproximado(String autor) throws SQLException {
+	public List<Book> findByAuthorNameLike(String autor) throws SQLException {
 		logger.debug("Consultando por autor aproximado: " + autor);
-		List<Livro> lista = new ArrayList<>();
+		List<Book> lista = new ArrayList<>();
 		try {
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "SELECT * FROM LIVROS WHERE AUTOR LIKE ?";
@@ -343,7 +343,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 			pstmt.setString(1, "%" + autor.toUpperCase() + "%");
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				Livro l = carregarObjeto(rs);
+				Book l = carregarObjeto(rs);
 				lista.add(l);
 			}
 		    rs.close();
@@ -359,9 +359,9 @@ public class LivroDaoBdLocal implements LivroDAO {
 	}
 
 	@Override
-	public List<Livro> findByTituloAproximado(String titulo) throws SQLException {
+	public List<Book> findByTitleLike(String titulo) throws SQLException {
 		logger.debug("Consultando por titulo aproximado: " + titulo);
-		List<Livro> lista = new ArrayList<>();
+		List<Book> lista = new ArrayList<>();
 		try {
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "SELECT * FROM LIVROS WHERE TITULO LIKE ?";
@@ -369,7 +369,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 			pstmt.setString(1, "%" + titulo.toUpperCase() + "%");
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				Livro l = carregarObjeto(rs);
+				Book l = carregarObjeto(rs);
 				lista.add(l);
 			}
 		    rs.close();
