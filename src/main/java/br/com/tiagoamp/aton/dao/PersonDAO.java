@@ -4,25 +4,25 @@ import java.sql.SQLException;
 import java.util.List;
 
 import br.com.tiagoamp.aton.model.Perfil;
-import br.com.tiagoamp.aton.model.Pessoa;
+import br.com.tiagoamp.aton.model.Person;
 
-public interface PessoaDAO {
+public interface PersonDAO {
 	
 	/**
 	 * Inserts the entity in the database.
 	 * 
-	 * @param pessoa
+	 * @param person
 	 * @throws SQLException 
 	 */
-	void create(Pessoa pessoa) throws SQLException;
+	void create(Person person) throws SQLException;
 	
 	/**
 	 * Updates the entity in the database.
 	 * 
-	 * @param pessoa
+	 * @param person
 	 * @throws SQLException 
 	 */
-	void update(Pessoa pessoa) throws SQLException;
+	void update(Person person) throws SQLException;
 	
 	/**
 	 * Deletes the entity in the database.
@@ -35,47 +35,47 @@ public interface PessoaDAO {
 	/**
 	 * Search the entity by 'id' in the database.
 	 * 
-	 * @param id Identificador da pessoa.
-	 * @return Pessoa Instância da pessoa ou null se não existir.
+	 * @param id Entity id.
+	 * @return Person 
 	 * @throws SQLException 
 	 */
-	Pessoa findById(int id) throws SQLException;
+	Person findById(int id) throws SQLException;
 	
 	/**
 	 * Search the entity by 'e-mail' in the database.
 	 * 
 	 * @param email
-	 * @return Pessoa Instância da pessoa ou null se não existir.
+	 * @return Person
 	 * @throws SQLException
 	 */
-	Pessoa findByEmail(String email) throws SQLException;
+	Person findByEmail(String email) throws SQLException;
 	
 	/**
 	 * Search the entity by 'name-like' in the database.
 	 * 
-	 * @param nome
+	 * @param name
 	 * @return List<Pessoa> List of entity
 	 * @throws SQLException
 	 */
-	List<Pessoa> findByNomeAproximado(String nome) throws SQLException;
+	List<Person> findByNameLike(String name) throws SQLException;
 	
 	/**
 	 * Search the entity by given parameters in the database.
 	 * 
-	 * @param nome
-	 * @param telefone
-	 * @param perfil
-	 * @return List<Pessoa> List of entity
+	 * @param name
+	 * @param phone
+	 * @param role
+	 * @return List<Person> 
 	 * @throws SQLException
 	 */
-	List<Pessoa> findByFields(String nome, String telefone, Perfil perfil) throws SQLException;
+	List<Person> findByFields(String name, String phone, Perfil role) throws SQLException;
 	
 	/**
 	 * Retrieve all entities from the database.
 	 * 
-	 * @return List<Pessoa> List of entity
+	 * @return List<Person> List of entity
 	 * @throws SQLException
 	 */
-	List<Pessoa> findAll() throws SQLException;
+	List<Person> findAll() throws SQLException;
 
 }

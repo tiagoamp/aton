@@ -15,13 +15,13 @@ import br.com.tiagoamp.aton.dao.EmprestimoDAO;
 import br.com.tiagoamp.aton.dao.EmprestimoDaoBdLocal;
 import br.com.tiagoamp.aton.dao.LivroDAO;
 import br.com.tiagoamp.aton.dao.LivroDaoBdLocal;
-import br.com.tiagoamp.aton.dao.PessoaDAO;
+import br.com.tiagoamp.aton.dao.PersonDAO;
 import br.com.tiagoamp.aton.dao.PessoaDaoJdbc;
 import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Emprestimo;
 import br.com.tiagoamp.aton.model.Livro;
 import br.com.tiagoamp.aton.model.Perfil;
-import br.com.tiagoamp.aton.model.Pessoa;
+import br.com.tiagoamp.aton.model.Person;
 
 /**
  * Fornece servicos de CRUD para a UI.
@@ -38,13 +38,13 @@ public class AtonService {
 		this.empDao = new EmprestimoDaoBdLocal();		
 	}
 	
-	private PessoaDAO pessoaDao;
+	private PersonDAO pessoaDao;
 	private LivroDAO livroDao;
 	private EmprestimoDAO empDao;
 	
-	public boolean inserirPessoa(Pessoa pessoa) throws AtonBOException {
+	public boolean inserirPessoa(Person pessoa) throws AtonBOException {
 		try {
-			Pessoa p = pessoaDao.findByEmail(pessoa.getEmail());
+			Person p = pessoaDao.findByEmail(pessoa.getEmail());
 			if (p != null) throw new AtonBOException("E-mail já cadastrado!");
 			int result = pessoaDao.create(pessoa);
 			return result == 1;
@@ -54,7 +54,7 @@ public class AtonService {
 		}
 	}
 	
-	public boolean atualizarPessoa(Pessoa pessoa) throws AtonBOException {
+	public boolean atualizarPessoa(Person pessoa) throws AtonBOException {
 		try {
 			int result = pessoaDao.update(pessoa);
 			return result == 1;
@@ -74,7 +74,7 @@ public class AtonService {
 		}
 	}
 	
-	public Pessoa consultarPessoa(int id) throws AtonBOException {
+	public Person consultarPessoa(int id) throws AtonBOException {
 		try {
 			return pessoaDao.findById(id);
 		} catch (SQLException e) {
@@ -83,7 +83,7 @@ public class AtonService {
 		}
 	}
 	
-	public Pessoa consultarPessoaPorEmail(String email) throws AtonBOException {
+	public Person consultarPessoaPorEmail(String email) throws AtonBOException {
 		try {
 			return pessoaDao.findByEmail(email);
 		} catch (SQLException e) {
@@ -92,7 +92,7 @@ public class AtonService {
 		}
 	}
 	
-	public List<Pessoa> consultarPessoas(String nome, String telefone, Perfil perfil) throws AtonBOException {
+	public List<Person> consultarPessoas(String nome, String telefone, Perfil perfil) throws AtonBOException {
 		try {
 			return pessoaDao.findByFields(nome, telefone, perfil);			
 		} catch (SQLException e) {
@@ -101,16 +101,16 @@ public class AtonService {
 		}
 	}
 	
-	public List<Pessoa> consultarPessoasPorNomeAproximado(String nome) throws AtonBOException {
+	public List<Person> consultarPessoasPorNomeAproximado(String nome) throws AtonBOException {
 		try {
-			return pessoaDao.findByNomeAproximado(nome);			
+			return pessoaDao.findByNameLike(nome);			
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
 			throw new AtonBOException("Erro durante acesso no banco de dados!", e);
 		}
 	}
 	
-	public List<Pessoa> consultarPessoas() throws AtonBOException {
+	public List<Person> consultarPessoas() throws AtonBOException {
 		try {
 			return pessoaDao.findAll();
 		} catch (SQLException e) {
@@ -318,10 +318,10 @@ public class AtonService {
 	}
 
 	
-	public PessoaDAO getPessoaDao() {
+	public PersonDAO getPessoaDao() {
 		return pessoaDao;
 	}
-	public void setPessoaDao(PessoaDAO pessoaDao) {
+	public void setPessoaDao(PersonDAO pessoaDao) {
 		this.pessoaDao = pessoaDao;
 	}
 	public LivroDAO getLivroDao() {

@@ -19,7 +19,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-@Entity
+//@Entity
 @Table(name="LIVROS")
 public class Livro implements Comparable<Livro> {
 	
@@ -84,7 +84,7 @@ public class Livro implements Comparable<Livro> {
     private String nomeDoador;
     
     @Column(name="CADASTRADOR")
-    private Pessoa pessoaCadastradora;
+    private Person pessoaCadastradora;
     
     @Enumerated(EnumType.STRING)
     @Column(name="SITUACAO")
@@ -212,10 +212,10 @@ public class Livro implements Comparable<Livro> {
 	public void setNomeDoador(String nomeDoador) {
 		this.nomeDoador = nomeDoador;
 	}
-	public Pessoa getPessoaCadastradora() {
+	public Person getPessoaCadastradora() {
 		return pessoaCadastradora;
 	}
-	public void setPessoaCadastradora(Pessoa pessoaCadastradora) {
+	public void setPessoaCadastradora(Person pessoaCadastradora) {
 		this.pessoaCadastradora = pessoaCadastradora;
 	}
 	public Situacao getSituacao() {

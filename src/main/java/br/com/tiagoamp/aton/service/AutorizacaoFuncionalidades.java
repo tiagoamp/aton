@@ -1,7 +1,7 @@
 package br.com.tiagoamp.aton.service;
 
 import br.com.tiagoamp.aton.model.Perfil;
-import br.com.tiagoamp.aton.model.Pessoa;
+import br.com.tiagoamp.aton.model.Person;
 import br.com.tiagoamp.aton.model.to.AutorizacaoResultadoTO;
 
 /**
@@ -19,7 +19,7 @@ public class AutorizacaoFuncionalidades {
 	 * @param acao
 	 * @return AutorizacaoResultadoTO
 	 */
-	public static AutorizacaoResultadoTO autorizarManutencaoLivros(Pessoa usuario, String acao) {
+	public static AutorizacaoResultadoTO autorizarManutencaoLivros(Person usuario, String acao) {
 		AutorizacaoResultadoTO to = null;
 		if (acao == null || acao.equals("alterar") || acao.equals("excluir")) { // ADMIN
 			if (usuario == null) {
@@ -46,7 +46,7 @@ public class AutorizacaoFuncionalidades {
 	 * @param acao
 	 * @return AutorizacaoResultadoTO
 	 */
-	public static AutorizacaoResultadoTO autorizarManutencaoPessoas(Pessoa usuario, String acao) {
+	public static AutorizacaoResultadoTO autorizarManutencaoPessoas(Person usuario, String acao) {
 		AutorizacaoResultadoTO to = null;
 		if (acao == null || acao.equals("alterar") || acao.equals("excluir")) { // ADMIN
 			if (usuario == null) {

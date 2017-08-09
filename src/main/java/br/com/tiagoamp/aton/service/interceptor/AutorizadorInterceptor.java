@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import br.com.tiagoamp.aton.model.Pessoa;
+import br.com.tiagoamp.aton.model.Person;
 import br.com.tiagoamp.aton.model.TipoMensagem;
 import br.com.tiagoamp.aton.model.to.AutorizacaoResultadoTO;
 import br.com.tiagoamp.aton.model.to.MensagemTO;
@@ -17,7 +17,7 @@ public class AutorizadorInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object controller) throws Exception {
 		String uri = request.getRequestURI();
-		Pessoa usuario = (Pessoa) request.getSession().getAttribute("usuario");
+		Person usuario = (Person) request.getSession().getAttribute("usuario");
 		
 		// PAGES QUE PRECISAM DE AUTENTICAÇÃO
 		if ( uri.endsWith("emprestimos") || uri.endsWith("emprestimolivro") || 

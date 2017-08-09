@@ -22,16 +22,16 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import br.com.tiagoamp.aton.TestHelper;
 import br.com.tiagoamp.aton.dao.EmprestimoDAO;
 import br.com.tiagoamp.aton.dao.LivroDAO;
-import br.com.tiagoamp.aton.dao.PessoaDAO;
+import br.com.tiagoamp.aton.dao.PersonDAO;
 import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Emprestimo;
 import br.com.tiagoamp.aton.model.Livro;
-import br.com.tiagoamp.aton.model.Pessoa;
+import br.com.tiagoamp.aton.model.Person;
 
 public class AtonServiceTest {
 	
 	@Mock
-	private PessoaDAO pessoaDAOMock;
+	private PersonDAO pessoaDAOMock;
 	@Mock
 	private LivroDAO livroDAOMock;
 	@Mock
@@ -40,7 +40,7 @@ public class AtonServiceTest {
 	// class under test
 	private AtonService service;
 	
-	private Pessoa pessoa;
+	private Person pessoa;
 	private Livro livro;
 	private Emprestimo emprestimo;
 	
@@ -52,7 +52,7 @@ public class AtonServiceTest {
 		MockitoAnnotations.initMocks(this);
 		
 		service = new AtonService();
-		pessoa = TestHelper.getPessoaTeste();
+		pessoa = TestHelper.getPersonForTest();
 		livro = TestHelper.getLivroTeste();
 		emprestimo = TestHelper.getEmprestimoTeste();
 		
@@ -154,7 +154,7 @@ public class AtonServiceTest {
 	
 	@Test
 	public void testConsultarPessoasParametros_shouldReturnValidOutput() throws SQLException, AtonBOException {
-		List<Pessoa> lista = new ArrayList<>();
+		List<Person> lista = new ArrayList<>();
 		when(pessoaDAOMock.findByFields(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil())).thenReturn(lista);
 		lista = service.consultarPessoas(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
 		assertTrue(lista != null);
@@ -170,23 +170,23 @@ public class AtonServiceTest {
 		
 	@Test
 	public void testConsultarPessoasPorNomeAproximado_shouldReturnValidOutput() throws SQLException, AtonBOException {
-		List<Pessoa> lista = new ArrayList<>();
-		when(pessoaDAOMock.findByNomeAproximado(pessoa.getNome())).thenReturn(lista);
+		List<Person> lista = new ArrayList<>();
+		when(pessoaDAOMock.findByNameLike(pessoa.getNome())).thenReturn(lista);
 		lista = service.consultarPessoasPorNomeAproximado(pessoa.getNome());
 		assertTrue(lista != null);
-		verify(pessoaDAOMock).findByNomeAproximado(pessoa.getNome());
+		verify(pessoaDAOMock).findByNameLike(pessoa.getNome());
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test(expected = AtonBOException.class)
 	public void testConsultarPessoasPorNomeAproximado_shouldThrowException() throws SQLException, AtonBOException {
-		when(pessoaDAOMock.findByNomeAproximado(pessoa.getNome())).thenThrow(SQLException.class);
+		when(pessoaDAOMock.findByNameLike(pessoa.getNome())).thenThrow(SQLException.class);
 		service.consultarPessoasPorNomeAproximado(pessoa.getNome());	
 	}
 	
 	@Test
 	public void testConsultarPessoas_shouldReturnValidOutput() throws SQLException, AtonBOException {
-		List<Pessoa> lista = new ArrayList<>();
+		List<Person> lista = new ArrayList<>();
 		when(pessoaDAOMock.findAll()).thenReturn(lista);
 		lista = service.consultarPessoas();
 		assertTrue(lista != null);

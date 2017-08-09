@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 
 import br.com.tiagoamp.aton.model.Emprestimo;
 import br.com.tiagoamp.aton.model.Livro;
-import br.com.tiagoamp.aton.model.Pessoa;
+import br.com.tiagoamp.aton.model.Person;
 
 public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	
@@ -46,7 +46,7 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	private Emprestimo carregarObjeto(ResultSet rs) throws SQLException {
 		Emprestimo emp = new Emprestimo();
 		emp.setId(rs.getInt("ID"));
-		Pessoa pessoa = new Pessoa();
+		Person pessoa = new Person();
 		pessoa.setId(rs.getInt("ID_PESSOA"));
 		emp.setPessoa(pessoa);
 		Livro livro = new Livro();

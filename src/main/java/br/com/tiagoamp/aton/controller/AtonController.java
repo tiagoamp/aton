@@ -27,7 +27,7 @@ import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Emprestimo;
 import br.com.tiagoamp.aton.model.Livro;
 import br.com.tiagoamp.aton.model.Perfil;
-import br.com.tiagoamp.aton.model.Pessoa;
+import br.com.tiagoamp.aton.model.Person;
 import br.com.tiagoamp.aton.model.TipoAquisicao;
 import br.com.tiagoamp.aton.model.TipoMensagem;
 import br.com.tiagoamp.aton.model.to.MensagemTO;
@@ -56,7 +56,7 @@ public class AtonController {
 	        @RequestParam(value="identificador", required=false) String pId, 
 	        Model model) {
 		
-		Pessoa pessoa = new Pessoa();
+		Person pessoa = new Person();
 		
 		if (pId != null && !pId.isEmpty()) {
 			try {		
@@ -79,14 +79,14 @@ public class AtonController {
 	
 	@RequestMapping("listapessoas")
 	public String listarPessoas(HttpServletRequest request, Model model) {
-		List<Pessoa> lista = new ArrayList<>();
+		List<Person> lista = new ArrayList<>();
 		
 		try {		
 			lista = service.consultarPessoas();
 			if (lista.isEmpty()) {
 				throw new AtonBOException("Consulta sem resultados!");
 			}
-			Set<Pessoa> listaOrdenada = new TreeSet<>();
+			Set<Person> listaOrdenada = new TreeSet<>();
 			listaOrdenada.addAll(lista);
 			model.addAttribute("listapessoas", listaOrdenada);
 		} catch (AtonBOException e) {
@@ -103,7 +103,7 @@ public class AtonController {
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
 	        Model model) {		
-		Pessoa pessoa;
+		Person pessoa;
 		try {		
 			pessoa = service.consultarPessoa(Integer.parseInt(pId));
 			if (pessoa == null) {
@@ -120,7 +120,7 @@ public class AtonController {
 	}
 	
 	@RequestMapping(value="pessoacadastrada", method = RequestMethod.POST)
-	public String salvarPessoa(@Valid Pessoa pessoa, BindingResult result, Model model) {
+	public String salvarPessoa(@Valid Person pessoa, BindingResult result, Model model) {
 		boolean hasErrors = false;
 		if(result.hasErrors()) {
 			hasErrors = true;
@@ -163,7 +163,7 @@ public class AtonController {
 	        @RequestParam(value="tEmail", required=false) String pEmail, 
 	        @RequestParam(value="tDados", required=false) String pDados, 
 	        Model model){
-		List<Pessoa> lista = new ArrayList<>();
+		List<Person> lista = new ArrayList<>();
 		try {
 			lista = this.pesquisarPessoasPorParametros(pEmail, pDados);
 			if (lista.isEmpty()) {
@@ -364,7 +364,7 @@ public class AtonController {
 			}
 			model.addAttribute("acao",pAcao);
 		}		
-		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), null, null);
+		Emprestimo emprestimo = new Emprestimo(livro, new Person(), new Date(), null, null);
 		model.addAttribute("emprestimo", emprestimo);
 		return "emprestimos/emprestimolivro";
 	}
@@ -375,7 +375,7 @@ public class AtonController {
 	        @RequestParam(value="tDados", required=false) String pDados,
 	        @RequestParam(value="tIdLivro", required=false) String pIdLivro,
 	        Model model){
-		List<Pessoa> lista = new ArrayList<>();
+		List<Person> lista = new ArrayList<>();
 		Livro livro = null;
 		try {
 			livro = service.consultarLivro(Integer.parseInt(pIdLivro)); // recarregando livro
@@ -388,7 +388,7 @@ public class AtonController {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
 		}				
-		Emprestimo emprestimo = new Emprestimo(livro, new Pessoa(), new Date(), null, null);
+		Emprestimo emprestimo = new Emprestimo(livro, new Person(), new Date(), null, null);
 		model.addAttribute("emprestimo", emprestimo);
 		return "emprestimos/emprestimolivro";
 	}
@@ -400,7 +400,7 @@ public class AtonController {
 	        @RequestParam(value="idLivro", required=false) String pIdLivro,
 	        Model model){
 		Livro livro = null;
-		Pessoa pessoa = null;
+		Person pessoa = null;
 		try {
 			livro = service.consultarLivro(Integer.parseInt(pIdLivro)); 
 			pessoa = service.consultarPessoa(Integer.parseInt(pId)); 			
@@ -417,11 +417,11 @@ public class AtonController {
 		return "emprestimos/emprestimolivro";	
 	}
 	
-	private List<Pessoa> pesquisarPessoasPorParametros(String email, String param) throws AtonBOException {
-		List<Pessoa> lista = new ArrayList<>();
+	private List<Person> pesquisarPessoasPorParametros(String email, String param) throws AtonBOException {
+		List<Person> lista = new ArrayList<>();
 		if (email != null && !email.isEmpty()) { // CAMPO DE PESQ EMAIL PREENCHIDO
 			// pesquisa por e-mail
-			Pessoa p = service.consultarPessoaPorEmail(email.trim().toUpperCase());
+			Person p = service.consultarPessoaPorEmail(email.trim().toUpperCase());
 			if (p != null)
 				lista.add(p);
 		} else { // CAMPO DE PESQ DADOS PREENCHIDO
@@ -517,10 +517,10 @@ public class AtonController {
 			} else { // CAMPO DE LEITOR(PESSOA) PREENCHIDO
 				if (pPessoa != null && !pPessoa.isEmpty()) {
 					pPessoa = pPessoa.trim().toUpperCase();
-					List<Pessoa> pessoas = new ArrayList<>();
+					List<Person> pessoas = new ArrayList<>();
 					pessoas.addAll(service.consultarPessoasPorNomeAproximado(pPessoa));
 					for (int i = 0; i < pessoas.size(); i++) {
-						Pessoa pessoa = pessoas.get(i);
+						Person pessoa = pessoas.get(i);
 						lista = service.consultarEmprestimos(null, pessoa.getId(), null, null);
 					}
 				}
@@ -600,18 +600,18 @@ public class AtonController {
 	
 	@RequestMapping("login")
 	public String pageLogin(HttpServletRequest request, Model model) {
-		Pessoa pessoa = new Pessoa();
+		Person pessoa = new Person();
 		model.addAttribute("pessoa", pessoa);
 	    return "login";
 	}
 	
 	@RequestMapping("efetuarlogin")
-	public String efetuarLogin(Pessoa pessoa, BindingResult result, Model model, HttpSession session) {
+	public String efetuarLogin(Person pessoa, BindingResult result, Model model, HttpSession session) {
 		if (pessoa.getEmail().isEmpty() || pessoa.getSenha().isEmpty()) {
 			model.addAttribute("mensagem",new MensagemTO("Campos não preenchidos!", TipoMensagem.ERRO));
 			return "login";
 		}
-		Pessoa pessoaBD = null;
+		Person pessoaBD = null;
 		try {
 			pessoaBD = service.consultarPessoaPorEmail(pessoa.getEmail());
 			if (pessoaBD == null) {

@@ -14,9 +14,9 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import br.com.tiagoamp.aton.model.Perfil;
-import br.com.tiagoamp.aton.model.Pessoa;
+import br.com.tiagoamp.aton.model.Person;
 
-public class PessoaDaoJdbc implements PessoaDAO {
+public class PessoaDaoJdbc implements PersonDAO {
 	
 	Logger logger = Logger.getLogger(PessoaDaoJdbc.class);
 	
@@ -40,8 +40,8 @@ public class PessoaDaoJdbc implements PessoaDAO {
 	private String PATH_DB;
 	private String NAME_DB;
 	
-	private Pessoa carregarObjeto(ResultSet rs) throws SQLException {
-		Pessoa p = new Pessoa();
+	private Person carregarObjeto(ResultSet rs) throws SQLException {
+		Person p = new Person();
 		p.setId(rs.getInt("ID"));
 		p.setEmail(rs.getString("EMAIL"));
 		p.setNome(rs.getString("NOME"));
@@ -52,7 +52,7 @@ public class PessoaDaoJdbc implements PessoaDAO {
 	}
 	
 	@Override
-	public void create(Pessoa pessoa) throws SQLException {
+	public void create(Person pessoa) throws SQLException {
 		logger.debug("Inserindo : " + pessoa);
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
@@ -75,7 +75,7 @@ public class PessoaDaoJdbc implements PessoaDAO {
 	}
 
 	@Override
-	public void update(Pessoa pessoa) throws SQLException {
+	public void update(Person pessoa) throws SQLException {
 		logger.debug("Atualizando: " + pessoa);
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
@@ -118,9 +118,9 @@ public class PessoaDaoJdbc implements PessoaDAO {
 	}
 
 	@Override
-	public Pessoa findById(int id) throws SQLException {
+	public Person findById(int id) throws SQLException {
 		logger.debug("Consultar com id: " + id);
-		Pessoa p = null;
+		Person p = null;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "SELECT * FROM PESSOAS WHERE ID = ?";
@@ -143,9 +143,9 @@ public class PessoaDaoJdbc implements PessoaDAO {
 	}
 	
 	@Override
-	public List<Pessoa> findByFields(String nome, String telefone, Perfil perfil) throws SQLException {
+	public List<Person> findByFields(String nome, String telefone, Perfil perfil) throws SQLException {
 		logger.debug("Consultando com parametros: " + nome +","+ telefone +","+ perfil);
-		List<Pessoa> lista = new ArrayList<>();
+		List<Person> lista = new ArrayList<>();
 		try {
 			conn = DriverManager.getConnection(URL_DB);
 			StringBuilder sql = new StringBuilder("SELECT * FROM PESSOAS");
@@ -165,7 +165,7 @@ public class PessoaDaoJdbc implements PessoaDAO {
 									
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				Pessoa p = carregarObjeto(rs);
+				Person p = carregarObjeto(rs);
 				lista.add(p);
 			}
 		    rs.close();
@@ -181,16 +181,16 @@ public class PessoaDaoJdbc implements PessoaDAO {
 	}
 
 	@Override
-	public List<Pessoa> findAll() throws SQLException {
+	public List<Person> findAll() throws SQLException {
 		logger.debug("Consultando todas 'pessoas'");
-		List<Pessoa> lista = new ArrayList<>();
+		List<Person> lista = new ArrayList<>();
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			StringBuilder sql = new StringBuilder("SELECT * FROM PESSOAS");
 			pstmt = conn.prepareStatement(sql.toString());
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				Pessoa p = carregarObjeto(rs);
+				Person p = carregarObjeto(rs);
 				lista.add(p);
 			}
 		    rs.close();
@@ -206,9 +206,9 @@ public class PessoaDaoJdbc implements PessoaDAO {
 	}
 
 	@Override
-	public Pessoa findByEmail(String email) throws SQLException {
+	public Person findByEmail(String email) throws SQLException {
 		logger.debug("Consultar com e-mail: " + email);
-		Pessoa p = null;
+		Person p = null;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "SELECT * FROM PESSOAS WHERE EMAIL = ?";
@@ -231,9 +231,9 @@ public class PessoaDaoJdbc implements PessoaDAO {
 	}
 
 	@Override
-	public List<Pessoa> findByNomeAproximado(String nome) throws SQLException {
+	public List<Person> findByNameLike(String nome) throws SQLException {
 		logger.debug("Consultando por nome: " + nome);
-		List<Pessoa> lista = new ArrayList<>();
+		List<Person> lista = new ArrayList<>();
 		try {
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "SELECT * FROM PESSOAS WHERE NOME LIKE ?";
@@ -241,7 +241,7 @@ public class PessoaDaoJdbc implements PessoaDAO {
 			pstmt.setString(1, "%" + nome.toUpperCase() + "%");
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				Pessoa p = carregarObjeto(rs);
+				Person p = carregarObjeto(rs);
 				lista.add(p);
 			}
 		    rs.close();

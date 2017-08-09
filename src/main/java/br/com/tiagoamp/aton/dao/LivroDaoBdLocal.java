@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.tiagoamp.aton.model.Livro;
-import br.com.tiagoamp.aton.model.Pessoa;
+import br.com.tiagoamp.aton.model.Person;
 import br.com.tiagoamp.aton.model.Situacao;
 import br.com.tiagoamp.aton.model.TipoAquisicao;
 
@@ -65,7 +65,7 @@ public class LivroDaoBdLocal implements LivroDAO {
 		l.setDataAquisicao(rs.getDate("DT_AQUISICAO"));
 		l.setTipoAquisicao(TipoAquisicao.valueOf(rs.getString("TIPO_AQUISICAO")));
 		l.setNomeDoador(rs.getString("NM_DOADOR"));
-		Pessoa pessoa = new Pessoa();
+		Person pessoa = new Person();
 		pessoa.setId(rs.getInt("ID_PESSOA_CADASTRADORA"));
 		l.setPessoaCadastradora(pessoa);
 		l.setSituacao(Situacao.valueOf(rs.getString("SITUACAO")));

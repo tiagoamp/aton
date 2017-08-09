@@ -15,14 +15,14 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-@Entity
+//@Entity
 @Table(name="EMPRESTIMOS")
 public class Emprestimo implements Comparable<Emprestimo> {
 	
 	public Emprestimo() {
 	}
 	
-	public Emprestimo(Livro livro, Pessoa pessoa, Date dataEmprestimo, Date dataDevolucaoProgramada, Date dataDevolucao) {
+	public Emprestimo(Livro livro, Person pessoa, Date dataEmprestimo, Date dataDevolucaoProgramada, Date dataDevolucao) {
 		this.livro = livro;
 		this.pessoa = pessoa;
 		this.dataEmprestimo = dataEmprestimo;
@@ -41,7 +41,7 @@ public class Emprestimo implements Comparable<Emprestimo> {
     
 	@ManyToOne
 	@Column(name="ID_PESSOA")
-    private Pessoa pessoa;
+    private Person pessoa;
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="DATA_EMPRESTIMO")
@@ -102,10 +102,10 @@ public class Emprestimo implements Comparable<Emprestimo> {
 	public void setLivro(Livro livro) {
 		this.livro = livro;
 	}
-	public Pessoa getPessoa() {
+	public Person getPessoa() {
 		return pessoa;
 	}
-	public void setPessoa(Pessoa pessoa) {
+	public void setPessoa(Person pessoa) {
 		this.pessoa = pessoa;
 	}
 	public Date getDataEmprestimo() {
