@@ -33,8 +33,7 @@ public class BookDAOTest {
 		bookDao = null;
 		personDao = null;
 	}
-	
-	
+		
 	
 	@Test
 	public void testCreate_shouldInsertEntity() throws SQLException {

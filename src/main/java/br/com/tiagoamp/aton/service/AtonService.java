@@ -11,14 +11,14 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
-import br.com.tiagoamp.aton.dao.EmprestimoDAO;
-import br.com.tiagoamp.aton.dao.EmprestimoDaoBdLocal;
+import br.com.tiagoamp.aton.dao.BorrowingDAO;
+import br.com.tiagoamp.aton.dao.BorrowingDaoJdbc;
 import br.com.tiagoamp.aton.dao.BookDAO;
 import br.com.tiagoamp.aton.dao.BookDaoJdbc;
 import br.com.tiagoamp.aton.dao.PersonDAO;
 import br.com.tiagoamp.aton.dao.PessoaDaoJdbc;
 import br.com.tiagoamp.aton.model.AtonBOException;
-import br.com.tiagoamp.aton.model.Emprestimo;
+import br.com.tiagoamp.aton.model.Borrowing;
 import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Person;
@@ -35,12 +35,12 @@ public class AtonService {
 	public AtonService() {		
 		this.pessoaDao = new PessoaDaoJdbc();
 		this.livroDao = new BookDaoJdbc();
-		this.empDao = new EmprestimoDaoBdLocal();		
+		this.empDao = new BorrowingDaoJdbc();		
 	}
 	
 	private PersonDAO pessoaDao;
 	private BookDAO livroDao;
-	private EmprestimoDAO empDao;
+	private BorrowingDAO empDao;
 	
 	public boolean inserirPessoa(Person pessoa) throws AtonBOException {
 		try {
@@ -230,7 +230,7 @@ public class AtonService {
 		}
 	}
 	
-	public boolean inserirEmprestimo(Emprestimo emprestimo) throws AtonBOException {
+	public boolean inserirEmprestimo(Borrowing emprestimo) throws AtonBOException {
 		try {
 			int result = empDao.create(emprestimo);
 			return result == 1;
@@ -240,7 +240,7 @@ public class AtonService {
 		}
 	}
 	
-	public boolean atualizarEmprestimo(Emprestimo emprestimo) throws AtonBOException {
+	public boolean atualizarEmprestimo(Borrowing emprestimo) throws AtonBOException {
 		try {
 			int result = empDao.update(emprestimo);
 			return result == 1;
@@ -260,16 +260,16 @@ public class AtonService {
 		}
 	}
 	
-	private Emprestimo popularEmprestimo(Emprestimo emp) throws AtonBOException {
+	private Borrowing popularEmprestimo(Borrowing emp) throws AtonBOException {
 		emp.setLivro(this.consultarLivro(emp.getLivro().getId()));
 		emp.setPessoa(this.consultarPessoa(emp.getPessoa().getId()));
 		return emp;
 	}
 	
-	private List<Emprestimo> popularEmprestimos(List<Emprestimo> lista) throws AtonBOException {
-		List<Emprestimo> result = new ArrayList<>();
+	private List<Borrowing> popularEmprestimos(List<Borrowing> lista) throws AtonBOException {
+		List<Borrowing> result = new ArrayList<>();
 		if (!lista.isEmpty()) {
-			for (Emprestimo emp : lista) {
+			for (Borrowing emp : lista) {
 				emp = popularEmprestimo(emp);
 				result.add(emp);
 			}
@@ -277,9 +277,9 @@ public class AtonService {
 		return result;
 	}
 	
-	public Emprestimo consultarEmprestimo(int id) throws AtonBOException {
+	public Borrowing consultarEmprestimo(int id) throws AtonBOException {
 		try {
-			Emprestimo emprestimo = empDao.findById(id);
+			Borrowing emprestimo = empDao.findById(id);
 			return popularEmprestimo(emprestimo);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
@@ -287,9 +287,9 @@ public class AtonService {
 		}
 	}
 	
-	public List<Emprestimo> consultarEmprestimos(Integer idLivro, Integer idPessoa, Date dataEmprestimo, Date dataDevolucao) throws AtonBOException {
+	public List<Borrowing> consultarEmprestimos(Integer idLivro, Integer idPessoa, Date dataEmprestimo, Date dataDevolucao) throws AtonBOException {
 		try {
-			List<Emprestimo> lista = empDao.find(idLivro, idPessoa, dataEmprestimo, dataDevolucao);
+			List<Borrowing> lista = empDao.findByFields(idLivro, idPessoa, dataEmprestimo, dataDevolucao);
 			return popularEmprestimos(lista);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
@@ -297,9 +297,9 @@ public class AtonService {
 		}
 	}
 	
-	public List<Emprestimo> consultarEmprestimos() throws AtonBOException {
+	public List<Borrowing> consultarEmprestimos() throws AtonBOException {
 		try {
-			List<Emprestimo> lista = empDao.findAll();
+			List<Borrowing> lista = empDao.findAll();
 			return popularEmprestimos(lista);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
@@ -307,9 +307,9 @@ public class AtonService {
 		}
 	}
 	
-	public List<Emprestimo> consultarEmprestimosEmAberto() throws AtonBOException {
+	public List<Borrowing> consultarEmprestimosEmAberto() throws AtonBOException {
 		try {
-			List<Emprestimo> lista = empDao.findAllEmAberto();
+			List<Borrowing> lista = empDao.findOpenBorrowings();
 			return popularEmprestimos(lista);
 		} catch (SQLException e) {
 			logger.error("Erro durante acesso no banco de dados! " + e);
@@ -330,10 +330,10 @@ public class AtonService {
 	public void setLivroDao(BookDAO livroDao) {
 		this.livroDao = livroDao;
 	}
-	public EmprestimoDAO getEmpDao() {
+	public BorrowingDAO getEmpDao() {
 		return empDao;
 	}
-	public void setEmpDao(EmprestimoDAO empDao) {
+	public void setEmpDao(BorrowingDAO empDao) {
 		this.empDao = empDao;
 	}	
 

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.tiagoamp.aton.model.AtonBOException;
-import br.com.tiagoamp.aton.model.Emprestimo;
+import br.com.tiagoamp.aton.model.Borrowing;
 import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Person;
@@ -364,7 +364,7 @@ public class AtonController {
 			}
 			model.addAttribute("acao",pAcao);
 		}		
-		Emprestimo emprestimo = new Emprestimo(livro, new Person(), new Date(), null, null);
+		Borrowing emprestimo = new Borrowing(livro, new Person(), new Date(), null, null);
 		model.addAttribute("emprestimo", emprestimo);
 		return "emprestimos/emprestimolivro";
 	}
@@ -388,7 +388,7 @@ public class AtonController {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
 		}				
-		Emprestimo emprestimo = new Emprestimo(livro, new Person(), new Date(), null, null);
+		Borrowing emprestimo = new Borrowing(livro, new Person(), new Date(), null, null);
 		model.addAttribute("emprestimo", emprestimo);
 		return "emprestimos/emprestimolivro";
 	}
@@ -412,7 +412,7 @@ public class AtonController {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_MONTH, 10);
 		
-		Emprestimo emprestimo = new Emprestimo(livro, pessoa, new Date(), new Date(calendar.getTimeInMillis()), null);
+		Borrowing emprestimo = new Borrowing(livro, pessoa, new Date(), new Date(calendar.getTimeInMillis()), null);
 		model.addAttribute("emprestimo", emprestimo);
 		return "emprestimos/emprestimolivro";	
 	}
@@ -446,7 +446,7 @@ public class AtonController {
 	}
 	
 	@RequestMapping(value="livroemprestado", method = RequestMethod.POST)
-	public String emprestarLivro(@Valid Emprestimo emprestimo, BindingResult result, Model model, HttpServletRequest request) {
+	public String emprestarLivro(@Valid Borrowing emprestimo, BindingResult result, Model model, HttpServletRequest request) {
 		boolean hasErrors = false;
 		if(result.hasErrors()) {
 			hasErrors = true;
@@ -503,7 +503,7 @@ public class AtonController {
 	        @RequestParam(value="tLivro", required=false) String pLivro, 
 	        @RequestParam(value="tPessoa", required=false) String pPessoa, 
 	        Model model){
-		List<Emprestimo> lista = new ArrayList<>();
+		List<Borrowing> lista = new ArrayList<>();
 		try {
 			if (pLivro != null && !pLivro.isEmpty()) { // CAMPO DE PESQ LIVRO PREENCHIDO
 				pLivro = pLivro.trim().toUpperCase();
@@ -539,7 +539,7 @@ public class AtonController {
 	
 	@RequestMapping("listaemprestimos")
 	public String listarEmprestimos(HttpServletRequest request, Model model) {
-		List<Emprestimo> lista = new ArrayList<>();
+		List<Borrowing> lista = new ArrayList<>();
 		try {		
 			lista = service.consultarEmprestimos();
 			if (lista.isEmpty()) {
@@ -556,7 +556,7 @@ public class AtonController {
 	
 	@RequestMapping("listaemprestimosabertos")
 	public String listarEmprestimosEmAberto(HttpServletRequest request, Model model) {
-		List<Emprestimo> lista = new ArrayList<>();
+		List<Borrowing> lista = new ArrayList<>();
 		try {		
 			lista = service.consultarEmprestimosEmAberto();
 			if (lista.isEmpty()) {
@@ -576,7 +576,7 @@ public class AtonController {
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
 	        Model model) {		
-		Emprestimo emprestimo = null;				
+		Borrowing emprestimo = null;				
 		if (pId != null && !pId.isEmpty()) {
 			try {		
 				emprestimo = service.consultarEmprestimo(Integer.parseInt(pId));

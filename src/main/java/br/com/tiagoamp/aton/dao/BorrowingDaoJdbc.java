@@ -14,15 +14,15 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import br.com.tiagoamp.aton.model.Emprestimo;
+import br.com.tiagoamp.aton.model.Borrowing;
 import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Person;
 
-public class EmprestimoDaoBdLocal implements EmprestimoDAO {
+public class BorrowingDaoJdbc implements BorrowingDAO {
 	
-	Logger logger = Logger.getLogger(EmprestimoDaoBdLocal.class);
+	Logger logger = Logger.getLogger(BorrowingDaoJdbc.class);
 	
-	public EmprestimoDaoBdLocal() {
+	public BorrowingDaoJdbc() {
 		InputStream istream = this.getClass().getResourceAsStream("config.properties");
 		Properties prop = new Properties();
 		try {
@@ -43,8 +43,8 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	private String NAME_DB;
 	
 		
-	private Emprestimo carregarObjeto(ResultSet rs) throws SQLException {
-		Emprestimo emp = new Emprestimo();
+	private Borrowing carregarObjeto(ResultSet rs) throws SQLException {
+		Borrowing emp = new Borrowing();
 		emp.setId(rs.getInt("ID"));
 		Person pessoa = new Person();
 		pessoa.setId(rs.getInt("ID_PESSOA"));
@@ -59,7 +59,7 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	}
 
 	@Override
-	public int create(Emprestimo emprestimo) throws SQLException {
+	public void create(Borrowing emprestimo) throws SQLException {
 		logger.debug("Inserindo : " + emprestimo);
 		int result;
 		try {			
@@ -88,7 +88,7 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	}
 
 	@Override
-	public int update(Emprestimo emprestimo) throws SQLException {
+	public void update(Borrowing emprestimo) throws SQLException {
 		logger.debug("Atualizando: " + emprestimo);
 		int result;
 		try {			
@@ -116,7 +116,7 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	}
 
 	@Override
-	public int delete(int id) throws SQLException {
+	public void delete(int id) throws SQLException {
 		logger.debug("Apagando id: " + id);
 		int result;
 		try {			
@@ -137,9 +137,9 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	}
 
 	@Override
-	public Emprestimo findById(int id) throws SQLException {
+	public Borrowing findById(int id) throws SQLException {
 		logger.debug("Consultar com id: " + id);
-		Emprestimo emp = null;
+		Borrowing emp = null;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "SELECT * FROM EMPRESTIMOS WHERE ID = ?";
@@ -162,9 +162,9 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	}
 
 	@Override
-	public List<Emprestimo> find(Integer idLivro, Integer idPessoa, Date dataEmprestimo, Date dataDevolucao) throws SQLException {
+	public List<Borrowing> findByFields(Integer idLivro, Integer idPessoa, Date dataEmprestimo, Date dataDevolucao) throws SQLException {
 		logger.debug("Consultando com parametros: " + idLivro + " , " + idPessoa + ", " + dataEmprestimo + " , " + dataDevolucao);
-		List<Emprestimo> lista = new ArrayList<>();
+		List<Borrowing> lista = new ArrayList<>();
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			StringBuilder sql = new StringBuilder("SELECT * FROM EMPRESTIMOS");
@@ -186,7 +186,7 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 									
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				Emprestimo emp = carregarObjeto(rs);
+				Borrowing emp = carregarObjeto(rs);
 				lista.add(emp);
 			}
 		    rs.close();
@@ -202,16 +202,16 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	}
 
 	@Override
-	public List<Emprestimo> findAll() throws SQLException {
+	public List<Borrowing> findAll() throws SQLException {
 		logger.debug("Consultando todos 'emprestimos'");
-		List<Emprestimo> lista = new ArrayList<>();
+		List<Borrowing> lista = new ArrayList<>();
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			StringBuilder sql = new StringBuilder("SELECT * FROM EMPRESTIMOS");
 			pstmt = conn.prepareStatement(sql.toString());
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				Emprestimo emp = carregarObjeto(rs);
+				Borrowing emp = carregarObjeto(rs);
 				lista.add(emp);
 			}
 		    rs.close();
@@ -227,16 +227,16 @@ public class EmprestimoDaoBdLocal implements EmprestimoDAO {
 	}
 	
 	@Override
-	public List<Emprestimo> findAllEmAberto() throws SQLException {
+	public List<Borrowing> findOpenBorrowings() throws SQLException {
 		logger.debug("Consultando todos 'emprestimos' em aberto");
-		List<Emprestimo> lista = new ArrayList<>();
+		List<Borrowing> lista = new ArrayList<>();
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			StringBuilder sql = new StringBuilder("SELECT * FROM EMPRESTIMOS WHERE DT_DEVOLUCAO IS NULL");
 			pstmt = conn.prepareStatement(sql.toString());
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				Emprestimo emp = carregarObjeto(rs);
+				Borrowing emp = carregarObjeto(rs);
 				lista.add(emp);
 			}
 		    rs.close();

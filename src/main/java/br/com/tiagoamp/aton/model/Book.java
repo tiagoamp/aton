@@ -102,7 +102,7 @@ public class Book implements Comparable<Book> {
     private Integer numberAvailable;
     
     @ManyToOne
-    @JoinColumn(name="REGISTERER_ID")
+    @JoinColumn(name="ID_REGISTERER")
     private Person registerer;
     
     @Transient
@@ -125,6 +125,11 @@ public class Book implements Comparable<Book> {
     @Override
     public int compareTo(Book o) {
     	return this.title.compareTo(o.title) ;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	return obj instanceof Book && ((Book)obj).getIsbn().equals(isbn);
     }
     
     private void synchronizeAuthorsNameInFields() {

@@ -12,17 +12,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.com.tiagoamp.aton.TestHelper;
-import br.com.tiagoamp.aton.model.Emprestimo;
+import br.com.tiagoamp.aton.model.Borrowing;
 
 public class EmprestimoDAOTest {
 	
-	private EmprestimoDAO dao;
-	private Emprestimo emp;
+	private BorrowingDAO dao;
+	private Borrowing emp;
 	
 	@Before
 	public void setup() throws ClassNotFoundException {
-		dao = new EmprestimoDaoBdLocal();
-		((EmprestimoDaoBdLocal)dao).setURL_DB("jdbc:sqlite:" + ((EmprestimoDaoBdLocal)dao).getPATH_DB() + "atondbtests");
+		dao = new BorrowingDaoJdbc();
+		((BorrowingDaoJdbc)dao).setURL_DB("jdbc:sqlite:" + ((BorrowingDaoJdbc)dao).getPATH_DB() + "atondbtests");
 		emp = TestHelper.getEmprestimoTeste();
 	}
 	
@@ -34,9 +34,9 @@ public class EmprestimoDAOTest {
 	
 	private void limparBaseDeDadosDeTeste() {
 		try {
-			List<Emprestimo> lista = dao.findAll();
-			for (Iterator<Emprestimo> iterator = lista.iterator(); iterator.hasNext();) {
-				Emprestimo emp = iterator.next();
+			List<Borrowing> lista = dao.findAll();
+			for (Iterator<Borrowing> iterator = lista.iterator(); iterator.hasNext();) {
+				Borrowing emp = iterator.next();
 				dao.delete(emp.getId());
 			}
 		} catch (SQLException e) {
@@ -55,13 +55,13 @@ public class EmprestimoDAOTest {
 		// criando massa de dados
 		emp.setDataDevolucao(null);
 		dao.create(emp); // insert sem data de devolucao
-		List<Emprestimo> lista = dao.find(emp.getLivro().getId(),emp.getPessoa().getId(),null,null);
+		List<Borrowing> lista = dao.findByFields(emp.getLivro().getId(),emp.getPessoa().getId(),null,null);
 		emp = lista.get(0);
 		emp.setDataDevolucao(new Date()); 
 		// teste
 		int result = dao.update(emp); // atualiza com data de devolucao
 		assertTrue(result == 1);
-		lista = dao.find(emp.getLivro().getId(),emp.getPessoa().getId(),null,null);
+		lista = dao.findByFields(emp.getLivro().getId(),emp.getPessoa().getId(),null,null);
 		emp = lista.get(0);
 		assertTrue(emp.getDataDevolucao() != null);
 	}
@@ -70,7 +70,7 @@ public class EmprestimoDAOTest {
 	public void testDelete() throws SQLException {
 		// criando massa de dados
 		dao.create(emp);
-		List<Emprestimo> lista = dao.find(emp.getLivro().getId(),emp.getPessoa().getId(),null,null);
+		List<Borrowing> lista = dao.findByFields(emp.getLivro().getId(),emp.getPessoa().getId(),null,null);
 		emp = lista.get(0);
 		// teste
 		int result = dao.delete(emp.getId());
@@ -81,10 +81,10 @@ public class EmprestimoDAOTest {
 	public void testFindById() throws SQLException {
 		// criando massa de dados
 		dao.create(emp);
-		List<Emprestimo> lista = dao.find(emp.getLivro().getId(),emp.getPessoa().getId(),null,null);
+		List<Borrowing> lista = dao.findByFields(emp.getLivro().getId(),emp.getPessoa().getId(),null,null);
 		int id = lista.get(0).getId();
 		// teste
-		Emprestimo emp2 = dao.findById(id);
+		Borrowing emp2 = dao.findById(id);
 		assertTrue(id == emp2.getId());
 	}
 
@@ -93,7 +93,7 @@ public class EmprestimoDAOTest {
 		// criando massa de dados
 		dao.create(emp);
 		// teste
-		List<Emprestimo> lista = dao.find(emp.getLivro().getId(),emp.getPessoa().getId(),null,null);
+		List<Borrowing> lista = dao.findByFields(emp.getLivro().getId(),emp.getPessoa().getId(),null,null);
 		assertTrue(!lista.isEmpty());
 		assertTrue(lista.size() == 1);		
 	}
@@ -103,7 +103,7 @@ public class EmprestimoDAOTest {
 		// criando massa de dados
 		dao.create(emp);
 		// teste
-		List<Emprestimo> lista = dao.findAll();
+		List<Borrowing> lista = dao.findAll();
 		assertTrue(!lista.isEmpty());
 	}
 	
@@ -113,7 +113,7 @@ public class EmprestimoDAOTest {
 		emp.setDataDevolucao(null);
 		dao.create(emp);
 		// teste
-		List<Emprestimo> lista = dao.findAllEmAberto();
+		List<Borrowing> lista = dao.findOpenBorrowings();
 		assertTrue(!lista.isEmpty());
 	}
 

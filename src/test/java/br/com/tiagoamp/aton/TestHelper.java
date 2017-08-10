@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import br.com.tiagoamp.aton.model.Book;
-import br.com.tiagoamp.aton.model.Emprestimo;
+import br.com.tiagoamp.aton.model.Borrowing;
 import br.com.tiagoamp.aton.model.Perfil;
 import br.com.tiagoamp.aton.model.Person;
 import br.com.tiagoamp.aton.model.Status;
@@ -44,16 +44,21 @@ public class TestHelper {
 		return book;
 	}
 	
-	public static Emprestimo getBorrowingForTest() {
-		Emprestimo emp = new Emprestimo();
-		Book livro = TestHelper.getBookForTest();
-		livro.setId(1);
-		emp.setLivro(livro);
-		Person pessoa = TestHelper.getPersonForTest();
-		pessoa.setId(1);
-		emp.setPessoa(pessoa);
-		emp.setDataEmprestimo(new Date());
-		return emp;
+	public static Borrowing getBorrowingForTest() {
+		Borrowing borrow = new Borrowing();
+		
+		Book book = TestHelper.getBookForTest();
+		book.setRegisterer(null);
+		Person person = TestHelper.getPersonForTest();
+		
+		borrow.setBook(book);
+		borrow.setPerson(person);
+		
+		borrow.setDateOfBorrowing(new Date());
+		Date fiveDaysAfter = new Date(borrow.getDateOfBorrowing().getTime() + 5 * (24 * 60 * 60 * 1000l) );
+		borrow.setDateOfScheduledReturn(fiveDaysAfter);
+		
+		return borrow;
 	}
 
 }

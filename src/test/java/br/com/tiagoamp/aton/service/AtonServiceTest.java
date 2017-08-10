@@ -20,11 +20,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import br.com.tiagoamp.aton.TestHelper;
-import br.com.tiagoamp.aton.dao.EmprestimoDAO;
+import br.com.tiagoamp.aton.dao.BorrowingDAO;
 import br.com.tiagoamp.aton.dao.BookDAO;
 import br.com.tiagoamp.aton.dao.PersonDAO;
 import br.com.tiagoamp.aton.model.AtonBOException;
-import br.com.tiagoamp.aton.model.Emprestimo;
+import br.com.tiagoamp.aton.model.Borrowing;
 import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Person;
 
@@ -35,14 +35,14 @@ public class AtonServiceTest {
 	@Mock
 	private BookDAO livroDAOMock;
 	@Mock
-	private EmprestimoDAO emprestimoDAOMock;
+	private BorrowingDAO emprestimoDAOMock;
 	
 	// class under test
 	private AtonService service;
 	
 	private Person pessoa;
 	private Book livro;
-	private Emprestimo emprestimo;
+	private Borrowing emprestimo;
 	
 	private static int ID = 100;
 
@@ -388,23 +388,23 @@ public class AtonServiceTest {
 	
 	@Test
 	public void testConsultarEmprestimosParametros_shouldReturnValidOutput() throws SQLException, AtonBOException {
-		List<Emprestimo> lista = new ArrayList<>();
-		when(emprestimoDAOMock.find(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao())).thenReturn(lista);
+		List<Borrowing> lista = new ArrayList<>();
+		when(emprestimoDAOMock.findByFields(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao())).thenReturn(lista);
 		lista = service.consultarEmprestimos(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao());
 		assertTrue(lista != null);
-		verify(emprestimoDAOMock).find(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao());
+		verify(emprestimoDAOMock).findByFields(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao());
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test(expected = AtonBOException.class)
 	public void testConsultarEmprestimosParametros_shouldThrowException() throws SQLException, AtonBOException {
-		when(emprestimoDAOMock.find(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao())).thenThrow(SQLException.class);
+		when(emprestimoDAOMock.findByFields(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao())).thenThrow(SQLException.class);
 		service.consultarEmprestimos(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao());	
 	}
 
 	@Test
 	public void testConsultarEmprestimos_shouldReturnValidOutput() throws SQLException, AtonBOException {
-		List<Emprestimo> lista = new ArrayList<>();
+		List<Borrowing> lista = new ArrayList<>();
 		when(emprestimoDAOMock.findAll()).thenReturn(lista);
 		lista = service.consultarEmprestimos();
 		assertTrue(lista != null);
@@ -420,17 +420,17 @@ public class AtonServiceTest {
 	
 	@Test
 	public void testConsultarEmprestimosEmAberto_shouldReturnValidOutput() throws SQLException, AtonBOException {
-		List<Emprestimo> lista = new ArrayList<>();
-		when(emprestimoDAOMock.findAllEmAberto()).thenReturn(lista);
+		List<Borrowing> lista = new ArrayList<>();
+		when(emprestimoDAOMock.findOpenBorrowings()).thenReturn(lista);
 		lista = service.consultarEmprestimosEmAberto();
 		assertTrue(lista != null);
-		verify(emprestimoDAOMock).findAllEmAberto();
+		verify(emprestimoDAOMock).findOpenBorrowings();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test(expected = AtonBOException.class)
 	public void testConsultarEmprestimosEmAberto_shouldThrowException() throws SQLException, AtonBOException {
-		when(emprestimoDAOMock.findAllEmAberto()).thenThrow(SQLException.class);
+		when(emprestimoDAOMock.findOpenBorrowings()).thenThrow(SQLException.class);
 		service.consultarEmprestimosEmAberto();	
 	}
 	
