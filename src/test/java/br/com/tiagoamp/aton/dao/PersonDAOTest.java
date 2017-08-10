@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.com.tiagoamp.aton.TestHelper;
-import br.com.tiagoamp.aton.model.Perfil;
+import br.com.tiagoamp.aton.model.Role;
 import br.com.tiagoamp.aton.model.Person;
 
 public class PersonDAOTest {
@@ -187,9 +187,9 @@ public class PersonDAOTest {
 	}
 	
 	private List<Person> insertPeopleListInDataBaseForTests() throws SQLException {
-		Person person1 = new Person("email1@email.com", "Name 01", "111-222", Perfil.ADMINISTRATOR);
-		Person person2 = new Person("email2@email.com", "Name 02", "111-222", Perfil.ADMINISTRATOR);
-		Person person3 = new Person("email3@email.com", "Name 03", "111-222", Perfil.ADMINISTRATOR);
+		Person person1 = new Person("email1@email.com", "Name 01", "111-222", Role.ADMINISTRATOR);
+		Person person2 = new Person("email2@email.com", "Name 02", "111-222", Role.ADMINISTRATOR);
+		Person person3 = new Person("email3@email.com", "Name 03", "111-222", Role.ADMINISTRATOR);
 		
 		dao.create(person1);
 		dao.create(person2);

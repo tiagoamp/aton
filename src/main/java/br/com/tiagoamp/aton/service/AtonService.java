@@ -20,7 +20,7 @@ import br.com.tiagoamp.aton.dao.PessoaDaoJdbc;
 import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Borrowing;
 import br.com.tiagoamp.aton.model.Book;
-import br.com.tiagoamp.aton.model.Perfil;
+import br.com.tiagoamp.aton.model.Role;
 import br.com.tiagoamp.aton.model.Person;
 
 /**
@@ -92,7 +92,7 @@ public class AtonService {
 		}
 	}
 	
-	public List<Person> consultarPessoas(String nome, String telefone, Perfil perfil) throws AtonBOException {
+	public List<Person> consultarPessoas(String nome, String telefone, Role perfil) throws AtonBOException {
 		try {
 			return pessoaDao.findByFields(nome, telefone, perfil);			
 		} catch (SQLException e) {

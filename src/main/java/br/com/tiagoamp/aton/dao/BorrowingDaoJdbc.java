@@ -18,6 +18,7 @@ import br.com.tiagoamp.aton.model.Borrowing;
 import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Person;
 
+@Deprecated
 public class BorrowingDaoJdbc implements BorrowingDAO {
 	
 	Logger logger = Logger.getLogger(BorrowingDaoJdbc.class);
@@ -44,40 +45,38 @@ public class BorrowingDaoJdbc implements BorrowingDAO {
 	
 		
 	private Borrowing carregarObjeto(ResultSet rs) throws SQLException {
-		Borrowing emp = new Borrowing();
-		emp.setId(rs.getInt("ID"));
-		Person pessoa = new Person();
-		pessoa.setId(rs.getInt("ID_PESSOA"));
-		emp.setPessoa(pessoa);
-		Book livro = new Book();
-		livro.setId(rs.getInt("ID_LIVRO"));
-		emp.setLivro(livro);
-		emp.setDataEmprestimo(rs.getDate("DT_EMPRESTIMO"));
-		emp.setDataDevolucao(rs.getDate("DT_DEVOLUCAO"));
-		emp.setDataDevolucaoProgramada(rs.getDate("DT_DEVOLUCAO_PROGRAMADA"));
-		return emp;
+		Borrowing borrow = new Borrowing();
+		borrow.setId(rs.getInt("ID"));
+		Person person = new Person();
+		person.setId(rs.getInt("ID_PESSOA"));
+		borrow.setPerson(person);
+		Book book = new Book();
+		book.setId(rs.getInt("ID_LIVRO"));
+		borrow.setBook(book);
+		borrow.setDateOfBorrowing(rs.getDate("DT_EMPRESTIMO"));
+		borrow.setDateOfReturn(rs.getDate("DT_DEVOLUCAO"));
+		borrow.setDateOfScheduledReturn(rs.getDate("DT_DEVOLUCAO_PROGRAMADA"));
+		return borrow;
 	}
 
 	@Override
-	public void create(Borrowing emprestimo) throws SQLException {
-		logger.debug("Inserindo : " + emprestimo);
-		int result;
+	public void create(Borrowing borrowing) throws SQLException {
+		logger.debug("Inserindo : " + borrowing);
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "INSERT INTO EMPRESTIMOS(ID_PESSOA, ID_LIVRO, DT_EMPRESTIMO, DT_DEVOLUCAO, DT_DEVOLUCAO_PROGRAMADA) VALUES (?, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);			
-			pstmt.setInt(1, emprestimo.getPessoa().getId());
-			pstmt.setInt(2, emprestimo.getLivro().getId());
-			pstmt.setDate(3, new java.sql.Date(emprestimo.getDataEmprestimo().getTime()));
-			if (emprestimo.getDataDevolucao() != null) {
-				pstmt.setDate(4, new java.sql.Date(emprestimo.getDataDevolucao().getTime()));
+			pstmt.setInt(1, borrowing.getPerson().getId());
+			pstmt.setInt(2, borrowing.getBook().getId());
+			pstmt.setDate(3, new java.sql.Date(borrowing.getDateOfBorrowing().getTime()));
+			if (borrowing.getDateOfReturn() != null) {
+				pstmt.setDate(4, new java.sql.Date(borrowing.getDateOfReturn().getTime()));
 			}			
-			if (emprestimo.getDataDevolucaoProgramada() != null) {
-				pstmt.setDate(5, new java.sql.Date(emprestimo.getDataDevolucaoProgramada().getTime()));
+			if (borrowing.getDateOfScheduledReturn() != null) {
+				pstmt.setDate(5, new java.sql.Date(borrowing.getDateOfScheduledReturn().getTime()));
 			}
-			result = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			logger.debug("Inserção concluída!");
-			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
@@ -90,21 +89,19 @@ public class BorrowingDaoJdbc implements BorrowingDAO {
 	@Override
 	public void update(Borrowing emprestimo) throws SQLException {
 		logger.debug("Atualizando: " + emprestimo);
-		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "UPDATE EMPRESTIMOS SET ID_PESSOA = ?, ID_LIVRO = ?, DT_EMPRESTIMO = ?, "
 					+ "DT_DEVOLUCAO = ?, DT_DEVOLUCAO_PROGRAMADA = ? WHERE ID = ?";
 			pstmt = conn.prepareStatement(sql);			
-			pstmt.setInt(1, emprestimo.getPessoa().getId());
-			pstmt.setInt(2, emprestimo.getLivro().getId());
-			pstmt.setDate(3, new java.sql.Date(emprestimo.getDataEmprestimo().getTime()));
-			pstmt.setDate(4, emprestimo.getDataDevolucao() != null ? new java.sql.Date(emprestimo.getDataDevolucao().getTime()) : null);
-			pstmt.setDate(5, emprestimo.getDataDevolucaoProgramada() != null ? new java.sql.Date(emprestimo.getDataDevolucaoProgramada().getTime()) : null);
+			pstmt.setInt(1, emprestimo.getPerson().getId());
+			pstmt.setInt(2, emprestimo.getBook().getId());
+			pstmt.setDate(3, new java.sql.Date(emprestimo.getDateOfBorrowing().getTime()));
+			pstmt.setDate(4, emprestimo.getDateOfReturn() != null ? new java.sql.Date(emprestimo.getDateOfReturn().getTime()) : null);
+			pstmt.setDate(5, emprestimo.getDateOfScheduledReturn() != null ? new java.sql.Date(emprestimo.getDateOfScheduledReturn().getTime()) : null);
 			pstmt.setInt(6, emprestimo.getId());
-			result = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			logger.debug("Atualização concluída!");
-			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
@@ -118,15 +115,13 @@ public class BorrowingDaoJdbc implements BorrowingDAO {
 	@Override
 	public void delete(int id) throws SQLException {
 		logger.debug("Apagando id: " + id);
-		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "DELETE FROM EMPRESTIMOS WHERE ID = ?";
 			pstmt = conn.prepareStatement(sql);			
 			pstmt.setInt(1, id);
-			result = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			logger.debug("Delete concluído!");
-			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			

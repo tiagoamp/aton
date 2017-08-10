@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Borrowing;
 import br.com.tiagoamp.aton.model.Book;
-import br.com.tiagoamp.aton.model.Perfil;
+import br.com.tiagoamp.aton.model.Role;
 import br.com.tiagoamp.aton.model.Person;
 import br.com.tiagoamp.aton.model.TypeOfAcquisition;
 import br.com.tiagoamp.aton.model.TipoMensagem;
@@ -125,7 +125,7 @@ public class AtonController {
 		if(result.hasErrors()) {
 			hasErrors = true;
 		}
-		if (pessoa.getPerfil() != null && pessoa.getPerfil() != Perfil.READER && pessoa.getSenha().equals("")) {
+		if (pessoa.getPerfil() != null && pessoa.getPerfil() != Role.READER && pessoa.getSenha().equals("")) {
 			result.reject("senha", "Senha deve ser preenchida para perfil 'Administrador' ou 'Bibliotecário'.");
 			hasErrors = true;
 		}
@@ -428,9 +428,9 @@ public class AtonController {
 			if (param != null && !param.isEmpty()) {
 				param = param.trim().toUpperCase();
 				// pesquisa por perfil
-				for (Perfil perfil : Perfil.values()) {
+				for (Role perfil : Role.values()) {
 					if (perfil.toString().equals(param))
-						lista = service.consultarPessoas(null, null, Perfil.valueOf(param));
+						lista = service.consultarPessoas(null, null, Role.valueOf(param));
 				}
 				if (lista.isEmpty()) {
 					// pesquisa por telefone
@@ -623,7 +623,7 @@ public class AtonController {
 			}
 			// verificando credenciais
 			pessoa.setSenha(DigestUtils.sha1Hex(pessoa.getSenha()).toUpperCase());
-			if (pessoaBD.getSenha().equals(pessoa.getSenha()) && pessoaBD.getPerfil() != Perfil.READER) {
+			if (pessoaBD.getSenha().equals(pessoa.getSenha()) && pessoaBD.getPerfil() != Role.READER) {
 				pessoaBD.setSenha(null); // null por seguranca, pra setar obj na sessao
 				session.setAttribute("usuario", pessoaBD);
 				logger.info("Usuario autenticado: " + pessoaBD);

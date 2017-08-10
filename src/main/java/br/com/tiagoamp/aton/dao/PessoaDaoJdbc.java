@@ -13,9 +13,10 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import br.com.tiagoamp.aton.model.Perfil;
+import br.com.tiagoamp.aton.model.Role;
 import br.com.tiagoamp.aton.model.Person;
 
+@Deprecated
 public class PessoaDaoJdbc implements PersonDAO {
 	
 	Logger logger = Logger.getLogger(PessoaDaoJdbc.class);
@@ -44,10 +45,10 @@ public class PessoaDaoJdbc implements PersonDAO {
 		Person p = new Person();
 		p.setId(rs.getInt("ID"));
 		p.setEmail(rs.getString("EMAIL"));
-		p.setNome(rs.getString("NOME"));
-		p.setTelefone(rs.getString("TELEFONE"));
-		p.setPerfil(Perfil.valueOf(rs.getString("PERFIL")));
-		p.setSenha(rs.getString("SENHA"));
+		p.setName(rs.getString("NOME"));
+		p.setPhone(rs.getString("TELEFONE"));
+		p.setRole(Role.valueOf(rs.getString("PERFIL")));
+		p.setPassword(rs.getString("SENHA"));
 		return p;
 	}
 	
@@ -59,10 +60,10 @@ public class PessoaDaoJdbc implements PersonDAO {
 			String sql = "INSERT INTO PESSOAS(EMAIL, NOME, TELEFONE, PERFIL, SENHA) VALUES (?, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, pessoa.getEmail().toUpperCase());
-			pstmt.setString(2, pessoa.getNome().toUpperCase());
-			pstmt.setString(3, pessoa.getTelefone());
-			pstmt.setString(4, pessoa.getPerfil().toString());
-			pstmt.setString(5, pessoa.getSenha() != null ? pessoa.getSenha().toUpperCase() : null);
+			pstmt.setString(2, pessoa.getName().toUpperCase());
+			pstmt.setString(3, pessoa.getPhone());
+			pstmt.setString(4, pessoa.getRole().toString());
+			pstmt.setString(5, pessoa.getPassword() != null ? pessoa.getPassword().toUpperCase() : null);
 			pstmt.executeUpdate();
 			logger.debug("Inserção executada!");
 		} catch (SQLException e) {
@@ -82,10 +83,10 @@ public class PessoaDaoJdbc implements PersonDAO {
 			String sql = "UPDATE PESSOAS SET EMAIL = ?, NOME = ?, TELEFONE = ?, PERFIL = ?, SENHA = ? WHERE ID = ?";
 			pstmt = conn.prepareStatement(sql);	
 			pstmt.setString(1, pessoa.getEmail().toUpperCase());
-			pstmt.setString(2, pessoa.getNome().toUpperCase());
-			pstmt.setString(3, pessoa.getTelefone());
-			pstmt.setString(4, pessoa.getPerfil().toString());
-			pstmt.setString(5, pessoa.getSenha() != null ? pessoa.getSenha().toUpperCase() : null);
+			pstmt.setString(2, pessoa.getName().toUpperCase());
+			pstmt.setString(3, pessoa.getPhone());
+			pstmt.setString(4, pessoa.getRole().toString());
+			pstmt.setString(5, pessoa.getPassword() != null ? pessoa.getPassword().toUpperCase() : null);
 			pstmt.setInt(6, pessoa.getId());
 			pstmt.executeUpdate();
 			logger.debug("Atualização executada!");			
@@ -143,7 +144,7 @@ public class PessoaDaoJdbc implements PersonDAO {
 	}
 	
 	@Override
-	public List<Person> findByFields(String nome, String telefone, Perfil perfil) throws SQLException {
+	public List<Person> findByFields(String nome, String telefone, Role perfil) throws SQLException {
 		logger.debug("Consultando com parametros: " + nome +","+ telefone +","+ perfil);
 		List<Person> lista = new ArrayList<>();
 		try {

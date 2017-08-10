@@ -5,7 +5,7 @@ import java.util.Date;
 
 import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Borrowing;
-import br.com.tiagoamp.aton.model.Perfil;
+import br.com.tiagoamp.aton.model.Role;
 import br.com.tiagoamp.aton.model.Person;
 import br.com.tiagoamp.aton.model.Status;
 import br.com.tiagoamp.aton.model.TypeOfAcquisition;
@@ -13,7 +13,7 @@ import br.com.tiagoamp.aton.model.TypeOfAcquisition;
 public class TestHelper {
 	
 	public static Person getPersonForTest() {
-		Person person = new Person("TEST@TESTEMAIL.COM", "NAME FOR TESTS", "11-1111-1111", Perfil.ADMINISTRATOR);
+		Person person = new Person("TEST@TESTEMAIL.COM", "NAME FOR TESTS", "11-1111-1111", Role.ADMINISTRATOR);
 		person.setPassword("1234");
 		return person;
 	}

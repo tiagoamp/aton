@@ -3,7 +3,7 @@ package br.com.tiagoamp.aton.dao;
 import java.sql.SQLException;
 import java.util.List;
 
-import br.com.tiagoamp.aton.model.Perfil;
+import br.com.tiagoamp.aton.model.Role;
 import br.com.tiagoamp.aton.model.Person;
 
 public interface PersonDAO {
@@ -68,7 +68,7 @@ public interface PersonDAO {
 	 * @return List<Person> 
 	 * @throws SQLException
 	 */
-	List<Person> findByFields(String name, String phone, Perfil role) throws SQLException;
+	List<Person> findByFields(String name, String phone, Role role) throws SQLException;
 	
 	/**
 	 * Retrieve all entities from the database.

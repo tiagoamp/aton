@@ -13,7 +13,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import br.com.tiagoamp.aton.model.Perfil;
+import br.com.tiagoamp.aton.model.Role;
 import br.com.tiagoamp.aton.model.Person;
 
 public class PersonDaoJpa implements PersonDAO {
@@ -81,14 +81,14 @@ public class PersonDaoJpa implements PersonDAO {
 	}
 
 	@Override
-	public List<Person> findByFields(String name, String phone, Perfil role) throws SQLException {
+	public List<Person> findByFields(String name, String phone, Role role) throws SQLException {
 		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 		CriteriaQuery<Person> query = criteriaBuilder.createQuery(Person.class);
 		
 		Root<Person> root = query.from(Person.class);
 		Path<String> namePath = root.<String>get("name");
 		Path<String> phonePath = root.<String>get("phone");
-		Path<Perfil> rolePath = root.<Perfil>get("role");
+		Path<Role> rolePath = root.<Role>get("role");
 		
 		List<Predicate> predicates = new ArrayList<>();		
 		if (name != null && !name.isEmpty()) {

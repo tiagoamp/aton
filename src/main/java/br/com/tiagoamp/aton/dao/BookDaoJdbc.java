@@ -23,6 +23,7 @@ import br.com.tiagoamp.aton.model.Person;
 import br.com.tiagoamp.aton.model.Status;
 import br.com.tiagoamp.aton.model.TypeOfAcquisition;
 
+@Deprecated
 public class BookDaoJdbc implements BookDAO {
 	
 	private Logger logger = Logger.getLogger(BookDaoJdbc.class);
@@ -48,37 +49,35 @@ public class BookDaoJdbc implements BookDAO {
 	private String NAME_DB;
 	
 	private Book carregarObjeto(ResultSet rs) throws SQLException {
-		Book l = new Book();
-		l.setId(rs.getInt("ID"));
-		l.setTitulo(rs.getString("TITULO"));
-		l.setSubtitulo(rs.getString("SUBTITULO"));
-		l.setDataCadastro(rs.getDate("DT_CADASTRO"));
-		l.setIsbn(rs.getString("ISBN"));
-		l.setEditora(rs.getString("EDITORA"));
-		l.setLocalPublicacao(rs.getString("LOCAL_PUBLICACAO"));
-		l.setAnoPublicacao(rs.getInt("ANO_PUBLICACAO"));
-		l.setNroPaginas(rs.getInt("NRO_PAGINAS"));
-		l.setGenero(rs.getString("GENERO"));
-		l.setClassificacao(rs.getString("CLASSIFICACAO"));
-		l.setPublicoAlvo(rs.getString("PUBLICO_ALVO"));
-		//l.setPathFotoCapa(Paths.get(rs.getString("PATH_FOTO_CAPA"))); // FIXME
-		l.setDataAquisicao(rs.getDate("DT_AQUISICAO"));
-		l.setTipoAquisicao(TypeOfAcquisition.valueOf(rs.getString("TIPO_AQUISICAO")));
-		l.setNomeDoador(rs.getString("NM_DOADOR"));
-		Person pessoa = new Person();
-		pessoa.setId(rs.getInt("ID_PESSOA_CADASTRADORA"));
-		l.setPessoaCadastradora(pessoa);
-		l.setSituacao(Status.valueOf(rs.getString("SITUACAO")));
-		l.setAutoresAgrupados(rs.getString("AUTOR"));
-		l.setQtdExemplares(rs.getInt("QTD_EXEMPLARES"));
-		l.setQtdDisponiveis(rs.getInt("QTD_DISPONIVEIS"));
-		return l;
+		Book book = new Book();
+		book.setId(rs.getInt("ID"));
+		book.setTitle(rs.getString("TITULO"));
+		book.setSubtitle(rs.getString("SUBTITULO"));
+		book.setDateOfRegistration(rs.getDate("DT_CADASTRO"));
+		book.setIsbn(rs.getString("ISBN"));
+		book.setPublishingCompany(rs.getString("EDITORA"));
+		book.setPublishingCity(rs.getString("LOCAL_PUBLICACAO"));
+		book.setPublishingYear(rs.getInt("ANO_PUBLICACAO"));
+		book.setNumberOfPages(rs.getInt("NRO_PAGINAS"));
+		book.setGenre(rs.getString("GENERO"));
+		book.setClassification(rs.getString("CLASSIFICACAO"));
+		book.setTargetAudience(rs.getString("PUBLICO_ALVO"));
+		book.setDateOfAcquisition(rs.getDate("DT_AQUISICAO"));
+		book.setTypeOfAcquisition(TypeOfAcquisition.valueOf(rs.getString("TIPO_AQUISICAO")));
+		book.setDonorName(rs.getString("NM_DOADOR"));
+		Person person = new Person();
+		person.setId(rs.getInt("ID_PESSOA_CADASTRADORA"));
+		book.setRegisterer(person);
+		book.setStatus(Status.valueOf(rs.getString("SITUACAO")));
+		book.setAuthorsNameInline(rs.getString("AUTOR"));
+		book.setNumberOfCopies(rs.getInt("QTD_EXEMPLARES"));
+		book.setNumberAvailable(rs.getInt("QTD_DISPONIVEIS"));
+		return book;
 	}
 	
 	@Override
-	public int create(Book livro) throws SQLException {
-		logger.debug("Inserindo: " + livro);
-		int result;
+	public void create(Book book) throws SQLException {
+		logger.debug("Inserindo: " + book);
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "INSERT INTO LIVROS(TITULO, SUBTITULO, DT_CADASTRO, ISBN,"
@@ -87,29 +86,27 @@ public class BookDaoJdbc implements BookDAO {
 					+ "NM_DOADOR, ID_PESSOA_CADASTRADORA, SITUACAO, AUTOR, QTD_EXEMPLARES, QTD_DISPONIVEIS) "
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);			
-			pstmt.setString(1, livro.getTitulo().toUpperCase());
-			pstmt.setString(2, livro.getSubtitulo().toUpperCase());
-			pstmt.setDate(3, new java.sql.Date(livro.getDataCadastro().getTime()) );
-			pstmt.setString(4, livro.getIsbn().toUpperCase());
-			pstmt.setString(5, livro.getEditora().toUpperCase());
-			pstmt.setString(6, livro.getLocalPublicacao().toUpperCase());
-			pstmt.setObject(7, livro.getAnoPublicacao());
-			pstmt.setObject(8, livro.getNroPaginas());
-			pstmt.setString(9, livro.getGenero());
-			pstmt.setString(10, livro.getClassificacao().toUpperCase());
-			pstmt.setString(11, livro.getPublicoAlvo().toUpperCase());
-			//pstmt.setObject(xx, livro.getPathFotoCapa() != null ? livro.getPathFotoCapa().toString() : null); //FIXME
-			pstmt.setDate(12, new java.sql.Date(livro.getDataAquisicao().getTime()));
-			pstmt.setObject(13, livro.getTipoAquisicao() != null ? livro.getTipoAquisicao().toString() : null);
-			pstmt.setString(14, livro.getNomeDoador().toUpperCase());
-			pstmt.setObject(15, livro.getPessoaCadastradora() != null ? livro.getPessoaCadastradora().getId() : null);
-			pstmt.setObject(16, livro.getSituacao() != null ? livro.getSituacao().toString() : null );
-			pstmt.setString(17, livro.getAutoresAgrupados().toUpperCase());
-			pstmt.setInt(18, livro.getQtdExemplares());
-			pstmt.setInt(19, livro.getQtdDisponiveis());
-			result = pstmt.executeUpdate();
+			pstmt.setString(1, book.getTitle().toUpperCase());
+			pstmt.setString(2, book.getSubtitle().toUpperCase());
+			pstmt.setDate(3, new java.sql.Date(book.getDateOfRegistration().getTime()) );
+			pstmt.setString(4, book.getIsbn().toUpperCase());
+			pstmt.setString(5, book.getPublishingCompany().toUpperCase());
+			pstmt.setString(6, book.getPublishingCity().toUpperCase());
+			pstmt.setObject(7, book.getPublishingYear());
+			pstmt.setObject(8, book.getNumberOfPages());
+			pstmt.setString(9, book.getGenre());
+			pstmt.setString(10, book.getClassification().toUpperCase());
+			pstmt.setString(11, book.getTargetAudience().toUpperCase());
+			pstmt.setDate(12, new java.sql.Date(book.getDateOfAcquisition().getTime()));
+			pstmt.setObject(13, book.getTypeOfAcquisition() != null ? book.getTypeOfAcquisition().toString() : null);
+			pstmt.setString(14, book.getDonorName().toUpperCase());
+			pstmt.setObject(15, book.getRegisterer() != null ? book.getRegisterer().getId() : null);
+			pstmt.setObject(16, book.getStatus() != null ? book.getStatus().toString() : null );
+			pstmt.setString(17, book.getAuthorsNameInline().toUpperCase());
+			pstmt.setInt(18, book.getNumberOfCopies());
+			pstmt.setInt(19, book.getNumberAvailable());
+			pstmt.executeUpdate();
 			logger.debug("Inserção concluída!");
-			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
@@ -120,9 +117,8 @@ public class BookDaoJdbc implements BookDAO {
 	}
 
 	@Override
-	public int update(Book livro) throws SQLException {
+	public void update(Book livro) throws SQLException {
 		logger.debug("Atualizando: " + livro);
-		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "UPDATE LIVROS SET "
@@ -133,30 +129,28 @@ public class BookDaoJdbc implements BookDAO {
 					+ "QTD_EXEMPLARES = ?, QTD_DISPONIVEIS = ?"
 					+ "	WHERE ID = ?";
 			pstmt = conn.prepareStatement(sql);			
-			pstmt.setString(1, livro.getTitulo().toUpperCase());
-			pstmt.setString(2, livro.getSubtitulo().toUpperCase());
-			pstmt.setDate(3, new java.sql.Date(livro.getDataCadastro().getTime()) );
+			pstmt.setString(1, livro.getTitle().toUpperCase());
+			pstmt.setString(2, livro.getSubtitle().toUpperCase());
+			pstmt.setDate(3, new java.sql.Date(livro.getDateOfRegistration().getTime()) );
 			pstmt.setString(4, livro.getIsbn().toUpperCase());
-			pstmt.setString(5, livro.getEditora().toUpperCase());
-			pstmt.setString(6, livro.getLocalPublicacao().toUpperCase());
-			pstmt.setInt(7, livro.getAnoPublicacao());
-			pstmt.setInt(8, livro.getNroPaginas());
-			pstmt.setString(9, livro.getGenero().toUpperCase());
-			pstmt.setString(10, livro.getClassificacao().toUpperCase());
-			pstmt.setString(11, livro.getPublicoAlvo().toUpperCase());
-			//pstmt.setString(XX, livro.getPathFotoCapa().toString()); //FIXME
-			pstmt.setDate(12, new java.sql.Date(livro.getDataAquisicao().getTime()));
-			pstmt.setString(13, livro.getTipoAquisicao().toString());
-			pstmt.setString(14, livro.getNomeDoador().toUpperCase());
-			pstmt.setInt(15, livro.getPessoaCadastradora() != null ? livro.getPessoaCadastradora().getId() : 0);
-			pstmt.setString(16, livro.getSituacao().toString());
-			pstmt.setString(17, livro.getAutoresAgrupados().toUpperCase());
-			pstmt.setInt(18, livro.getQtdExemplares());
-			pstmt.setInt(19, livro.getQtdDisponiveis());
+			pstmt.setString(5, livro.getPublishingCompany().toUpperCase());
+			pstmt.setString(6, livro.getPublishingCity().toUpperCase());
+			pstmt.setInt(7, livro.getPublishingYear());
+			pstmt.setInt(8, livro.getNumberOfPages());
+			pstmt.setString(9, livro.getGenre().toUpperCase());
+			pstmt.setString(10, livro.getClassification().toUpperCase());
+			pstmt.setString(11, livro.getTargetAudience().toUpperCase());
+			pstmt.setDate(12, new java.sql.Date(livro.getDateOfAcquisition().getTime()));
+			pstmt.setString(13, livro.getTypeOfAcquisition().toString());
+			pstmt.setString(14, livro.getDonorName().toUpperCase());
+			pstmt.setInt(15, livro.getRegisterer() != null ? livro.getRegisterer().getId() : 0);
+			pstmt.setString(16, livro.getStatus().toString());
+			pstmt.setString(17, livro.getAuthorsNameInline().toUpperCase());
+			pstmt.setInt(18, livro.getNumberOfCopies());
+			pstmt.setInt(19, livro.getNumberAvailable());
 			pstmt.setInt(20, livro.getId());
-			result = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			logger.debug("Atualização concluída!");
-			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			
@@ -167,17 +161,15 @@ public class BookDaoJdbc implements BookDAO {
 	}
 
 	@Override
-	public int delete(int id) throws SQLException {
+	public void delete(int id) throws SQLException {
 		logger.debug("Apagando id: " + id);
-		int result;
 		try {			
 			conn = DriverManager.getConnection(URL_DB);
 			String sql = "DELETE FROM LIVROS WHERE ID = ?";
 			pstmt = conn.prepareStatement(sql);			
 			pstmt.setInt(1, id);
-			result = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			logger.debug("Delete concluído!");
-			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 			throw e;			

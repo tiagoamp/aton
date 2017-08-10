@@ -1,6 +1,6 @@
 package br.com.tiagoamp.aton.service;
 
-import br.com.tiagoamp.aton.model.Perfil;
+import br.com.tiagoamp.aton.model.Role;
 import br.com.tiagoamp.aton.model.Person;
 import br.com.tiagoamp.aton.model.to.AutorizacaoResultadoTO;
 
@@ -25,13 +25,13 @@ public class AutorizacaoFuncionalidades {
 			if (usuario == null) {
 				to = new AutorizacaoResultadoTO("autorizacao", null);
 			} else {
-				if (usuario.getPerfil() != Perfil.ADMINISTRATOR) {
+				if (usuario.getPerfil() != Role.ADMINISTRATOR) {
 					to = new AutorizacaoResultadoTO("livros", "Ação autorizada somente para perfil 'Administrador'.");
 				}
 			}
 		} else { // BIBLIOTECARIO  
 			if (acao.equals("emprestar") && usuario != null) {
-				if (usuario.getPerfil() != Perfil.ADMINISTRATOR || usuario.getPerfil() != Perfil.LIBRARIAN) {
+				if (usuario.getPerfil() != Role.ADMINISTRATOR || usuario.getPerfil() != Role.LIBRARIAN) {
 					to = new AutorizacaoResultadoTO("livros", "Ação autorizada somente para perfil 'Bibliotecário'.");
 				}
 			}
@@ -52,7 +52,7 @@ public class AutorizacaoFuncionalidades {
 			if (usuario == null) {
 				to = new AutorizacaoResultadoTO("autorizacao", null);
 			} else {
-				if (usuario.getPerfil() != Perfil.ADMINISTRATOR) {
+				if (usuario.getPerfil() != Role.ADMINISTRATOR) {
 					to = new AutorizacaoResultadoTO("pessoas", "Ação autorizada somente para perfil 'Administrador'.");
 				}
 			}
