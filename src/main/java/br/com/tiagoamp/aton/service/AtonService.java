@@ -24,7 +24,7 @@ import br.com.tiagoamp.aton.model.Role;
 import br.com.tiagoamp.aton.model.Person;
 
 /**
- * Fornece servicos de CRUD para a UI.
+ * CRUD Services.
  * 
  * @author tiagoamp
  */
@@ -261,8 +261,8 @@ public class AtonService {
 	}
 	
 	private Borrowing popularEmprestimo(Borrowing emp) throws AtonBOException {
-		emp.setLivro(this.consultarLivro(emp.getLivro().getId()));
-		emp.setPessoa(this.consultarPessoa(emp.getPessoa().getId()));
+		emp.setLivro(this.findById(emp.getLivro().getId()));
+		emp.setPessoa(this.findById(emp.getPessoa().getId()));
 		return emp;
 	}
 	

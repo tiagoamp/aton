@@ -156,7 +156,7 @@ public class AtonServiceTest {
 	public void testConsultarPessoasParametros_shouldReturnValidOutput() throws SQLException, AtonBOException {
 		List<Person> lista = new ArrayList<>();
 		when(pessoaDAOMock.findByFields(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil())).thenReturn(lista);
-		lista = service.consultarPessoas(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
+		lista = service.findByFields(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
 		assertTrue(lista != null);
 		verify(pessoaDAOMock).findByFields(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());
 	}
@@ -165,14 +165,14 @@ public class AtonServiceTest {
 	@Test(expected = AtonBOException.class)
 	public void testConsultarPessoasParametros_shouldThrowException() throws SQLException, AtonBOException {
 		when(pessoaDAOMock.findByFields(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil())).thenThrow(SQLException.class);
-		service.consultarPessoas(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());	
+		service.findByFields(pessoa.getNome(), pessoa.getTelefone(), pessoa.getPerfil());	
 	}
 		
 	@Test
 	public void testConsultarPessoasPorNomeAproximado_shouldReturnValidOutput() throws SQLException, AtonBOException {
 		List<Person> lista = new ArrayList<>();
 		when(pessoaDAOMock.findByNameLike(pessoa.getNome())).thenReturn(lista);
-		lista = service.consultarPessoasPorNomeAproximado(pessoa.getNome());
+		lista = service.findByName(pessoa.getNome());
 		assertTrue(lista != null);
 		verify(pessoaDAOMock).findByNameLike(pessoa.getNome());
 	}
@@ -181,7 +181,7 @@ public class AtonServiceTest {
 	@Test(expected = AtonBOException.class)
 	public void testConsultarPessoasPorNomeAproximado_shouldThrowException() throws SQLException, AtonBOException {
 		when(pessoaDAOMock.findByNameLike(pessoa.getNome())).thenThrow(SQLException.class);
-		service.consultarPessoasPorNomeAproximado(pessoa.getNome());	
+		service.findByName(pessoa.getNome());	
 	}
 	
 	@Test
@@ -298,7 +298,7 @@ public class AtonServiceTest {
 	public void testConsultarLivrosParametros_shouldReturnValidOutput() throws SQLException, AtonBOException {
 		List<Book> lista = new ArrayList<>();
 		when(livroDAOMock.findByFields(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo())).thenReturn(lista);
-		lista = service.consultarLivros(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
+		lista = service.findByFields(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
 		assertTrue(lista != null);
 		verify(livroDAOMock).findByFields(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());
 	}
@@ -307,7 +307,7 @@ public class AtonServiceTest {
 	@Test(expected = AtonBOException.class)
 	public void testConsultarLivrosParametros_shouldThrowException() throws SQLException, AtonBOException {
 		when(livroDAOMock.findByFields(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo())).thenThrow(SQLException.class);
-		service.consultarLivros(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());	
+		service.findByFields(livro.getTitulo(), livro.getAutoresAgrupados(), livro.getIsbn(), livro.getClassificacao(), livro.getPublicoAlvo());	
 	}
 
 	@Test
@@ -390,7 +390,7 @@ public class AtonServiceTest {
 	public void testConsultarEmprestimosParametros_shouldReturnValidOutput() throws SQLException, AtonBOException {
 		List<Borrowing> lista = new ArrayList<>();
 		when(emprestimoDAOMock.findByFields(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao())).thenReturn(lista);
-		lista = service.consultarEmprestimos(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao());
+		lista = service.findByFields(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao());
 		assertTrue(lista != null);
 		verify(emprestimoDAOMock).findByFields(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao());
 	}
@@ -399,7 +399,7 @@ public class AtonServiceTest {
 	@Test(expected = AtonBOException.class)
 	public void testConsultarEmprestimosParametros_shouldThrowException() throws SQLException, AtonBOException {
 		when(emprestimoDAOMock.findByFields(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao())).thenThrow(SQLException.class);
-		service.consultarEmprestimos(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao());	
+		service.findByFields(ID, ID, emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao());	
 	}
 
 	@Test

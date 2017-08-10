@@ -452,9 +452,9 @@ public class AtonController {
 			hasErrors = true;
 		}
 		try { // recuperando livro e pessoa
-			emprestimo.setLivro(service.consultarLivro(emprestimo.getLivro().getId()));
+			emprestimo.setLivro(service.findById(emprestimo.getLivro().getId()));
 			if (emprestimo.getPessoa() == null || emprestimo.getPessoa().getId() == null) throw new AtonBOException("Pessoa não selecionada para empréstimo do livro!");
-			emprestimo.setPessoa(service.consultarPessoa(emprestimo.getPessoa().getId()));			
+			emprestimo.setPessoa(service.findById(emprestimo.getPessoa().getId()));			
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
