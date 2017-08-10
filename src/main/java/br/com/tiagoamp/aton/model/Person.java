@@ -20,7 +20,7 @@ public class Person implements Comparable<Person> {
 	public Person() {
 	}
 	
-	public Person(String email, String name, String phone, Perfil role) {
+	public Person(String email, String name, String phone, Role role) {
 		this.email = email;
 		this.name = name;
 		this.phone = phone;
@@ -48,7 +48,7 @@ public class Person implements Comparable<Person> {
 	@NotNull(message = "{NotNull.pessoa.perfil}")
 	@Enumerated(EnumType.STRING)
 	@Column(name="ROLE")
-	private Perfil role;
+	private Role role;
 	
 	@Column(name="PASSWORD")
 	private String password;
@@ -93,10 +93,10 @@ public class Person implements Comparable<Person> {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public Perfil getRole() {
+	public Role getRole() {
 		return role;
 	}
-	public void setRole(Perfil role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
 	public String getPassword() {
