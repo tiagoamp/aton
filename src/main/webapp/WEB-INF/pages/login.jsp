@@ -20,10 +20,6 @@
       <p class="lead">Login</p>      
     </div>
     
-    <%-- <strong>
-    	<form:errors path="pessoa.*" element="div" cssClass="alert alert-danger error" />
-    </strong> --%>
-    
     <!-- MENSAGENS -->
     <jsp:include page = "comum/mensagens.jsp" />
         
@@ -33,7 +29,7 @@
 	    	<h3 class="panel-title">Login no sistema</h3>
 	  	</div>
 	  	<div class="panel-body">
-	  		<form:form id="formLogin" method="POST" cssClass="navbar" action="efetuarlogin" modelAttribute="pessoa">
+	  		<form:form id="formLogin" method="POST" cssClass="navbar" action="efetuarlogin" modelAttribute="person">
 	  			<form:hidden path="id" />
 	  			<div class="form-group">
     				<div class="input-group">
@@ -44,7 +40,7 @@
   				<div id="divSenha" class="form-group" style="display: block;">
 					<div class="input-group">
 						<span class="input-group-addon" id="basic-addon1">Senha</span> 
-						<form:password id="tSenha" path="senha" cssClass="form-control required" placeholder="Digite a senha" aria-describedby="basic-addon1" size="40"/>						
+						<form:password id="tSenha" path="password" cssClass="form-control required" placeholder="Digite a senha" aria-describedby="basic-addon1" size="40"/>						
 					</div>					
 				</div>
 				<button type="submit" class="btn btn-default">

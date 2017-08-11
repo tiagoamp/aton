@@ -17,11 +17,11 @@ import br.com.tiagoamp.aton.model.Role;
 import br.com.tiagoamp.aton.model.Person;
 
 @Deprecated
-public class PessoaDaoJdbc implements PersonDAO {
+public class PersonDaoJdbc implements PersonDAO {
 	
-	Logger logger = Logger.getLogger(PessoaDaoJdbc.class);
+	Logger logger = Logger.getLogger(PersonDaoJdbc.class);
 	
-	public PessoaDaoJdbc() {
+	public PersonDaoJdbc() {
 		InputStream istream = this.getClass().getResourceAsStream("config.properties");
 		Properties prop = new Properties();
 		try {

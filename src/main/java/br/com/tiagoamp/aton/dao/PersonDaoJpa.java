@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -62,8 +63,14 @@ public class PersonDaoJpa implements PersonDAO {
 	@Override
 	public Person findByEmail(String email) throws SQLException {
 		Query query = em.createQuery("SELECT p from Person p WHERE p.email = :pEmail");
-		query.setParameter("pEmail", email);		
-		return (Person) query.getSingleResult();
+		query.setParameter("pEmail", email);
+		Person person;
+		try {
+			person = (Person) query.getSingleResult();
+		} catch (NoResultException nre) {
+			person = null;
+		}		
+		return person;
 	}
 		
 	@Override

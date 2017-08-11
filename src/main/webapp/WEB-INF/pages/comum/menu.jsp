@@ -31,7 +31,7 @@
 	      		<p class="navbar-text navbar-right"><a href="#" class="navbar-link">Usuário não autenticado</a></p>
 	      </c:if>
 	      <c:if test="${not empty usuario}">
-	      		<p class="navbar-text navbar-right"><a href="#" class="navbar-link"> ${usuario.nome} </a></p>
+	      		<p class="navbar-text navbar-right"><a href="#" class="navbar-link"> ${usuario.name} </a></p>
 	   	  </c:if>
 	    </div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->

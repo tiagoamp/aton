@@ -38,15 +38,34 @@ import br.com.tiagoamp.aton.service.PersonService;
 @Controller
 public class AtonController {
 	
+	public AtonController() {
+	}
+	
 	Logger logger = Logger.getLogger(AtonController.class);
 	
-	//private AtonService service = new AtonService();
 	private PersonService personService = new PersonService();
 	private BookService bookService = new BookService();
 	private BorrowingService borrowService = new BorrowingService();
 	
 	@RequestMapping("/aton")
 	public String pageInicial() {
+		return "aton";
+	}
+	
+	@RequestMapping("initializeAndDeleteThisEntry")
+	public String pageInitialize() {
+		//TODO: Delete this method after initializing the application
+		
+		try {
+			List<Person> list = personService.getAll();
+			if (list.isEmpty()) {
+				Person person = new Person("admin@email.com", "System Administrator", null, Role.ADMINISTRATOR);
+				person.setPassword(DigestUtils.sha1Hex("admin"));
+				personService.insert(person);
+			}				
+		} catch (AtonBOException e) {
+			e.printStackTrace();
+		}
 	    return "aton";
 	}
 	
@@ -143,7 +162,7 @@ public class AtonController {
 		try {
 			// digest da senha
 			if (person.getPassword() != null && !person.getPassword().isEmpty()) {
-				person.setPassword(DigestUtils.sha1Hex(person.getPassword()));
+				person.setPassword(DigestUtils.sha1Hex(person.getPassword().toUpperCase()));
 			}
 			// gravando pessoas
 			if (person.getId() == null) {
@@ -605,8 +624,8 @@ public class AtonController {
 	
 	@RequestMapping("login")
 	public String pageLogin(HttpServletRequest request, Model model) {
-		Person pessoa = new Person();
-		model.addAttribute("pessoa", pessoa);
+		Person person = new Person();
+		model.addAttribute("person", person);
 	    return "login";
 	}
 	
@@ -627,7 +646,7 @@ public class AtonController {
 				return "login";
 			}
 			// verificando credenciais
-			pessoa.setPassword(DigestUtils.sha1Hex(pessoa.getPassword()).toUpperCase());
+			pessoa.setPassword(DigestUtils.sha1Hex(pessoa.getPassword()));
 			if (pessoaBD.getPassword().equals(pessoa.getPassword()) && pessoaBD.getRole() != Role.READER) {
 				pessoaBD.setPassword(null); // null por seguranca, pra setar obj na sessao
 				session.setAttribute("usuario", pessoaBD);

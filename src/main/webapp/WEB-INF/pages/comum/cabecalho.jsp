@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-<title>Aton - Sistema de Gestï¿½o de Biblioteca</title>
+<title>Aton - Sistema de Gestão de Biblioteca</title>
 
 <!-- CSS -->
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">

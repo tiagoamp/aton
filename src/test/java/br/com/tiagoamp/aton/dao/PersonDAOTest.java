@@ -14,8 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.com.tiagoamp.aton.TestHelper;
-import br.com.tiagoamp.aton.model.Role;
 import br.com.tiagoamp.aton.model.Person;
+import br.com.tiagoamp.aton.model.Role;
 
 public class PersonDAOTest {
 	
@@ -160,9 +160,9 @@ public class PersonDAOTest {
 	private void instanciateDaoForTests(String type) {
 		if (type == null) throw new IllegalArgumentException("JDBC or JPA should be informed as argument!");
 		if (type.equals("jdbc")) {
-			dao = new PessoaDaoJdbc();
-			((PessoaDaoJdbc)dao).setURL_DB("jdbc:sqlite:" + ((PessoaDaoJdbc)dao).getPATH_DB() + "atondbtests");			
-		} else if(type.equals("jpa")) {    
+			dao = new PersonDaoJdbc();
+			((PersonDaoJdbc)dao).setURL_DB("jdbc:sqlite:" + ((PersonDaoJdbc)dao).getPATH_DB() + "atondbtests");			
+		} else if(type.equals("jpa")) {
 			dao = new PersonDaoJpa(new JPAUtil().getMyTestsEntityManager());
 		}	
 	}
