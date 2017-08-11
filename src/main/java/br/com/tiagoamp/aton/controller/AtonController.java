@@ -28,9 +28,9 @@ import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Borrowing;
 import br.com.tiagoamp.aton.model.Person;
 import br.com.tiagoamp.aton.model.Role;
-import br.com.tiagoamp.aton.model.TipoMensagem;
+import br.com.tiagoamp.aton.model.MessaType;
 import br.com.tiagoamp.aton.model.TypeOfAcquisition;
-import br.com.tiagoamp.aton.model.to.MensagemTO;
+import br.com.tiagoamp.aton.model.to.MessageTO;
 import br.com.tiagoamp.aton.service.BookService;
 import br.com.tiagoamp.aton.service.BorrowingService;
 import br.com.tiagoamp.aton.service.PersonService;
@@ -39,13 +39,16 @@ import br.com.tiagoamp.aton.service.PersonService;
 public class AtonController {
 	
 	public AtonController() {
+		personService = new PersonService();
+		bookService = new BookService();
+		borrowService = new BorrowingService();
 	}
 	
 	Logger logger = Logger.getLogger(AtonController.class);
 	
-	private PersonService personService = new PersonService();
-	private BookService bookService = new BookService();
-	private BorrowingService borrowService = new BorrowingService();
+	private PersonService personService;
+	private BookService bookService;
+	private BorrowingService borrowService;
 	
 	@RequestMapping("/aton")
 	public String pageInicial() {
@@ -87,14 +90,14 @@ public class AtonController {
 				pessoa = personService.findById(Integer.parseInt(pId));				 				
 			} catch (AtonBOException e) {
 				logger.error("Erro: " + e);
-				model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+				model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 				return "pessoas";
 			}
 			model.addAttribute("acao",pAcao);
 		}
 		
 		if (pAcao != null && pAcao.equals("excluir")) {
-			model.addAttribute("mensagem",new MensagemTO("Confirma exclusão com os dados abaixo?", TipoMensagem.ALERTA));
+			model.addAttribute("mensagem",new MessageTO("Confirma exclusão com os dados abaixo?", MessaType.ALERTA));
 		}
 				
 		model.addAttribute("pessoa", pessoa);
@@ -115,7 +118,7 @@ public class AtonController {
 			model.addAttribute("listapessoas", listaOrdenada);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 			return "pessoas";
 		}
 		
@@ -134,11 +137,11 @@ public class AtonController {
 				throw new AtonBOException("Erro na exclusão de pessoa: Identificador inválido!");
 			}
 			personService.delete(pessoa.getId());
-			model.addAttribute("mensagem",new MensagemTO("Exclusão com sucesso: " + pessoa.toString(), TipoMensagem.SUCESSO));
+			model.addAttribute("mensagem",new MessageTO("Exclusão com sucesso: " + pessoa.toString(), MessaType.SUCESSO));
 			logger.info("Pessoa excluída: " + pessoa);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));			
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));			
 		}		
 		return "pessoas";
 	}
@@ -170,12 +173,12 @@ public class AtonController {
 			} else {
 				personService.update(person); // update
 			}
-			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + person.toString(), TipoMensagem.SUCESSO));
+			model.addAttribute("mensagem",new MessageTO("Gravação com sucesso: " + person.toString(), MessaType.SUCESSO));
 			logger.info("Pessoa cadastrada: " + person);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("pessoa", person);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 			return "pessoas/cadastro";
 		}			
 		
@@ -196,7 +199,7 @@ public class AtonController {
 			model.addAttribute("listapessoas", lista);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 		}
 		return "pessoas";		
 	}
@@ -217,14 +220,14 @@ public class AtonController {
 				livro = bookService.findById(Integer.parseInt(pId));				 				
 			} catch (AtonBOException e) {
 				logger.error("Erro: " + e);
-				model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+				model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 				return "livros";
 			}
 			model.addAttribute("acao",pAcao);
 		}
 		
 		if (pAcao != null && pAcao.equals("excluir")) {
-			model.addAttribute("mensagem",new MensagemTO("Confirma exclusão com os dados abaixo?", TipoMensagem.ALERTA));
+			model.addAttribute("mensagem",new MessageTO("Confirma exclusão com os dados abaixo?", MessaType.ALERTA));
 		}
 				
 		model.addAttribute("livro", livro);
@@ -260,7 +263,7 @@ public class AtonController {
 			model.addAttribute("listalivros", list);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 		}
 		return "livros";		
 	}
@@ -317,12 +320,12 @@ public class AtonController {
 					//FIXME Implementar e refatorar gravação de figura de capa do livro
 				bookService.update(book); // update
 			}
-			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + book.toString(), TipoMensagem.SUCESSO));
+			model.addAttribute("mensagem",new MessageTO("Gravação com sucesso: " + book.toString(), MessaType.SUCESSO));
 			logger.info("Livro cadastrado: " + book);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("livro", book);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 			return "livros/cadastro";
 		}		
 		return "livros";
@@ -340,7 +343,7 @@ public class AtonController {
 			model.addAttribute("listalivros", lista);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 			return "livros";
 		}		
 	    return "livros";
@@ -358,11 +361,11 @@ public class AtonController {
 				throw new AtonBOException("Erro na exclusão de pessoa: Identificador inválido!");
 			}
 			borrowService.delete(book.getId());
-			model.addAttribute("mensagem",new MensagemTO("Exclusão com sucesso: " + book.toString(), TipoMensagem.SUCESSO));
+			model.addAttribute("mensagem",new MessageTO("Exclusão com sucesso: " + book.toString(), MessaType.SUCESSO));
 			logger.info("Livro excluído: " + book);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));			
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));			
 		}		
 		return "livros";
 	}
@@ -383,7 +386,7 @@ public class AtonController {
 				book = bookService.findById(Integer.parseInt(pId));				 				
 			} catch (AtonBOException e) {
 				logger.error("Erro: " + e);
-				model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+				model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 				return "livros";
 			}
 			model.addAttribute("acao",pAcao);
@@ -410,7 +413,7 @@ public class AtonController {
 			model.addAttribute("listapessoas", lista);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 		}				
 		Borrowing emprestimo = new Borrowing(livro, new Person(), new Date(), null, null);
 		model.addAttribute("emprestimo", emprestimo);
@@ -430,7 +433,7 @@ public class AtonController {
 			pessoa = personService.findById(Integer.parseInt(pId)); 			
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 		}
 		// Regra da data sugerida de devolução ==> D + 10
 		Calendar calendar = Calendar.getInstance();
@@ -481,7 +484,7 @@ public class AtonController {
 			borrowing.setPerson(personService.findById(borrowing.getPerson().getId()));			
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 			model.addAttribute("emprestimo", borrowing);
 			return "emprestimos/emprestimolivro";
 		}
@@ -511,12 +514,12 @@ public class AtonController {
 			Book book = borrowing.getBook();
 			book.setNumberAvailable(book.getNumberAvailable() - 1);
 			bookService.update(book);			
-			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + borrowing.toString(), TipoMensagem.SUCESSO));
+			model.addAttribute("mensagem",new MessageTO("Gravação com sucesso: " + borrowing.toString(), MessaType.SUCESSO));
 			logger.info("Emprestimo cadastrado: " + borrowing);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("emprestimo", borrowing);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 			return "emprestimos/emprestimolivro";
 		}	
 		return "livros";
@@ -556,7 +559,7 @@ public class AtonController {
 			model.addAttribute("listaemprestimos", lista);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 		}
 		return "emprestimos";		
 	}
@@ -573,7 +576,7 @@ public class AtonController {
 			model.addAttribute("listaemprestimos", lista);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));			
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));			
 		}		
 	    return "emprestimos";
 	}
@@ -590,7 +593,7 @@ public class AtonController {
 			model.addAttribute("listaemprestimos", lista);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));			
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));			
 		}		
 	    return "emprestimos";
 	}
@@ -609,11 +612,11 @@ public class AtonController {
 				Book livro = emprestimo.getBook();
 				livro.setNumberAvailable(livro.getNumberAvailable() + 1);
 				bookService.update(livro);
-				model.addAttribute("mensagem",new MensagemTO("Devolução com sucesso: " + emprestimo.toString(), TipoMensagem.SUCESSO));
+				model.addAttribute("mensagem",new MessageTO("Devolução com sucesso: " + emprestimo.toString(), MessaType.SUCESSO));
 				logger.info("Emprestimo devolvido: " + emprestimo);
 			} catch (AtonBOException e) {
 				logger.error("Erro: " + e);
-				model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+				model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 				return "emprestimos";
 			}
 			model.addAttribute("acao",pAcao);
@@ -622,7 +625,17 @@ public class AtonController {
 		return "emprestimos";
 	}
 	
-	@RequestMapping("login")
+	@RequestMapping("autorizacao")
+	public String pageAutorizacao() {
+	    return "autorizacao";
+	}
+	
+	@RequestMapping("sobre")
+	public String pageSobre() {
+		return "sobre";
+	}
+	
+	/*@RequestMapping("login")
 	public String pageLogin(HttpServletRequest request, Model model) {
 		Person person = new Person();
 		model.addAttribute("person", person);
@@ -669,16 +682,6 @@ public class AtonController {
 		session.invalidate();
 		model.addAttribute("mensagem",new MensagemTO("Logout concluído!", TipoMensagem.SUCESSO));
 	    return "aton";
-	}
-	
-	@RequestMapping("autorizacao")
-	public String pageAutorizacao() {
-	    return "autorizacao";
-	}
-	
-	@RequestMapping("sobre")
-	public String pageSobre() {
-		return "sobre";
-	}
-	
+	}*/
+		
 }

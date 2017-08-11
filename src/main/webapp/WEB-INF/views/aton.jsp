@@ -18,7 +18,7 @@
 	<!-- Begin page content -->
     <div class="container">
       <div class="page-header">
-        <h1>Aton - Sistema de Gestão de Biblioteca</h1>
+        <h1>Aton - Gestão de Biblioteca</h1>
       </div>
       <p class="lead">Sistema de Gestão de Biblioteca</p>
       <p><img alt="aton logo" src="resources/images/aton.png" width="300" height="100" /></p>

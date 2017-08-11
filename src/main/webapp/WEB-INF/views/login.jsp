@@ -16,42 +16,44 @@
 	<jsp:include page = "comum/menu.jsp" />
 	
 	<!-- Begin page content -->
-    <div class="" style="margin: 10px;">
-      <p class="lead">Login</p>      
-    </div>
-    
-    <!-- MENSAGENS -->
-    <jsp:include page = "comum/messages.jsp" />
-        
+	<div class="container">
+	
+	    <!-- <div>
+	      <p class="lead">Autenticação</p>      
+	    </div> -->
+	    
+	    <!-- MENSAGENS -->
+	    <jsp:include page = "comum/messages.jsp" />
      
-    <div class="panel panel-default" style="margin: 10px;">
-		<div class="panel-heading">
-	    	<h3 class="panel-title">Login no sistema</h3>
-	  	</div>
-	  	<div class="panel-body">
-	  		<form:form id="formLogin" method="POST" cssClass="navbar" action="efetuarlogin" modelAttribute="person">
-	  			<form:hidden path="id" />
-	  			<div class="form-group">
-    				<div class="input-group">
-						<span class="input-group-addon" id="basic-addon1">E-mail</span> 
-						<form:input path="email" cssClass="form-control required" placeholder="Digite o e-mail" aria-describedby="basic-addon1" size="40" />						
-					</div>
-  				</div>
-  				<div id="divSenha" class="form-group" style="display: block;">
-					<div class="input-group">
-						<span class="input-group-addon" id="basic-addon1">Senha</span> 
-						<form:password id="tSenha" path="password" cssClass="form-control required" placeholder="Digite a senha" aria-describedby="basic-addon1" size="40"/>						
-					</div>					
-				</div>
-				<button type="submit" class="btn btn-default">
-					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Entrar
-				</button>
-				<button type="button" class="btn btn-default" onClick="location.href='aton'">
-					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancelar
-				</button>
-										
-			</form:form>	
-	  	</div>
+	    <div class="panel panel-default" >
+			<div class="panel-heading">
+		    	<h3 class="panel-title">Login</h3>
+		  	</div>
+		  	<div class="panel-body">		  	
+		  		<form:form id="formLogin" cssClass="form-horizontal" method="POST" action="efetuarlogin" modelAttribute="person">
+		  			<form:hidden path="id" />		  			
+		  			<div class="form-group">
+					    <label for="tEmail" class="col-sm-2 control-label">Email</label>
+					    <div class="col-sm-10">
+					      <form:input path="email" cssClass="form-control required" placeholder="Digite o e-mail" id="tEmail"  />
+					    </div>
+					</div>									  
+				    <div class="form-group">
+				    	<label for="tSenha" class="col-sm-2 control-label">Senha</label>
+				    	<div class="col-sm-10">				      
+				      		<form:password id="tSenha" path="password" cssClass="form-control required" placeholder="Digite a senha" />
+				    	</div>
+				  	</div>				  			  
+				  	<div class="form-group">
+					    <div class="col-sm-offset-2 col-sm-10">
+					      <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-ok" ></span> Entrar</button>
+					      <button type="button" class="btn btn-default" onClick="location.href='aton'"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+					    </div>
+				  	</div>				  
+				</form:form>		  			
+		  	</div>
+		</div>
+	
 	</div>
 
 	<jsp:include page = "comum/footer.jsp" />

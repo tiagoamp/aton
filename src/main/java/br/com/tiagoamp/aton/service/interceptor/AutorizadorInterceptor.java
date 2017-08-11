@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import br.com.tiagoamp.aton.model.Person;
-import br.com.tiagoamp.aton.model.TipoMensagem;
+import br.com.tiagoamp.aton.model.MessaType;
 import br.com.tiagoamp.aton.model.to.AutorizacaoResultadoTO;
-import br.com.tiagoamp.aton.model.to.MensagemTO;
+import br.com.tiagoamp.aton.model.to.MessageTO;
 import br.com.tiagoamp.aton.service.AutorizacaoFuncionalidades;
 
 public class AutorizadorInterceptor extends HandlerInterceptorAdapter {
@@ -29,7 +29,7 @@ public class AutorizadorInterceptor extends HandlerInterceptorAdapter {
 		} else if (uri.endsWith("cadastrolivro")) { // MANUT LIVROS
 			AutorizacaoResultadoTO autTO = AutorizacaoFuncionalidades.autorizarManutencaoLivros(usuario, request.getParameter("acao"));
 			if (autTO != null) {
-				if (autTO.getMsgErro() != null) request.setAttribute("mensagem", new MensagemTO(autTO.getMsgErro(), TipoMensagem.ERRO));
+				if (autTO.getMsgErro() != null) request.setAttribute("mensagem", new MessageTO(autTO.getMsgErro(), MessaType.ERRO));
 				RequestDispatcher rd = request.getRequestDispatcher(autTO.getUrlRedirect());
 				rd.forward(request, response);
 				return false;
@@ -37,7 +37,7 @@ public class AutorizadorInterceptor extends HandlerInterceptorAdapter {
 		} else if (uri.endsWith("cadastropessoa")) { // MANUT PESSOAS
 			AutorizacaoResultadoTO autTO = AutorizacaoFuncionalidades.autorizarManutencaoPessoas(usuario, request.getParameter("acao"));
 			if (autTO != null) {
-				if (autTO.getMsgErro() != null) request.setAttribute("mensagem", new MensagemTO(autTO.getMsgErro(), TipoMensagem.ERRO));
+				if (autTO.getMsgErro() != null) request.setAttribute("mensagem", new MessageTO(autTO.getMsgErro(), MessaType.ERRO));
 				RequestDispatcher rd = request.getRequestDispatcher(autTO.getUrlRedirect());
 				rd.forward(request, response);
 				return false;

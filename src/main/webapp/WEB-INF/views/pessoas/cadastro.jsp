@@ -60,22 +60,22 @@
   				<div class="form-group">
     				<div class="input-group">
 						<span class="input-group-addon" id="basic-addon1">Nome</span>
-						<form:input path="nome" cssClass="form-control required" placeholder="Digite o nome" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}" />						
+						<form:input path="name" cssClass="form-control required" placeholder="Digite o nome" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}" />						
 					</div>
 				</div>  								
 				<div class="form-group">
     				<div class="input-group">
 						<span class="input-group-addon" id="basic-addon1">Telefone</span> 
-						<form:input path="telefone" cssClass="form-control required" placeholder="Digite o telefone" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
+						<form:input path="phone" cssClass="form-control required" placeholder="Digite o telefone" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
 					</div>
 				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading">Perfil</div>
 					<div class="panel-body">
 						<div class="input-group">
-							<span class="input-group-addon"><form:radiobutton path="perfil" value="LEITOR" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/> LEITOR </span>
-							<span class="input-group-addon"><form:radiobutton path="perfil" value="BIBLIOTECARIO" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/> BIBLIOTECARIO </span>
-							<span class="input-group-addon"><form:radiobutton path="perfil" value="ADMINISTRADOR" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/> ADMINISTRADOR </span>						
+							<span class="input-group-addon"><form:radiobutton path="role" value="LEITOR" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/> LEITOR </span>
+							<span class="input-group-addon"><form:radiobutton path="role" value="BIBLIOTECARIO" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/> BIBLIOTECARIO </span>
+							<span class="input-group-addon"><form:radiobutton path="role" value="ADMINISTRADOR" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/> ADMINISTRADOR </span>						
 						</div><!-- /input-group -->
 					</div>
 				</div>
@@ -83,7 +83,7 @@
 					<div id="divSenha" class="form-group" style="display: block;">
 						<div class="input-group">
 							<span class="input-group-addon" id="basic-addon1">Senha</span> 
-							<form:password id="tSenha" path="senha" cssClass="form-control required" placeholder="Digite a senha (somente para perfis administrador e bibliotecário)" aria-describedby="basic-addon1" size="50"/>						
+							<form:password id="tSenha" path="password" cssClass="form-control required" placeholder="Digite a senha (somente para perfis administrador e bibliotecário)" aria-describedby="basic-addon1" size="50"/>						
 						</div>					
 					</div>
 				</c:if>
