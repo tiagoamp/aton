@@ -4,7 +4,7 @@
 <html>
 	<head>
 
-		<jsp:include page = "comum/cabecalho.jsp" />
+		<jsp:include page = "comum/header.jsp" />
 
 	</head>
 	
@@ -29,7 +29,7 @@
 	  	</div>
 	</div>
 		
-	<jsp:include page = "comum/rodape.jsp" />
+	<jsp:include page = "comum/footer.jsp" />
 
 </body>
 </html>

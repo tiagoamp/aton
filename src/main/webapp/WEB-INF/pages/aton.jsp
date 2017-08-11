@@ -4,7 +4,7 @@
 <html>
 	<head>
 
-		<jsp:include page = "comum/cabecalho.jsp" />
+		<jsp:include page = "comum/header.jsp" />
 
 	</head>
 	
@@ -13,7 +13,7 @@
 	<jsp:include page = "comum/menu.jsp" />
 	
 	<!-- MENSAGENS -->
-    <jsp:include page = "comum/mensagens.jsp" />
+    <jsp:include page = "comum/messages.jsp" />
 	
 	<!-- Begin page content -->
     <div class="container">
@@ -24,7 +24,7 @@
       <p><img alt="aton logo" src="resources/images/aton.png" width="300" height="100" /></p>
     </div>
     
-	<jsp:include page = "comum/rodape.jsp" />
+	<jsp:include page = "comum/footer.jsp" />
 
 </body>
 </html>

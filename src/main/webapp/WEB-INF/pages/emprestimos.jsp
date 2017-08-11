@@ -5,7 +5,7 @@
 <html>
 	<head>
 
-		<jsp:include page = "comum/cabecalho.jsp" />
+		<jsp:include page = "comum/header.jsp" />
 
 	</head>
 	
@@ -19,7 +19,7 @@
     </div>
     
     <!-- MENSAGENS -->
-    <jsp:include page = "comum/mensagens.jsp" />
+    <jsp:include page = "comum/messages.jsp" />
     
     <!-- PESQUISA -->
     <div class="panel panel-default" style="margin: 10px;">
@@ -110,7 +110,7 @@
 		</div>
 	</c:if>
 
-	<jsp:include page = "comum/rodape.jsp" />
+	<jsp:include page = "comum/footer.jsp" />
 
 </body>
 </html>
