@@ -55,9 +55,10 @@ public class LoginController {
 			// verificando credenciais
 			person.setPassword(DigestUtils.sha1Hex(person.getPassword()));
 			if (personFromDB.getPassword().equals(person.getPassword()) && personFromDB.getRole() != Role.READER) {
-				personFromDB.setPassword(null); // null for security reasons, obj will be setted in session
-				session.setAttribute("usuario", personFromDB);
-				logger.info("Usuario autenticado: " + personFromDB);
+				// creating new obj not managed without password attribute setted for security reasons, obj will be setted in session
+				person = new Person(personFromDB.getEmail(), personFromDB.getName(), personFromDB.getPhone(), personFromDB.getRole());
+				session.setAttribute("usuario", person);
+				logger.info("Usuario autenticado: " + person);
 			} else {
 				model.addAttribute("mensagem",new MessageTO("Credenciais inválidas!", MessaType.ERRO));
 				return "login";
@@ -73,7 +74,8 @@ public class LoginController {
 	
 	@RequestMapping("logout")
 	public String logout(HttpSession session, HttpServletRequest request, Model model) {
-		session.invalidate();
+		session.removeAttribute("usuario");
+		session.invalidate();		
 		model.addAttribute("mensagem",new MessageTO("Logout concluído!", MessaType.SUCESSO));
 	    return "aton";
 	}
