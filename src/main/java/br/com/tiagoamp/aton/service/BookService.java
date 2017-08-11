@@ -17,17 +17,17 @@ import br.com.tiagoamp.aton.model.Book;
 public class BookService {
 	
 	public BookService() {		
-		this.bookDao = new BookDaoJpa(new JPAUtil().getMyEntityManager());		
+		this.dao = new BookDaoJpa(new JPAUtil().getMyEntityManager());		
 	}
 	
-	private BookDAO bookDao;
+	private BookDAO dao;
 	
 	
 	public void insert(Book book) throws AtonBOException {
 		try {
-			Book bookRetrieved = bookDao.findByIsbn(book.getIsbn());
+			Book bookRetrieved = dao.findByIsbn(book.getIsbn());
 			if (bookRetrieved != null) throw new AtonBOException("'ISBN' already registered");			
-			bookDao.create(book);
+			dao.create(book);
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}				
@@ -35,7 +35,7 @@ public class BookService {
 	
 	public void update(Book book) throws AtonBOException {
 		try {
-			bookDao.update(book);
+			dao.update(book);
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
@@ -43,7 +43,7 @@ public class BookService {
 	
 	public void delete(int id) throws AtonBOException {
 		try {
-			bookDao.delete(id);
+			dao.delete(id);
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
@@ -51,7 +51,7 @@ public class BookService {
 	
 	public Book findById(int id) throws AtonBOException {
 		try {
-			return bookDao.findById(id);
+			return dao.findById(id);
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
@@ -59,7 +59,7 @@ public class BookService {
 	
 	public Book findByIsbn(String isbn) throws AtonBOException {
 		try {
-			return bookDao.findByIsbn(isbn);
+			return dao.findByIsbn(isbn);
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
@@ -67,7 +67,7 @@ public class BookService {
 	
 	public List<Book> findByFields(String title, String authorsName, String isbn, String classification, String targetAudience) throws AtonBOException {
 		try {
-			return bookDao.findByFields(title, authorsName, isbn, classification, targetAudience);
+			return dao.findByFields(title, authorsName, isbn, classification, targetAudience);
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
@@ -75,7 +75,7 @@ public class BookService {
 	
 	public List<Book> getAll() throws AtonBOException {
 		try {
-			return bookDao.findAll();
+			return dao.findAll();
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
@@ -83,7 +83,7 @@ public class BookService {
 	
 	public List<Book> findByAuthorName(String authorName) throws AtonBOException {
 		try {
-			return bookDao.findByAuthorNameLike(authorName);			
+			return dao.findByAuthorNameLike(authorName);			
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
@@ -91,18 +91,18 @@ public class BookService {
 	
 	public List<Book> findByTitle(String title) throws AtonBOException {
 		try {
-			return bookDao.findByTitleLike(title);			
+			return dao.findByTitleLike(title);			
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
 	}
 	
 	
-	public BookDAO getBookDao() {
-		return bookDao;
+	public BookDAO getDao() {
+		return dao;
 	}
-	public void setBookDao(BookDAO bookDao) {
-		this.bookDao = bookDao;
+	public void setDao(BookDAO dao) {
+		this.dao = dao;
 	}
 
 }

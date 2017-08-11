@@ -18,15 +18,15 @@ import br.com.tiagoamp.aton.model.Borrowing;
 public class BorrowingService {
 	
 	public BorrowingService() {		
-		this.borrowDao = new BorrowingDaoJpa(new JPAUtil().getMyEntityManager());		
+		this.dao = new BorrowingDaoJpa(new JPAUtil().getMyEntityManager());		
 	}
 	
-	private BorrowingDAO borrowDao;
+	private BorrowingDAO dao;
 	
 	
 	public void insert(Borrowing borrowing) throws AtonBOException {
 		try {
-			borrowDao.create(borrowing);			
+			dao.create(borrowing);			
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
@@ -34,7 +34,7 @@ public class BorrowingService {
 	
 	public void update(Borrowing borrowing) throws AtonBOException {
 		try {
-			borrowDao.update(borrowing);			
+			dao.update(borrowing);			
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
@@ -42,7 +42,7 @@ public class BorrowingService {
 	
 	public void delete(int id) throws AtonBOException {
 		try {
-			borrowDao.delete(id);
+			dao.delete(id);
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
@@ -50,7 +50,7 @@ public class BorrowingService {
 	
 	public Borrowing findById(int id) throws AtonBOException {
 		try {
-			return borrowDao.findById(id);
+			return dao.findById(id);
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
@@ -58,7 +58,7 @@ public class BorrowingService {
 	
 	public List<Borrowing> findByFields(Integer bookId, Integer personId, Date dateOfBorrowing, Date dateOfReturn) throws AtonBOException {
 		try {
-			return borrowDao.findByFields(bookId, personId, dateOfBorrowing, dateOfReturn);			
+			return dao.findByFields(bookId, personId, dateOfBorrowing, dateOfReturn);			
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
@@ -66,7 +66,7 @@ public class BorrowingService {
 	
 	public List<Borrowing> getAll() throws AtonBOException {
 		try {
-			return borrowDao.findAll();
+			return dao.findAll();
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
@@ -74,18 +74,18 @@ public class BorrowingService {
 	
 	public List<Borrowing> getOpenBorrowings() throws AtonBOException {
 		try {
-			return borrowDao.findOpenBorrowings();
+			return dao.findOpenBorrowings();
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
 	}
 
 	
-	public BorrowingDAO getBorrowDao() {
-		return borrowDao;
+	public BorrowingDAO getDao() {
+		return dao;
 	}
-	public void setBorrowDao(BorrowingDAO borrowDao) {
-		this.borrowDao = borrowDao;
+	public void setDao(BorrowingDAO dao) {
+		this.dao = dao;
 	}
 
 }

@@ -26,8 +26,8 @@ public class PersonService {
 	public void insert(Person person) throws AtonBOException {
 		try {
 			Person personRetrieved = dao.findByEmail(person.getEmail());
-			if (personRetrieved != null) throw new AtonBOException("'E-mail' already registered");
-			dao.create(personRetrieved);
+			if (personRetrieved != null) throw new AtonBOException("'E-mail' already registered!");
+			dao.create(person);
 		} catch (SQLException e) {
 			throw new AtonBOException("Database access error!", e);
 		}
