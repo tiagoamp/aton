@@ -24,21 +24,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.tiagoamp.aton.model.AtonBOException;
-import br.com.tiagoamp.aton.model.Borrowing;
 import br.com.tiagoamp.aton.model.Book;
-import br.com.tiagoamp.aton.model.Role;
+import br.com.tiagoamp.aton.model.Borrowing;
 import br.com.tiagoamp.aton.model.Person;
-import br.com.tiagoamp.aton.model.TypeOfAcquisition;
+import br.com.tiagoamp.aton.model.Role;
 import br.com.tiagoamp.aton.model.TipoMensagem;
+import br.com.tiagoamp.aton.model.TypeOfAcquisition;
 import br.com.tiagoamp.aton.model.to.MensagemTO;
-import br.com.tiagoamp.aton.service.AtonService;
+import br.com.tiagoamp.aton.service.BookService;
+import br.com.tiagoamp.aton.service.BorrowingService;
+import br.com.tiagoamp.aton.service.PersonService;
 
 @Controller
 public class AtonController {
 	
 	Logger logger = Logger.getLogger(AtonController.class);
 	
-	private AtonService service = new AtonService();
+	//private AtonService service = new AtonService();
+	private PersonService personService = new PersonService();
+	private BookService bookService = new BookService();
+	private BorrowingService borrowService = new BorrowingService();
 	
 	@RequestMapping("/aton")
 	public String pageInicial() {
@@ -60,10 +65,10 @@ public class AtonController {
 		
 		if (pId != null && !pId.isEmpty()) {
 			try {		
-				pessoa = service.consultarPessoa(Integer.parseInt(pId));				 				
+				pessoa = personService.findById(Integer.parseInt(pId));				 				
 			} catch (AtonBOException e) {
 				logger.error("Erro: " + e);
-				model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+				model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
 				return "pessoas";
 			}
 			model.addAttribute("acao",pAcao);
@@ -82,7 +87,7 @@ public class AtonController {
 		List<Person> lista = new ArrayList<>();
 		
 		try {		
-			lista = service.consultarPessoas();
+			lista = personService.getAll();
 			if (lista.isEmpty()) {
 				throw new AtonBOException("Consulta sem resultados!");
 			}
@@ -91,7 +96,7 @@ public class AtonController {
 			model.addAttribute("listapessoas", listaOrdenada);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
 			return "pessoas";
 		}
 		
@@ -105,53 +110,53 @@ public class AtonController {
 	        Model model) {		
 		Person pessoa;
 		try {		
-			pessoa = service.consultarPessoa(Integer.parseInt(pId));
+			pessoa = personService.findById(Integer.parseInt(pId));
 			if (pessoa == null) {
 				throw new AtonBOException("Erro na exclusão de pessoa: Identificador inválido!");
 			}
-			service.apagarPessoa(pessoa.getId());
+			personService.delete(pessoa.getId());
 			model.addAttribute("mensagem",new MensagemTO("Exclusão com sucesso: " + pessoa.toString(), TipoMensagem.SUCESSO));
 			logger.info("Pessoa excluída: " + pessoa);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));			
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));			
 		}		
 		return "pessoas";
 	}
 	
 	@RequestMapping(value="pessoacadastrada", method = RequestMethod.POST)
-	public String salvarPessoa(@Valid Person pessoa, BindingResult result, Model model) {
+	public String salvarPessoa(@Valid Person person, BindingResult result, Model model) {
 		boolean hasErrors = false;
 		if(result.hasErrors()) {
 			hasErrors = true;
 		}
-		if (pessoa.getPerfil() != null && pessoa.getPerfil() != Role.READER && pessoa.getSenha().equals("")) {
+		if (person.getRole() != null && person.getRole() != Role.READER && person.getRole().equals("")) {
 			result.reject("senha", "Senha deve ser preenchida para perfil 'Administrador' ou 'Bibliotecário'.");
 			hasErrors = true;
 		}
 		if (hasErrors) {
-			pessoa.setPerfil(null);
-			model.addAttribute("pessoa", pessoa);
+			person.setRole(null);
+			model.addAttribute("pessoa", person);
 			return "pessoas/cadastro";
 		}
 		
 		try {
 			// digest da senha
-			if (pessoa.getSenha() != null && !pessoa.getSenha().isEmpty()) {
-				pessoa.setSenha(DigestUtils.sha1Hex(pessoa.getSenha()));
+			if (person.getPassword() != null && !person.getPassword().isEmpty()) {
+				person.setPassword(DigestUtils.sha1Hex(person.getPassword()));
 			}
 			// gravando pessoas
-			if (pessoa.getId() == null) {
-				service.inserirPessoa(pessoa); // insert
+			if (person.getId() == null) {
+				personService.insert(person); // insert
 			} else {
-				service.atualizarPessoa(pessoa); // update
+				personService.update(person); // update
 			}
-			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + pessoa.toString(), TipoMensagem.SUCESSO));
-			logger.info("Pessoa cadastrada: " + pessoa);
+			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + person.toString(), TipoMensagem.SUCESSO));
+			logger.info("Pessoa cadastrada: " + person);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("pessoa", pessoa);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+			model.addAttribute("pessoa", person);
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
 			return "pessoas/cadastro";
 		}			
 		
@@ -172,7 +177,7 @@ public class AtonController {
 			model.addAttribute("listapessoas", lista);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
 		}
 		return "pessoas";		
 	}
@@ -190,10 +195,10 @@ public class AtonController {
 		Book livro = new Book();
 		if (pId != null && !pId.isEmpty()) {
 			try {		
-				livro = service.consultarLivro(Integer.parseInt(pId));				 				
+				livro = bookService.findById(Integer.parseInt(pId));				 				
 			} catch (AtonBOException e) {
 				logger.error("Erro: " + e);
-				model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+				model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
 				return "livros";
 			}
 			model.addAttribute("acao",pAcao);
@@ -212,46 +217,46 @@ public class AtonController {
 	        @RequestParam(value="tISBN", required=false) String pISBN, 
 	        @RequestParam(value="tDados", required=false) String pDados, 
 	        Model model){
-		List<Book> lista = new ArrayList<>();
+		List<Book> list = new ArrayList<>();
 		try {
 			if (pISBN != null && !pISBN.isEmpty()) { // CAMPO DE PESQ ISBN PREENCHIDO
 				// pesquisa por isbn
-				Book l = service.consultarLivroPorIsbn(pISBN.trim().toUpperCase());
+				Book l = bookService.findByIsbn(pISBN.trim().toUpperCase());
 				if (l != null)
-					lista.add(l);
+					list.add(l);
 			} else { // CAMPO DE PESQ DADOS PREENCHIDO
 				if (pDados != null && !pDados.isEmpty()) {
 					pDados = pDados.trim().toUpperCase();
 					// pesquisa por titulo aproximado
-					lista = service.consultarLivrosPorTituloAproximado(pDados);
-					if (lista.isEmpty()) {
+					list = bookService.findByTitle(pDados);
+					if (list.isEmpty()) {
 						// pesquisa por autor aproximado
-						lista = service.consultarLivrosPorAutorAproximado(pDados);						
+						list = bookService.findByAuthorName(pDados);						
 					}
 				}
 			}
-			if (lista.isEmpty()) {
+			if (list.isEmpty()) {
 				throw new AtonBOException("Consulta sem resultados!");
 			}
-			model.addAttribute("listalivros", lista);
+			model.addAttribute("listalivros", list);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
 		}
 		return "livros";		
 	}
 		
 	@RequestMapping(value="livrocadastrado", method = RequestMethod.POST)
-	public String salvarLivro(@Valid Book livro, BindingResult result, Model model, HttpServletRequest request
+	public String salvarLivro(@Valid Book book, BindingResult result, Model model, HttpServletRequest request
 			/*@, RequestParam(value="file", required=false) MultipartFile pFile*/) {
 		boolean hasErrors = false;
 		if(result.hasErrors()) {
 			hasErrors = true;
 		}
-		if (!livro.getDataAquisicaoFormatada().isEmpty()) {
+		if (!book.getDateOfAcquisition().toString().isEmpty()) {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			try {
-				livro.setDataAquisicao(sdf.parse(livro.getDataAquisicaoFormatada()));
+				book.setDateOfAcquisition(sdf.parse(book.getDateOfAcquisition().toString()));
 			} catch (ParseException e) {
 				result.reject("dataAquisicao", "Data de Aquisição em formato inválido.");
 				hasErrors = true;
@@ -260,18 +265,18 @@ public class AtonController {
 			result.reject("dataAquisicaoFormatada", "Campo obrigatório não preenchido: Data de Aquisição.");
 			hasErrors = true;
 		}
-		if (livro.getTipoAquisicao() == TypeOfAcquisition.COMPRA && !livro.getNomeDoador().isEmpty()) {
+		if (book.getTypeOfAcquisition() == TypeOfAcquisition.PURCHASE && !book.getDonorName().isEmpty()) {
 			result.reject("tipoAquisicao", "Tipo de aquisição 'COMPRA' não permite cadastro de doador.");
 			hasErrors = true;
 		}
-		if (livro.getQtdDisponiveis() > livro.getQtdExemplares()) {
+		if (book.getNumberAvailable() > book.getNumberOfCopies()) {
 			result.reject("qtdExemplares", "Quantidade de exemplares disponíveis deve ser menor que quantidade total.");
 			model.addAttribute("acao","alterar");
 			hasErrors = true;
 		}
 		if (hasErrors) {
-			livro.setTipoAquisicao(null);
-			model.addAttribute("livro", livro);
+			book.setTypeOfAcquisition(null);
+			model.addAttribute("livro", book);
 			return "livros/cadastro";
 		}
 		
@@ -282,23 +287,23 @@ public class AtonController {
 				Path path = service.inserirFotoCapaLivro(mFile, livro.getIsbn());
 				livro.setPathFotoCapa(path);
 			}*/			
-			if (livro.getId() == null) {
-				livro.setQtdDisponiveis(livro.getQtdExemplares());
-				service.inserirLivro(livro); // insert				
+			if (book.getId() == null) {
+				book.setNumberAvailable(book.getNumberOfCopies());
+				bookService.insert(book); // insert				
 			} else {
 				/*if (livro.getPathFotoCapa() == null) {
 					Livro l = service.consultarLivro(livro.getId());
 					if (l.getPathFotoCapa() != null) livro.setPathFotoCapa(l.getPathFotoCapa());	
 				}*/				
 					//FIXME Implementar e refatorar gravação de figura de capa do livro
-				service.atualizarLivro(livro); // update
+				bookService.update(book); // update
 			}
-			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + livro.toString(), TipoMensagem.SUCESSO));
-			logger.info("Livro cadastrado: " + livro);
+			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + book.toString(), TipoMensagem.SUCESSO));
+			logger.info("Livro cadastrado: " + book);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("livro", livro);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+			model.addAttribute("livro", book);
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
 			return "livros/cadastro";
 		}		
 		return "livros";
@@ -308,7 +313,7 @@ public class AtonController {
 	public String listarLivros(HttpServletRequest request, Model model) {
 		List<Book> lista = new ArrayList<>();
 		try {		
-			lista = service.consultarLivros();
+			lista = bookService.getAll();
 			if (lista.isEmpty()) {
 				throw new AtonBOException("Consulta sem resultados!");
 			}
@@ -316,7 +321,7 @@ public class AtonController {
 			model.addAttribute("listalivros", lista);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
 			return "livros";
 		}		
 	    return "livros";
@@ -327,18 +332,18 @@ public class AtonController {
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
 	        Model model) {		
-		Book livro;
+		Book book;
 		try {		
-			livro = service.consultarLivro(Integer.parseInt(pId));
-			if (livro == null) {
+			book = bookService.findById(Integer.parseInt(pId));
+			if (book == null) {
 				throw new AtonBOException("Erro na exclusão de pessoa: Identificador inválido!");
 			}
-			service.apagarLivro(livro.getId());
-			model.addAttribute("mensagem",new MensagemTO("Exclusão com sucesso: " + livro.toString(), TipoMensagem.SUCESSO));
-			logger.info("Livro excluído: " + livro);
+			borrowService.delete(book.getId());
+			model.addAttribute("mensagem",new MensagemTO("Exclusão com sucesso: " + book.toString(), TipoMensagem.SUCESSO));
+			logger.info("Livro excluído: " + book);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));			
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));			
 		}		
 		return "livros";
 	}
@@ -353,18 +358,18 @@ public class AtonController {
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
 	        Model model) {		
-		Book livro = new Book();				
+		Book book = new Book();				
 		if (pId != null && !pId.isEmpty()) {
 			try {		
-				livro = service.consultarLivro(Integer.parseInt(pId));				 				
+				book = bookService.findById(Integer.parseInt(pId));				 				
 			} catch (AtonBOException e) {
 				logger.error("Erro: " + e);
-				model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+				model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
 				return "livros";
 			}
 			model.addAttribute("acao",pAcao);
 		}		
-		Borrowing emprestimo = new Borrowing(livro, new Person(), new Date(), null, null);
+		Borrowing emprestimo = new Borrowing(book, new Person(), new Date(), null, null);
 		model.addAttribute("emprestimo", emprestimo);
 		return "emprestimos/emprestimolivro";
 	}
@@ -378,7 +383,7 @@ public class AtonController {
 		List<Person> lista = new ArrayList<>();
 		Book livro = null;
 		try {
-			livro = service.consultarLivro(Integer.parseInt(pIdLivro)); // recarregando livro
+			livro = bookService.findById(Integer.parseInt(pIdLivro)); // recarregando livro
 			lista = this.pesquisarPessoasPorParametros(pEmail, pDados); 
 			if (lista.isEmpty()) {
 				throw new AtonBOException("Consulta sem resultados!");
@@ -386,7 +391,7 @@ public class AtonController {
 			model.addAttribute("listapessoas", lista);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
 		}				
 		Borrowing emprestimo = new Borrowing(livro, new Person(), new Date(), null, null);
 		model.addAttribute("emprestimo", emprestimo);
@@ -402,11 +407,11 @@ public class AtonController {
 		Book livro = null;
 		Person pessoa = null;
 		try {
-			livro = service.consultarLivro(Integer.parseInt(pIdLivro)); 
-			pessoa = service.consultarPessoa(Integer.parseInt(pId)); 			
+			livro = bookService.findById(Integer.parseInt(pIdLivro)); 
+			pessoa = personService.findById(Integer.parseInt(pId)); 			
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
 		}
 		// Regra da data sugerida de devolução ==> D + 10
 		Calendar calendar = Calendar.getInstance();
@@ -421,7 +426,7 @@ public class AtonController {
 		List<Person> lista = new ArrayList<>();
 		if (email != null && !email.isEmpty()) { // CAMPO DE PESQ EMAIL PREENCHIDO
 			// pesquisa por e-mail
-			Person p = service.consultarPessoaPorEmail(email.trim().toUpperCase());
+			Person p = personService.findByEmail(email.trim().toUpperCase());
 			if (p != null)
 				lista.add(p);
 		} else { // CAMPO DE PESQ DADOS PREENCHIDO
@@ -430,14 +435,14 @@ public class AtonController {
 				// pesquisa por perfil
 				for (Role perfil : Role.values()) {
 					if (perfil.toString().equals(param))
-						lista = service.consultarPessoas(null, null, Role.valueOf(param));
+						lista = personService.findByFields(null, null, Role.valueOf(param));
 				}
 				if (lista.isEmpty()) {
 					// pesquisa por telefone
-					lista = service.consultarPessoas(null, param, null);
+					lista = personService.findByFields(null, param, null);
 					if (lista.isEmpty()) {
 						// pesquisa por nome aproximado
-						lista = service.consultarPessoasPorNomeAproximado(param);
+						lista = personService.findByName(param);
 					}
 				}
 			}
@@ -446,53 +451,53 @@ public class AtonController {
 	}
 	
 	@RequestMapping(value="livroemprestado", method = RequestMethod.POST)
-	public String emprestarLivro(@Valid Borrowing emprestimo, BindingResult result, Model model, HttpServletRequest request) {
+	public String emprestarLivro(@Valid Borrowing borrowing, BindingResult result, Model model, HttpServletRequest request) {
 		boolean hasErrors = false;
 		if(result.hasErrors()) {
 			hasErrors = true;
 		}
 		try { // recuperando livro e pessoa
-			emprestimo.setLivro(service.findById(emprestimo.getLivro().getId()));
-			if (emprestimo.getPessoa() == null || emprestimo.getPessoa().getId() == null) throw new AtonBOException("Pessoa não selecionada para empréstimo do livro!");
-			emprestimo.setPessoa(service.findById(emprestimo.getPessoa().getId()));			
+			borrowing.setBook(bookService.findById(borrowing.getBook().getId()));
+			if (borrowing.getPerson() == null || borrowing.getPerson().getId() == null) throw new AtonBOException("Pessoa não selecionada para empréstimo do livro!");
+			borrowing.setPerson(personService.findById(borrowing.getPerson().getId()));			
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
-			model.addAttribute("emprestimo", emprestimo);
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
+			model.addAttribute("emprestimo", borrowing);
 			return "emprestimos/emprestimolivro";
 		}
-		if (emprestimo.getDataEmprestimoFormatada().isEmpty()) {
+		if (borrowing.getDateOfBorrowing().toString().isEmpty()) {
 			result.reject("dataEmprestimoFormatada", "Campo obrigatório não preenchido: Data de Empréstimo.");
 			hasErrors = true;
-		} else if (emprestimo.getDataDevolucaoProgramadaFormatada().isEmpty()) {
+		} else if (borrowing.getDateOfScheduledReturn().toString().isEmpty()) {
 			result.reject("dataDevolucaoProgramadaFormatada", "Campo obrigatório não preenchido: Data de Devolução.");
 			hasErrors = true;
 		} else {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			try {
-				emprestimo.setDataEmprestimo(sdf.parse(emprestimo.getDataEmprestimoFormatada()));
-				emprestimo.setDataDevolucaoProgramada(sdf.parse(emprestimo.getDataDevolucaoProgramadaFormatada()));
+				borrowing.setDateOfBorrowing(sdf.parse(borrowing.getDateOfBorrowing().toString()));
+				borrowing.setDateOfScheduledReturn(sdf.parse(borrowing.getDateOfScheduledReturn().toString()));
 			} catch (ParseException e) {
 				result.reject("dataEmprestimoFormatada", "Data de Empréstimo ou Devolução em formato inválido.");
 				hasErrors = true;
 			}
 		} 
 		if (hasErrors) {
-			model.addAttribute("emprestimo", emprestimo);
+			model.addAttribute("emprestimo", borrowing);
 			return "emprestimos/emprestimolivro";
 		}
 		
 		try {			
-			service.inserirEmprestimo(emprestimo);
-			Book livro = emprestimo.getLivro();
-			livro.setQtdDisponiveis(livro.getQtdDisponiveis() - 1);
-			service.atualizarLivro(livro);			
-			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + emprestimo.toString(), TipoMensagem.SUCESSO));
-			logger.info("Emprestimo cadastrado: " + emprestimo);
+			borrowService.insert(borrowing);
+			Book book = borrowing.getBook();
+			book.setNumberAvailable(book.getNumberAvailable() - 1);
+			bookService.update(book);			
+			model.addAttribute("mensagem",new MensagemTO("Gravação com sucesso: " + borrowing.toString(), TipoMensagem.SUCESSO));
+			logger.info("Emprestimo cadastrado: " + borrowing);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("emprestimo", emprestimo);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+			model.addAttribute("emprestimo", borrowing);
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
 			return "emprestimos/emprestimolivro";
 		}	
 		return "livros";
@@ -507,21 +512,21 @@ public class AtonController {
 		try {
 			if (pLivro != null && !pLivro.isEmpty()) { // CAMPO DE PESQ LIVRO PREENCHIDO
 				pLivro = pLivro.trim().toUpperCase();
-				List<Book> livros = new ArrayList<>();
-				livros.addAll(service.consultarLivrosPorTituloAproximado(pLivro));
-				livros.addAll(service.consultarLivrosPorAutorAproximado(pLivro));
-				for (int i = 0; i < livros.size(); i++) {
-					Book livro = livros.get(i);
-					lista = service.consultarEmprestimos(livro.getId(), null, null, null);
+				List<Book> books = new ArrayList<>();
+				books.addAll(bookService.findByTitle(pLivro));
+				books.addAll(bookService.findByAuthorName(pLivro));
+				for (int i = 0; i < books.size(); i++) {
+					Book livro = books.get(i);
+					lista = borrowService.findByFields(livro.getId(), null, null, null);
 				}
 			} else { // CAMPO DE LEITOR(PESSOA) PREENCHIDO
 				if (pPessoa != null && !pPessoa.isEmpty()) {
 					pPessoa = pPessoa.trim().toUpperCase();
-					List<Person> pessoas = new ArrayList<>();
-					pessoas.addAll(service.consultarPessoasPorNomeAproximado(pPessoa));
-					for (int i = 0; i < pessoas.size(); i++) {
-						Person pessoa = pessoas.get(i);
-						lista = service.consultarEmprestimos(null, pessoa.getId(), null, null);
+					List<Person> people = new ArrayList<>();
+					people.addAll(personService.findByName(pPessoa));
+					for (int i = 0; i < people.size(); i++) {
+						Person pessoa = people.get(i);
+						lista = borrowService.findByFields(null, pessoa.getId(), null, null);
 					}
 				}
 			}
@@ -532,7 +537,7 @@ public class AtonController {
 			model.addAttribute("listaemprestimos", lista);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
 		}
 		return "emprestimos";		
 	}
@@ -541,7 +546,7 @@ public class AtonController {
 	public String listarEmprestimos(HttpServletRequest request, Model model) {
 		List<Borrowing> lista = new ArrayList<>();
 		try {		
-			lista = service.consultarEmprestimos();
+			lista = borrowService.getAll();
 			if (lista.isEmpty()) {
 				throw new AtonBOException("Consulta sem resultados!");
 			}
@@ -549,7 +554,7 @@ public class AtonController {
 			model.addAttribute("listaemprestimos", lista);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));			
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));			
 		}		
 	    return "emprestimos";
 	}
@@ -558,7 +563,7 @@ public class AtonController {
 	public String listarEmprestimosEmAberto(HttpServletRequest request, Model model) {
 		List<Borrowing> lista = new ArrayList<>();
 		try {		
-			lista = service.consultarEmprestimosEmAberto();
+			lista = borrowService.getOpenBorrowings();
 			if (lista.isEmpty()) {
 				throw new AtonBOException("Consulta sem resultados!");
 			}
@@ -566,7 +571,7 @@ public class AtonController {
 			model.addAttribute("listaemprestimos", lista);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));			
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));			
 		}		
 	    return "emprestimos";
 	}
@@ -579,17 +584,17 @@ public class AtonController {
 		Borrowing emprestimo = null;				
 		if (pId != null && !pId.isEmpty()) {
 			try {		
-				emprestimo = service.consultarEmprestimo(Integer.parseInt(pId));
-				emprestimo.setDataDevolucao(new Date());
-				service.atualizarEmprestimo(emprestimo);
-				Book livro = emprestimo.getLivro();
-				livro.setQtdDisponiveis(livro.getQtdDisponiveis() + 1);
-				service.atualizarLivro(livro);
+				emprestimo = borrowService.findById(Integer.parseInt(pId));
+				emprestimo.setDateOfReturn(new Date());
+				borrowService.update(emprestimo);
+				Book livro = emprestimo.getBook();
+				livro.setNumberAvailable(livro.getNumberAvailable() + 1);
+				bookService.update(livro);
 				model.addAttribute("mensagem",new MensagemTO("Devolução com sucesso: " + emprestimo.toString(), TipoMensagem.SUCESSO));
 				logger.info("Emprestimo devolvido: " + emprestimo);
 			} catch (AtonBOException e) {
 				logger.error("Erro: " + e);
-				model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+				model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
 				return "emprestimos";
 			}
 			model.addAttribute("acao",pAcao);
@@ -607,24 +612,24 @@ public class AtonController {
 	
 	@RequestMapping("efetuarlogin")
 	public String efetuarLogin(Person pessoa, BindingResult result, Model model, HttpSession session) {
-		if (pessoa.getEmail().isEmpty() || pessoa.getSenha().isEmpty()) {
+		if (pessoa.getEmail().isEmpty() || pessoa.getPassword().isEmpty()) {
 			model.addAttribute("mensagem",new MensagemTO("Campos não preenchidos!", TipoMensagem.ERRO));
 			return "login";
 		}
 		Person pessoaBD = null;
 		try {
-			pessoaBD = service.consultarPessoaPorEmail(pessoa.getEmail());
+			pessoaBD = personService.findByEmail(pessoa.getEmail());
 			if (pessoaBD == null) {
 				model.addAttribute("mensagem",new MensagemTO("Usuário inexistente!", TipoMensagem.ERRO));
 				return "login";
-			} else if (pessoaBD.getSenha().isEmpty()) {
+			} else if (pessoaBD.getPassword().isEmpty()) {
 				model.addAttribute("mensagem",new MensagemTO("Usuário sem acesso cadastrado.", TipoMensagem.ERRO));
 				return "login";
 			}
 			// verificando credenciais
-			pessoa.setSenha(DigestUtils.sha1Hex(pessoa.getSenha()).toUpperCase());
-			if (pessoaBD.getSenha().equals(pessoa.getSenha()) && pessoaBD.getPerfil() != Role.READER) {
-				pessoaBD.setSenha(null); // null por seguranca, pra setar obj na sessao
+			pessoa.setPassword(DigestUtils.sha1Hex(pessoa.getPassword()).toUpperCase());
+			if (pessoaBD.getPassword().equals(pessoa.getPassword()) && pessoaBD.getRole() != Role.READER) {
+				pessoaBD.setPassword(null); // null por seguranca, pra setar obj na sessao
 				session.setAttribute("usuario", pessoaBD);
 				logger.info("Usuario autenticado: " + pessoaBD);
 			} else {
@@ -633,7 +638,7 @@ public class AtonController {
 			}
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getMsg(), TipoMensagem.ERRO));
+			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
 			return "login";
 		}
 		model.addAttribute("mensagem",new MensagemTO("Usuário autenticado!", TipoMensagem.SUCESSO));
