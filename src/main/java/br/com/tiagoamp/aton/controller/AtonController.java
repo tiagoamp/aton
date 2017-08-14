@@ -77,6 +77,11 @@ public class AtonController {
 	    return "pessoas";
 	}
 	
+	/*@RequestMapping("pessoas")
+	public String pagePessoas() {
+	    return "pessoas";
+	}
+	
 	@RequestMapping("cadastropessoa")
 	public String cadastrarPessoa(HttpServletRequest request,  
 	        @RequestParam(value="acao", required=false) String pAcao, 
@@ -202,7 +207,7 @@ public class AtonController {
 			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 		}
 		return "pessoas";		
-	}
+	}*/
 		
 	@RequestMapping("livros")
 	public String pageLivros() {
@@ -634,54 +639,5 @@ public class AtonController {
 	public String pageSobre() {
 		return "sobre";
 	}
-	
-	/*@RequestMapping("login")
-	public String pageLogin(HttpServletRequest request, Model model) {
-		Person person = new Person();
-		model.addAttribute("person", person);
-	    return "login";
-	}
-	
-	@RequestMapping("efetuarlogin")
-	public String efetuarLogin(Person pessoa, BindingResult result, Model model, HttpSession session) {
-		if (pessoa.getEmail().isEmpty() || pessoa.getPassword().isEmpty()) {
-			model.addAttribute("mensagem",new MensagemTO("Campos não preenchidos!", TipoMensagem.ERRO));
-			return "login";
-		}
-		Person pessoaBD = null;
-		try {
-			pessoaBD = personService.findByEmail(pessoa.getEmail());
-			if (pessoaBD == null) {
-				model.addAttribute("mensagem",new MensagemTO("Usuário inexistente!", TipoMensagem.ERRO));
-				return "login";
-			} else if (pessoaBD.getPassword().isEmpty()) {
-				model.addAttribute("mensagem",new MensagemTO("Usuário sem acesso cadastrado.", TipoMensagem.ERRO));
-				return "login";
-			}
-			// verificando credenciais
-			pessoa.setPassword(DigestUtils.sha1Hex(pessoa.getPassword()));
-			if (pessoaBD.getPassword().equals(pessoa.getPassword()) && pessoaBD.getRole() != Role.READER) {
-				pessoaBD.setPassword(null); // null por seguranca, pra setar obj na sessao
-				session.setAttribute("usuario", pessoaBD);
-				logger.info("Usuario autenticado: " + pessoaBD);
-			} else {
-				model.addAttribute("mensagem",new MensagemTO("Credenciais inválidas!", TipoMensagem.ERRO));
-				return "login";
-			}
-		} catch (AtonBOException e) {
-			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MensagemTO(e.getBusinessMessage(), TipoMensagem.ERRO));
-			return "login";
-		}
-		model.addAttribute("mensagem",new MensagemTO("Usuário autenticado!", TipoMensagem.SUCESSO));
-		return "aton";
-	}
-	
-	@RequestMapping("logout")
-	public String logout(HttpSession session, HttpServletRequest request, Model model) {
-		session.invalidate();
-		model.addAttribute("mensagem",new MensagemTO("Logout concluído!", TipoMensagem.SUCESSO));
-	    return "aton";
-	}*/
-		
+			
 }

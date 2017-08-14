@@ -10,9 +10,10 @@
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="resources/css/navbar.css" rel="stylesheet">
 <link href="resources/css/sticky-footer-navbar.css" rel="stylesheet">
+<link href="resources/css/aton.css" rel="stylesheet">
 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<link href="resources/js/ie10-viewport-bug-workaround.css" rel="stylesheet">
+<!-- <link href="resources/js/ie10-viewport-bug-workaround.css" rel="stylesheet"> -->
 
 <!-- JAVASCRIPT -->
 
