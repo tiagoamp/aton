@@ -91,9 +91,9 @@
 								<input type="hidden" id ="identificador" name="identificador">
 								<c:forEach items="${listofpeople}" var="person">
 									<li class="list-group-item">				
-										&nbsp;&nbsp; <a href="javascript:carregarAcoes('consultar',${pessoa.id},'cadastropessoa');" title="Consultar"><span class="glyphicon glyphicon-eye-open"></span></a>
-										&nbsp;&nbsp; <a href="javascript:carregarAcoes('alterar',${pessoa.id},'cadastropessoa');" title="Alterar"><span class="glyphicon glyphicon-edit"></span></a> 
-										&nbsp;&nbsp; <a href="javascript:carregarAcoes('excluir',${pessoa.id},'cadastropessoa');" title="Excluir"><span class="glyphicon glyphicon-remove-circle"></span></a>
+										&nbsp;&nbsp; <a href="javascript:carregarAcoes('consultar',${person.id},'cadastropessoa');" title="Consultar"><span class="glyphicon glyphicon-eye-open"></span></a>
+										&nbsp;&nbsp; <a href="javascript:carregarAcoes('alterar',${person.id},'cadastropessoa');" title="Alterar"><span class="glyphicon glyphicon-edit"></span></a> 
+										&nbsp;&nbsp; <a href="javascript:carregarAcoes('excluir',${person.id},'cadastropessoa');" title="Excluir"><span class="glyphicon glyphicon-remove-circle"></span></a>
 										&nbsp;&nbsp;&nbsp;&nbsp;
 										<c:out value="${person.name}" /> - 
 										<c:out value="${person.email}" /> - 
