@@ -1,7 +1,7 @@
 package br.com.tiagoamp.aton.service;
 
 import br.com.tiagoamp.aton.model.Role;
-import br.com.tiagoamp.aton.model.Person;
+import br.com.tiagoamp.aton.model.User;
 import br.com.tiagoamp.aton.model.to.AutorizacaoResultadoTO;
 
 /**
@@ -16,12 +16,12 @@ public class AutorizacaoFuncionalidades {
 	 * Regras de autorização para Livros.
 	 * 
 	 * @param usuario
-	 * @param acao
+	 * @param action
 	 * @return AutorizacaoResultadoTO
 	 */
-	public static AutorizacaoResultadoTO autorizarManutencaoLivros(Person usuario, String acao) {
+	public static AutorizacaoResultadoTO autorizarManutencaoLivros(User usuario, String action) {
 		AutorizacaoResultadoTO to = null;
-		if (acao == null || acao.equals("alterar") || acao.equals("excluir")) { // ADMIN
+		if (action == null || action.equals("alterar") || action.equals("excluir")) { // ADMIN
 			if (usuario == null) {
 				to = new AutorizacaoResultadoTO("autorizacao", null);
 			} else {
@@ -30,7 +30,7 @@ public class AutorizacaoFuncionalidades {
 				}
 			}
 		} else { // BIBLIOTECARIO  
-			if (acao.equals("emprestar") && usuario != null) {
+			if (action.equals("emprestar") && usuario != null) {
 				if (usuario.getRole() != Role.ADMINISTRATOR || usuario.getRole() != Role.LIBRARIAN) {
 					to = new AutorizacaoResultadoTO("livros", "Ação autorizada somente para perfil 'Bibliotecário'.");
 				}
@@ -42,17 +42,17 @@ public class AutorizacaoFuncionalidades {
 	/**
 	 * Regras de autorização para Pessoas.
 	 * 
-	 * @param usuario
-	 * @param acao
+	 * @param user
+	 * @param action
 	 * @return AutorizacaoResultadoTO
 	 */
-	public static AutorizacaoResultadoTO autorizarManutencaoPessoas(Person usuario, String acao) {
+	public static AutorizacaoResultadoTO autorizarManutencaoPessoas(User user, String action) {
 		AutorizacaoResultadoTO to = null;
-		if (acao == null || acao.equals("alterar") || acao.equals("excluir")) { // ADMIN
-			if (usuario == null) {
+		if (action == null || action.equals("alterar") || action.equals("excluir")) { // ADMIN
+			if (user == null) {
 				to = new AutorizacaoResultadoTO("autorizacao", null);
 			} else {
-				if (usuario.getRole() != Role.ADMINISTRATOR) {
+				if (user.getRole() != Role.ADMINISTRATOR) {
 					to = new AutorizacaoResultadoTO("pessoas", "Ação autorizada somente para perfil 'Administrador'.");
 				}
 			}

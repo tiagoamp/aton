@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Person;
 import br.com.tiagoamp.aton.model.Role;
+import br.com.tiagoamp.aton.model.User;
 import br.com.tiagoamp.aton.model.MessaType;
 import br.com.tiagoamp.aton.model.to.MessageTO;
 import br.com.tiagoamp.aton.service.PersonService;
@@ -52,13 +53,13 @@ public class LoginController {
 				model.addAttribute("mensagem",new MessageTO("Usuário sem acesso cadastrado.", MessaType.ERRO));
 				return "login";
 			}
-			// verificando credenciais
+			// checking credntials
 			person.setPassword(DigestUtils.sha1Hex(person.getPassword()));
 			if (personFromDB.getPassword().equals(person.getPassword()) && personFromDB.getRole() != Role.READER) {
-				// creating new obj not managed without password attribute setted for security reasons, obj will be setted in session
-				person = new Person(personFromDB.getEmail(), personFromDB.getName(), personFromDB.getPhone(), personFromDB.getRole());
-				session.setAttribute("usuario", person);
-				logger.info("Usuario autenticado: " + person);
+				// creating obj 'user' not managed without password attribute setted for security reasons, obj will be setted in session
+				User user = new User(personFromDB.getEmail(), personFromDB.getName(), personFromDB.getRole());
+				session.setAttribute("usuario", user);
+				logger.info("Usuario autenticado: " + user);
 			} else {
 				model.addAttribute("mensagem",new MessageTO("Credenciais inválidas!", MessaType.ERRO));
 				return "login";
