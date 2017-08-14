@@ -1,9 +1,8 @@
 package br.com.tiagoamp.aton.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -102,31 +101,39 @@ public class PersonController {
 		return "pessoas/cadastro";		
 	}
 	
-	
-	
-	
-	
-	@RequestMapping("listapessoas")
-	public String listarPessoas(HttpServletRequest request, Model model) {
-		List<Person> lista = new ArrayList<>();
-		
-		try {		
-			lista = personService.getAll();
-			if (lista.isEmpty()) {
-				throw new AtonBOException("Consulta sem resultados!");
+	@RequestMapping(method = RequestMethod.POST)
+	public String pesquisarPessoas(HttpServletRequest request,  
+	        @RequestParam(value="tEmail", required=false) String pEmail, 
+	        @RequestParam(value="tFields", required=false) String pFields,
+	        @RequestParam(value="tList", required=false) String pList,
+	        Model model){
+		List<Person> list = new ArrayList<>();
+		try {
+			
+			if (pEmail != null && !pEmail.isEmpty()) {
+				Person p = searchByEmail(pEmail);
+				if (p != null) list.add(p);
+			} else if (pFields != null && !pFields.isEmpty()) {
+				list = searchByRoleOrName(pFields);
+			} else if (pEmail == null && pFields == null) {
+				list = personService.getAll();
 			}
-			Set<Person> listaOrdenada = new TreeSet<>();
-			listaOrdenada.addAll(lista);
-			model.addAttribute("listapessoas", listaOrdenada);
+			
+			if (list.isEmpty()) {
+				model.addAttribute("mensagem",new MessageTO("Consulta sem resultados!", MessaType.ERRO));				
+			}
+			
+			Collections.sort(list);
+			model.addAttribute("listofpeople", list);			
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
-			return "pessoas";
 		}
 		
-	    return "pessoas";
+		return "pessoas/pessoas";				
 	}
-	
+		
+		
 	@RequestMapping("exclusaopessoa")
 	public String excluirPessoa(HttpServletRequest request,  
 	        @RequestParam(value="acao", required=false) String pAcao, 
@@ -148,52 +155,23 @@ public class PersonController {
 		return "pessoas";
 	}
 	
-	
-	@RequestMapping(value = "consultapessoa", method = RequestMethod.POST)
-	public String consultarPessoa(HttpServletRequest request,  
-	        @RequestParam(value="tEmail", required=false) String pEmail, 
-	        @RequestParam(value="tDados", required=false) String pDados, 
-	        Model model){
-		List<Person> lista = new ArrayList<>();
-		try {
-			lista = this.pesquisarPessoasPorParametros(pEmail, pDados);
-			if (lista.isEmpty()) {
-				throw new AtonBOException("Consulta sem resultados!");
-			}
-			model.addAttribute("listapessoas", lista);
-		} catch (AtonBOException e) {
-			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
-		}
-		return "pessoas";		
+				
+	private Person searchByEmail(String email) throws AtonBOException {
+		return personService.findByEmail(email.trim().toUpperCase());
 	}
-		
-	private List<Person> pesquisarPessoasPorParametros(String email, String param) throws AtonBOException {
+	
+	private List<Person> searchByRoleOrName(String param) throws AtonBOException {
 		List<Person> lista = new ArrayList<>();
-		if (email != null && !email.isEmpty()) { // CAMPO DE PESQ EMAIL PREENCHIDO
-			// pesquisa por e-mail
-			Person p = personService.findByEmail(email.trim().toUpperCase());
-			if (p != null)
-				lista.add(p);
-		} else { // CAMPO DE PESQ DADOS PREENCHIDO
-			if (param != null && !param.isEmpty()) {
-				param = param.trim().toUpperCase();
-				// pesquisa por perfil
-				for (Role perfil : Role.values()) {
-					if (perfil.toString().equals(param))
-						lista = personService.findByFields(null, null, Role.valueOf(param));
-				}
-				if (lista.isEmpty()) {
-					// pesquisa por telefone
-					lista = personService.findByFields(null, param, null);
-					if (lista.isEmpty()) {
-						// pesquisa por nome aproximado
-						lista = personService.findByName(param);
-					}
-				}
+		param = param.trim().toUpperCase();
+		for (Role role : Role.values()) {  // role
+			if (role.toString().equals(param)) {
+				lista = personService.findByFields(null, null, Role.valueOf(param));
 			}
+		}
+		if (lista.isEmpty()) {  // name
+			lista = personService.findByName(param);
 		}
 		return lista;
 	}
-				
+					
 }

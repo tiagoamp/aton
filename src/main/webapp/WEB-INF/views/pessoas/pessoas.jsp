@@ -17,7 +17,7 @@
 	
 		<!-- Begin page content -->
 	    <div>
-	      <p class="lead">Pessoas</p>      
+	      <p class="lead"><strong>Gestão de Pessoas</strong></p>      
 	    </div>
 	    
 	    <!-- MENSAGENS -->
@@ -29,19 +29,19 @@
 		    	<h3 class="panel-title">Pesquisa de Pessoas</h3>
 		  	</div>
 		  	<div class="panel-body">
-		  		<form id="formConsultaPessoas" class="form-inline" method="POST" action="pessoas/consultapessoa">
+		  		<form id="formConsultaPessoas" class="form-inline" method="POST" action="pessoas">
 		  			<div class="row" align="center">
 		  				<div class="col-md-5">
 				  			<div class="form-group" >
 							    <label for="tEmailSearch">Consulta por E-mail:</label>
-							    <input type="text" name="tEmail" class="form-control" id="tEmailSearch" placeholder="Digite o e-mail do leitor">
+							    <input type="text" name="tEmail" class="form-control" size="40" id="tEmailSearch" placeholder="Digite o e-mail do leitor">
 							</div>
 							<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Buscar </button>
 						</div>
 						<div class="col-md-7">					
 							<div class="form-group">
 							    <label for="tFieldsSearch">Consulta por Dados:</label>
-							    <input type="text" name="tDados" class="form-control" size="45" id="tFieldsSearch" placeholder="Digite o nome, telefone ou perfil da pessoa">
+							    <input type="text" name="tFields" class="form-control" size="40" id="tFieldsSearch" placeholder="Digite o nome ou perfil da pessoa">
 							</div>
 							<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Buscar </button>
 						</div>
@@ -66,9 +66,11 @@
 					</div>
 					<div class="col-md-6">
 						<div class="btn-group">
-							<button type="button" class="btn btn-default btn-lg" onClick="location.href='pessoas/listapessoas'">
-								<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Listar Pessoas
-							</button>	
+							<form id="formListaPessoas" method="POST" action="pessoas">								
+								<button type="submit" class="btn btn-default btn-lg">
+									<span class="glyphicon glyphicon-th-list"></span> Listar Pessoas
+								</button>
+							</form>	
 						</div>
 					</div>
 		  		</div>		  		
@@ -76,8 +78,8 @@
 		</div>
 	      
 	    <!-- LISTAGEM -->
-	    <c:if test="${not empty listapessoas}">
-		    <div class="panel panel-default" style="margin: 10px;">
+	    <c:if test="${not empty listofpeople}">
+		    <div class="panel panel-default">
 				<div class="panel-heading">
 			    	<h3 class="panel-title">Resultado da Pesquisa</h3>
 			  	</div>
@@ -87,11 +89,11 @@
 							<form id="formAcoes">
 								<input type="hidden" id ="acao" name="acao">
 								<input type="hidden" id ="identificador" name="identificador">
-								<c:forEach items="${listapessoas}" var="person">
+								<c:forEach items="${listofpeople}" var="person">
 									<li class="list-group-item">				
-										&nbsp;&nbsp; <a href="javascript:carregarAcoes('consultar',${pessoa.id},'cadastropessoa');" title="Consultar"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-										&nbsp;&nbsp; <a href="javascript:carregarAcoes('alterar',${pessoa.id},'cadastropessoa');" title="Alterar"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a> 
-										&nbsp;&nbsp; <a href="javascript:carregarAcoes('excluir',${pessoa.id},'cadastropessoa');" title="Excluir"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a>
+										&nbsp;&nbsp; <a href="javascript:carregarAcoes('consultar',${pessoa.id},'cadastropessoa');" title="Consultar"><span class="glyphicon glyphicon-eye-open"></span></a>
+										&nbsp;&nbsp; <a href="javascript:carregarAcoes('alterar',${pessoa.id},'cadastropessoa');" title="Alterar"><span class="glyphicon glyphicon-edit"></span></a> 
+										&nbsp;&nbsp; <a href="javascript:carregarAcoes('excluir',${pessoa.id},'cadastropessoa');" title="Excluir"><span class="glyphicon glyphicon-remove-circle"></span></a>
 										&nbsp;&nbsp;&nbsp;&nbsp;
 										<c:out value="${person.name}" /> - 
 										<c:out value="${person.email}" /> - 
