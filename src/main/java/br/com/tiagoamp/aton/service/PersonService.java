@@ -26,10 +26,10 @@ public class PersonService {
 	public void insert(Person person) throws AtonBOException {
 		try {
 			Person personRetrieved = dao.findByEmail(person.getEmail());
-			if (personRetrieved != null) throw new AtonBOException("'E-mail' already registered!");
+			if (personRetrieved != null) throw new AtonBOException("'E-mail' já cadastrado!");
 			dao.create(person);
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -37,7 +37,7 @@ public class PersonService {
 		try {
 			dao.update(person);
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -45,7 +45,7 @@ public class PersonService {
 		try {
 			dao.delete(id);
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -53,7 +53,7 @@ public class PersonService {
 		try {
 			return dao.findById(id);
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -61,7 +61,7 @@ public class PersonService {
 		try {
 			return dao.findByEmail(email);
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -69,7 +69,7 @@ public class PersonService {
 		try {
 			return dao.findByFields(name, phone, role);			
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -77,7 +77,7 @@ public class PersonService {
 		try {
 			return dao.findByNameLike(name);			
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -85,7 +85,7 @@ public class PersonService {
 		try {
 			return dao.findAll();
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	

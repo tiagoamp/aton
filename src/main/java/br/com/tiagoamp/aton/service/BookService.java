@@ -26,10 +26,10 @@ public class BookService {
 	public void insert(Book book) throws AtonBOException {
 		try {
 			Book bookRetrieved = dao.findByIsbn(book.getIsbn());
-			if (bookRetrieved != null) throw new AtonBOException("'ISBN' already registered");			
+			if (bookRetrieved != null) throw new AtonBOException("'ISBN' já cadastrado!");			
 			dao.create(book);
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}				
 	}
 	
@@ -37,7 +37,7 @@ public class BookService {
 		try {
 			dao.update(book);
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -45,7 +45,7 @@ public class BookService {
 		try {
 			dao.delete(id);
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -53,7 +53,7 @@ public class BookService {
 		try {
 			return dao.findById(id);
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -61,7 +61,7 @@ public class BookService {
 		try {
 			return dao.findByIsbn(isbn);
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -69,7 +69,7 @@ public class BookService {
 		try {
 			return dao.findByFields(title, authorsName, isbn, classification, targetAudience);
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -77,7 +77,7 @@ public class BookService {
 		try {
 			return dao.findAll();
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -85,7 +85,7 @@ public class BookService {
 		try {
 			return dao.findByAuthorNameLike(authorName);			
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -93,7 +93,7 @@ public class BookService {
 		try {
 			return dao.findByTitleLike(title);			
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	

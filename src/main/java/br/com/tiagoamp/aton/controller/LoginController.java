@@ -53,13 +53,13 @@ public class LoginController {
 				model.addAttribute("mensagem",new MessageTO("Usuário sem acesso cadastrado.", MessaType.ERRO));
 				return "login";
 			}
-			// checking credntials
+			// checking credentials
 			person.setPassword(DigestUtils.sha1Hex(person.getPassword()));
 			if (personFromDB.getPassword().equals(person.getPassword()) && personFromDB.getRole() != Role.READER) {
 				// creating obj 'user' not managed without password attribute setted for security reasons, obj will be setted in session
 				User user = new User(personFromDB.getEmail(), personFromDB.getName(), personFromDB.getRole());
 				session.setAttribute("usuario", user);
-				logger.info("Usuario autenticado: " + user);
+				logger.info("Usuário autenticado: " + user);
 			} else {
 				model.addAttribute("mensagem",new MessageTO("Credenciais inválidas!", MessaType.ERRO));
 				return "login";

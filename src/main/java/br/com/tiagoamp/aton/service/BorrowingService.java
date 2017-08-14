@@ -28,7 +28,7 @@ public class BorrowingService {
 		try {
 			dao.create(borrowing);			
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -36,7 +36,7 @@ public class BorrowingService {
 		try {
 			dao.update(borrowing);			
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -44,7 +44,7 @@ public class BorrowingService {
 		try {
 			dao.delete(id);
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -52,7 +52,7 @@ public class BorrowingService {
 		try {
 			return dao.findById(id);
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -60,7 +60,7 @@ public class BorrowingService {
 		try {
 			return dao.findByFields(bookId, personId, dateOfBorrowing, dateOfReturn);			
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -68,7 +68,7 @@ public class BorrowingService {
 		try {
 			return dao.findAll();
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 	
@@ -76,7 +76,7 @@ public class BorrowingService {
 		try {
 			return dao.findOpenBorrowings();
 		} catch (SQLException e) {
-			throw new AtonBOException("Database access error!", e);
+			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
 	}
 
