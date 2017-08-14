@@ -15,25 +15,29 @@
 
 	<jsp:include page = "comum/menu.jsp" />
 	
-	<!-- Begin page content -->
-    <div class="" style="margin: 10px;">
-      <p class="lead">Autenticação requerida</p>      
-    </div>
-
-	<div class="alert alert-danger" role="alert">
-		<strong> <span class="glyphicon glyphicon-exclamation-sign"	aria-hidden="true"> </span> 
-			Funcionalidade com autenticação requerida no sistema!
-		</strong>
-	</div>
-
-
-	<div class="panel panel-default" style="margin: 10px;">
-		<div class="panel-heading">
-	    	<h3 class="panel-title">Login no sistema</h3>
-	  	</div>
-	  	<div class="panel-body">
-	  		Acesse a página de <a href="login">LOGIN</a> do sistema.	  			
-	  	</div>
+	<div class="margemPadrao">
+	
+		<!-- Begin page content -->
+	    <div>
+	      <p class="lead">Autenticação requerida</p>      
+	    </div>
+	
+		<div class="alert alert-danger" role="alert">
+			<strong> <span class="glyphicon glyphicon-exclamation-sign"	aria-hidden="true"> </span> 
+				Funcionalidade com autenticação requerida no sistema!
+			</strong>
+		</div>
+	
+	
+		<div class="panel panel-default">
+			<div class="panel-heading">
+		    	<h3 class="panel-title">Login no sistema</h3>
+		  	</div>
+		  	<div class="panel-body">
+		  		Acesse a página de <a href="login">LOGIN</a> do sistema.	  			
+		  	</div>
+		</div>
+	
 	</div>
 
 	<jsp:include page = "comum/footer.jsp" />

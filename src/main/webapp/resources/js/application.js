@@ -1,8 +1,9 @@
 // RADIO BUTTON DE EXIBICAO DE SENHA DEPENDENDO DO PERFIL
 $(document).ready(function() {
-    $('input[type=radio][name=perfil]').change(function() {
-        if (this.value == 'LEITOR') {
+    $('input[type=radio][name=role]').change(function() {
+        if (this.value == 'READER') {
         	$('#formCadPessoas').find('#tSenha').removeClass("required");
+        	$('#formCadPessoas').find('#tSenha').text("");
             document.getElementById("divSenha").style.display = "none";            
         }
         else {

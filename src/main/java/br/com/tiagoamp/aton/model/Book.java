@@ -140,12 +140,12 @@ public class Book implements Comparable<Book> {
 				sb.append(authorsName.get(i) + " ; ");
 			}
 			sb.append(authorsName.get(i));  // last one without ';'
-			authorsNameInline = sb.toString();
+			authorsNameInline = sb.toString().toUpperCase();
     	} else if (authorsName == null && authorsNameInline != null) {
     		authorsName = new ArrayList<>();
 			String[] authorSplit = authorsNameInline.split(";");
 			for (int i = 0; i < authorSplit.length; i++) {
-				authorsName.add(authorSplit[i].trim());
+				authorsName.add(authorSplit[i].trim().toUpperCase());
 			}
     	}
     }
@@ -160,19 +160,19 @@ public class Book implements Comparable<Book> {
 		return isbn;
 	}
 	public void setIsbn(String isbn) {
-		this.isbn = isbn;
+		this.isbn = isbn.toUpperCase();
 	}
 	public String getTitle() {
 		return title;
 	}
 	public void setTitle(String title) {
-		this.title = title;
+		this.title = title.toUpperCase();
 	}
 	public String getSubtitle() {
 		return subtitle;
 	}
 	public void setSubtitle(String subtitle) {
-		this.subtitle = subtitle;
+		this.subtitle = subtitle.toUpperCase();
 	}
 	public Date getDateOfRegistration() {
 		return dateOfRegistration;
@@ -184,13 +184,13 @@ public class Book implements Comparable<Book> {
 		return publishingCompany;
 	}
 	public void setPublishingCompany(String publishingCompany) {
-		this.publishingCompany = publishingCompany;
+		this.publishingCompany = publishingCompany.toUpperCase();
 	}
 	public String getPublishingCity() {
 		return publishingCity;
 	}
 	public void setPublishingCity(String publishingCity) {
-		this.publishingCity = publishingCity;
+		this.publishingCity = publishingCity.toUpperCase();
 	}
 	public Integer getPublishingYear() {
 		return publishingYear;
@@ -208,19 +208,19 @@ public class Book implements Comparable<Book> {
 		return genre;
 	}
 	public void setGenre(String genre) {
-		this.genre = genre;
+		this.genre = genre.toUpperCase();
 	}
 	public String getClassification() {
 		return classification;
 	}
 	public void setClassification(String classification) {
-		this.classification = classification;
+		this.classification = classification.toUpperCase();
 	}
 	public String getTargetAudience() {
 		return targetAudience;
 	}
 	public void setTargetAudience(String targetAudience) {
-		this.targetAudience = targetAudience;
+		this.targetAudience = targetAudience.toUpperCase();
 	}
 	public String getCoverImagePath() {
 		return coverImagePath;
@@ -244,7 +244,7 @@ public class Book implements Comparable<Book> {
 		return donorName;
 	}
 	public void setDonorName(String donorName) {
-		this.donorName = donorName;
+		this.donorName = donorName.toUpperCase();
 	}
 	public Person getRegisterer() {
 		return registerer;
@@ -288,7 +288,7 @@ public class Book implements Comparable<Book> {
 		return authorsNameInline;
     }
     public void setAuthorsNameInline(String authorsNameInline) {
-		this.authorsNameInline = authorsNameInline;
+		this.authorsNameInline = authorsNameInline.toUpperCase();
 		synchronizeAuthorsNameInFields();
 	}
     

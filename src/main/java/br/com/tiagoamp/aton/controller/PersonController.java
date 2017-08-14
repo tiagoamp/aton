@@ -36,18 +36,18 @@ public class PersonController {
 	
 	private PersonService personService;
 	
-	
-	@RequestMapping("cadastropessoa")
+		
+	@RequestMapping(value="cadastro", method=RequestMethod.GET)
 	public String cadastrarPessoa(HttpServletRequest request,  
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
 	        Model model) {
 		
-		Person pessoa = new Person();
+		Person person = new Person();
 		
 		if (pId != null && !pId.isEmpty()) {
 			try {		
-				pessoa = personService.findById(Integer.parseInt(pId));				 				
+				person = personService.findById(Integer.parseInt(pId));				 				
 			} catch (AtonBOException e) {
 				logger.error("Erro: " + e);
 				model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
@@ -60,9 +60,51 @@ public class PersonController {
 			model.addAttribute("mensagem",new MessageTO("Confirma exclusão com os dados abaixo?", MessaType.ALERTA));
 		}
 				
-		model.addAttribute("pessoa", pessoa);
+		model.addAttribute("person", person);
 	    return "pessoas/cadastro";
 	}
+	
+	@RequestMapping(value="cadastro", method=RequestMethod.POST)
+	public String salvarPessoa(@Valid Person person, BindingResult result, Model model) {
+		boolean hasErrors = false;
+		if(result.hasErrors()) {
+			hasErrors = true;
+		}
+		if (person.getRole() != null && person.getRole() != Role.READER && person.getPassword().equals("")) {
+			result.reject("senha", "Senha deve ser preenchida para perfil 'Administrador' ou 'Bibliotecário'.");
+			hasErrors = true;
+		}
+		if (hasErrors) {
+			person.setRole(null);
+			model.addAttribute("person", person);
+		} else {
+			try {
+				// digest da senha
+				if (person.getPassword() != null && !person.getPassword().isEmpty()) {
+					person.setPassword(DigestUtils.sha1Hex(person.getPassword()));
+				}
+				// gravando pessoas
+				if (person.getId() == null) {
+					personService.insert(person); // insert
+				} else {
+					personService.update(person); // update
+				}
+				model.addAttribute("mensagem",new MessageTO("Gravação com sucesso: " + person.toString(), MessaType.SUCESSO));
+				model.addAttribute("acao", "consultar");
+				logger.info("Pessoa cadastrada: " + person);
+			} catch (AtonBOException e) {
+				logger.error("Erro: " + e);
+				model.addAttribute("person", person);
+				model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
+			}
+		}					
+		
+		return "pessoas/cadastro";		
+	}
+	
+	
+	
+	
 	
 	@RequestMapping("listapessoas")
 	public String listarPessoas(HttpServletRequest request, Model model) {
@@ -106,45 +148,7 @@ public class PersonController {
 		return "pessoas";
 	}
 	
-	@RequestMapping(value="pessoacadastrada", method = RequestMethod.POST)
-	public String salvarPessoa(@Valid Person person, BindingResult result, Model model) {
-		boolean hasErrors = false;
-		if(result.hasErrors()) {
-			hasErrors = true;
-		}
-		if (person.getRole() != null && person.getRole() != Role.READER && person.getRole().equals("")) {
-			result.reject("senha", "Senha deve ser preenchida para perfil 'Administrador' ou 'Bibliotecário'.");
-			hasErrors = true;
-		}
-		if (hasErrors) {
-			person.setRole(null);
-			model.addAttribute("pessoa", person);
-			return "pessoas/cadastro";
-		}
-		
-		try {
-			// digest da senha
-			if (person.getPassword() != null && !person.getPassword().isEmpty()) {
-				person.setPassword(DigestUtils.sha1Hex(person.getPassword().toUpperCase()));
-			}
-			// gravando pessoas
-			if (person.getId() == null) {
-				personService.insert(person); // insert
-			} else {
-				personService.update(person); // update
-			}
-			model.addAttribute("mensagem",new MessageTO("Gravação com sucesso: " + person.toString(), MessaType.SUCESSO));
-			logger.info("Pessoa cadastrada: " + person);
-		} catch (AtonBOException e) {
-			logger.error("Erro: " + e);
-			model.addAttribute("pessoa", person);
-			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
-			return "pessoas/cadastro";
-		}			
-		
-		return "pessoas";
-	}
-		
+	
 	@RequestMapping(value = "consultapessoa", method = RequestMethod.POST)
 	public String consultarPessoa(HttpServletRequest request,  
 	        @RequestParam(value="tEmail", required=false) String pEmail, 

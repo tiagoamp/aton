@@ -5,13 +5,13 @@
 <html>
 	<head>
 
-		<jsp:include page = "comum/header.jsp" />
+		<jsp:include page = "../comum/header.jsp" />
 
 	</head>
 	
 <body>
 
-	<jsp:include page = "comum/menu.jsp" />
+	<jsp:include page = "../comum/menu.jsp" />
 	
 	<div class="margemPadrao">
 	
@@ -21,7 +21,7 @@
 	    </div>
 	    
 	    <!-- MENSAGENS -->
-	    <jsp:include page = "comum/messages.jsp" />
+	    <jsp:include page = "../comum/messages.jsp" />
 	    
 	    <!-- PESQUISA -->
 	    <div class="panel panel-default">
@@ -29,7 +29,7 @@
 		    	<h3 class="panel-title">Pesquisa de Pessoas</h3>
 		  	</div>
 		  	<div class="panel-body">
-		  		<form id="formConsultaPessoas" class="form-inline" method="POST" action="pessoas/consultapessoa" role="search">
+		  		<form id="formConsultaPessoas" class="form-inline" method="POST" action="pessoas/consultapessoa">
 		  			<div class="row" align="center">
 		  				<div class="col-md-5">
 				  			<div class="form-group" >
@@ -58,14 +58,14 @@
 		  	<div class="panel-body">
 		  		<div class="row" align="center">
 		  			<div class="col-md-6">
-			  			<div class="btn-group" role="group">
-							<button type="button" class="btn btn-default btn-lg" onClick="location.href='pessoas/cadastropessoa'">
+			  			<div class="btn-group">
+							<button type="button" class="btn btn-default btn-lg" onClick="location.href='pessoas/cadastro'">
 								<span class="glyphicon glyphicon-user" aria-hidden="true"></span> Cadastrar Pessoa
-							</button>	
+							</button>							
 						</div>
 					</div>
 					<div class="col-md-6">
-						<div class="btn-group" role="group">
+						<div class="btn-group">
 							<button type="button" class="btn btn-default btn-lg" onClick="location.href='pessoas/listapessoas'">
 								<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Listar Pessoas
 							</button>	
@@ -87,15 +87,15 @@
 							<form id="formAcoes">
 								<input type="hidden" id ="acao" name="acao">
 								<input type="hidden" id ="identificador" name="identificador">
-								<c:forEach items="${listapessoas}" var="pessoa">
+								<c:forEach items="${listapessoas}" var="person">
 									<li class="list-group-item">				
 										&nbsp;&nbsp; <a href="javascript:carregarAcoes('consultar',${pessoa.id},'cadastropessoa');" title="Consultar"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
 										&nbsp;&nbsp; <a href="javascript:carregarAcoes('alterar',${pessoa.id},'cadastropessoa');" title="Alterar"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a> 
 										&nbsp;&nbsp; <a href="javascript:carregarAcoes('excluir',${pessoa.id},'cadastropessoa');" title="Excluir"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a>
 										&nbsp;&nbsp;&nbsp;&nbsp;
-										<c:out value="${pessoa.nome}" /> - 
-										<c:out value="${pessoa.email}" /> - 
-										<c:out value="${pessoa.perfil}" />							
+										<c:out value="${person.name}" /> - 
+										<c:out value="${person.email}" /> - 
+										<c:out value="${person.role}" />							
 									</li>
 								</c:forEach>
 							</form>
@@ -107,7 +107,7 @@
 	
 	</div>
 	
-	<jsp:include page = "comum/footer.jsp" />
+	<jsp:include page = "../comum/footer.jsp" />
 
 </body>
 </html>

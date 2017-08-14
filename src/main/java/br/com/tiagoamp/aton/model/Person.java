@@ -21,8 +21,8 @@ public class Person implements Comparable<Person> {
 	}
 	
 	public Person(String email, String name, String phone, Role role) {
-		this.email = email;
-		this.name = name;
+		this.email = email.toUpperCase();
+		this.name = name.toUpperCase();
 		this.phone = phone;
 		this.role = role;
 	}
@@ -79,13 +79,13 @@ public class Person implements Comparable<Person> {
 		return email;
 	}
 	public void setEmail(String email) {
-		this.email = email;
+		this.email = email.toUpperCase();
 	}
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
-		this.name = name;
+		this.name = name.toUpperCase();
 	}
 	public String getPhone() {
 		return phone;

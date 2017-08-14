@@ -30,7 +30,7 @@
 		    	<h3 class="panel-title">Login</h3>
 		  	</div>
 		  	<div class="panel-body">		  	
-		  		<form:form id="formLogin" cssClass="form-horizontal" method="POST" action="efetuarlogin" modelAttribute="person">
+		  		<form:form id="formLogin" cssClass="form-horizontal" method="POST" action="login" modelAttribute="person">
 		  			<form:hidden path="id" />		  			
 		  			<div class="form-group">
 					    <label for="tEmail" class="col-sm-2 control-label">Email</label>

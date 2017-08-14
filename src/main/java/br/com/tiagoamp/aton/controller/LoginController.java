@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Person;
@@ -30,14 +31,14 @@ public class LoginController {
 	private PersonService personService;
 	
 		
-	@RequestMapping("login")
+	@RequestMapping(value="login", method=RequestMethod.GET)
 	public String pageLogin(HttpServletRequest request, Model model) {
 		Person person = new Person();
 		model.addAttribute("person", person);
 	    return "login";
 	}
 	
-	@RequestMapping("efetuarlogin")
+	@RequestMapping(value="login", method=RequestMethod.POST)
 	public String efetuarLogin(Person person, BindingResult result, Model model, HttpSession session) {
 		if (person.getEmail().isEmpty() || person.getPassword().isEmpty()) {
 			model.addAttribute("mensagem",new MessageTO("Campos não preenchidos!", MessaType.ERRO));
