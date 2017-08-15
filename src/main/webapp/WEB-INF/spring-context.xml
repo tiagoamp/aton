@@ -38,7 +38,7 @@
   <mvc:annotation-driven/>
   
   <mvc:interceptors>
-  	<bean class="br.com.tiagoamp.aton.service.interceptor.AutorizadorInterceptor" />
+  	<bean class="br.com.tiagoamp.aton.service.interceptor.AtonAuthorizerInterceptor" />
   </mvc:interceptors>
 
 </beans>

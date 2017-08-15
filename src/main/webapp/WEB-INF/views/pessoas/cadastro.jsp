@@ -29,22 +29,22 @@
 	    <!-- MENSAGENS -->
 	    <jsp:include page = "../comum/messages.jsp" />
 	        
-	    <c:if test="${acao eq 'excluir'}">
-	    	<form id="formExclusao">
-	    		<input type="hidden" id ="acao" name="acao">
-				<input type="hidden" id ="identificador" name="identificador">
+	    <%-- <c:if test="${acao eq 'excluir'}">
+	    	<form id="formExclusao" action="exclusao" method="post">
+	    		<!-- <input type="hidden" id ="acao" name="acao" value="excluir"> -->
+				<input type="hidden" id ="identificador" name="identificador" value="${person.id}">
 	    		<div class="panel panel-default" style="margin: 10px;">
-		    		<div class="panel-body">
-		    			<button type="button" class="btn btn-default" onClick="carregarExclusao('excluir',${pessoa.id},'exclusaopessoa');">
+		    		<div class="panel-body" align="center">
+		    			<button type="button" class="btn btn-default btn-lg">
 							<span class="glyphicon glyphicon-trash"></span> Excluir
 						</button>
-						<button type="button" class="btn btn-default" onClick="location.href='pessoas'">
+						<button type="button" class="btn btn-default btn-lg" onClick="location.href='../pessoas'">
 							<span class="glyphicon glyphicon-remove"></span> Cancelar
 						</button>
 					</div>
 				</div>
 			</form>
-		</c:if>
+		</c:if> --%>
 	        
 	    <div class="panel panel-default">
 			<div class="panel-heading">
@@ -66,21 +66,27 @@
 					    </div>
 					</div>
 					<div class="form-group">
+					    <label for="tNome" class="col-sm-2 control-label">Telefone</label>
+					    <div class="col-sm-10">
+					      <form:input path="phone" cssClass="form-control" id="tTelefone" placeholder="Digite o telefone" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />
+					    </div>
+					</div>
+					<div class="form-group">
 					    <label for="tPerfil" class="col-sm-2 control-label">Perfil</label>
 					    <div class="col-sm-10">
 					      <div class="radio">
 							  <label>
-							    <form:radiobutton path="role" value="READER" disabled="${acao eq 'consultar' or acao eq 'excluir'}" /> LEITOR
+							    <form:radiobutton path="role" value="LEITOR" disabled="${acao eq 'consultar'}" /> LEITOR
 							  </label>
 						  </div>
 						  <div class="radio">
 							  <label>
-							    <form:radiobutton path="role" value="LIBRARIAN" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/> BIBLIOTECÁRIO
+							    <form:radiobutton path="role" value="BIBLIOTECARIO" disabled="${acao eq 'consultar'}"/> BIBLIOTECÁRIO
 							  </label>
 						  </div>
 						  <div class="radio">
 							  <label>
-							    <form:radiobutton path="role" value="ADMINISTRATOR" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/> ADMINISTRADOR
+							    <form:radiobutton path="role" value="ADMINISTRADOR" disabled="${acao eq 'consultar'}"/> ADMINISTRADOR
 							  </label>
 						  </div>
 					    </div>
@@ -106,6 +112,20 @@
 							  </button>
 						    </div>
 						</div>						
+					</c:if>
+					
+					<c:if test="${acao eq 'excluir'}">
+						<input type="hidden" id ="exclusao" name="exclusao" value="exclusao">
+						<div class="panel panel-default" style="margin: 10px;">
+				    		<div class="panel-body" align="center">
+				    			<button type="submit" class="btn btn-default btn-lg">
+									<span class="glyphicon glyphicon-trash"></span> Excluir
+								</button>
+								<button type="button" class="btn btn-default btn-lg" onClick="location.href='../pessoas'">
+									<span class="glyphicon glyphicon-remove"></span> Cancelar
+								</button>
+							</div>
+						</div>
 					</c:if>
 					
 					<c:if test="${acao eq 'consultar'}">

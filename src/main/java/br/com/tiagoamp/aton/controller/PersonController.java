@@ -64,33 +64,43 @@ public class PersonController {
 	}
 	
 	@RequestMapping(value="cadastro", method=RequestMethod.POST)
-	public String salvarPessoa(@Valid Person person, BindingResult result, Model model) {
+	public String salvarPessoa(@Valid Person person, BindingResult result, Model model, @RequestParam(value="exclusao", required=false) String pExclusao) {
 		boolean hasErrors = false;
-		if(result.hasErrors()) {
-			hasErrors = true;
-		}
-		if (person.getRole() != null && person.getRole() != Role.READER && person.getPassword().equals("")) {
-			result.reject("senha", "Senha deve ser preenchida para perfil 'Administrador' ou 'Bibliotecário'.");
-			hasErrors = true;
-		}
+		
+		boolean isDelete = pExclusao != null && !pExclusao.isEmpty();
+		
+		if (!isDelete) {
+			if(result.hasErrors()) {
+				hasErrors = true;
+			}
+			if (person.getRole() != null && person.getRole() != Role.LEITOR && person.getPassword().equals("")) {
+				result.reject("senha", "Senha deve ser preenchida para perfil 'Administrador' ou 'Bibliotecário'.");
+				hasErrors = true;
+			}
+		}		
+		
 		if (hasErrors) {
 			person.setRole(null);
-			model.addAttribute("person", person);
+			model.addAttribute("person", person);			
 		} else {
 			try {
 				// digest da senha
 				if (person.getPassword() != null && !person.getPassword().isEmpty()) {
 					person.setPassword(DigestUtils.sha1Hex(person.getPassword()));
 				}
-				// gravando pessoas
+				// manut pessoas
 				if (person.getId() == null) {
-					personService.insert(person); // insert
+					personService.insert(person); 
 				} else {
-					personService.update(person); // update
+					if (isDelete) {
+						personService.delete(person.getId());
+					} else {
+						personService.update(person);
+					}					 
 				}
-				model.addAttribute("mensagem",new MessageTO("Gravação com sucesso: " + person.toString(), MessaType.SUCESSO));
+				model.addAttribute("mensagem",new MessageTO("Operação realizada com sucesso: " + person.toString(), MessaType.SUCESSO));
 				model.addAttribute("acao", "consultar");
-				logger.info("Pessoa cadastrada: " + person);
+				logger.info("Pessoa cadastrada/editada/deletada: " + person);
 			} catch (AtonBOException e) {
 				logger.error("Erro: " + e);
 				model.addAttribute("person", person);
@@ -134,26 +144,26 @@ public class PersonController {
 	}
 		
 		
-	@RequestMapping("exclusaopessoa")
+	/*@RequestMapping("exclusao")
 	public String excluirPessoa(HttpServletRequest request,  
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
 	        Model model) {		
-		Person pessoa;
+		Person person;
 		try {		
-			pessoa = personService.findById(Integer.parseInt(pId));
-			if (pessoa == null) {
+			person = personService.findById(Integer.parseInt(pId));
+			if (person == null) {
 				throw new AtonBOException("Erro na exclusão de pessoa: Identificador inválido!");
 			}
-			personService.delete(pessoa.getId());
-			model.addAttribute("mensagem",new MessageTO("Exclusão com sucesso: " + pessoa.toString(), MessaType.SUCESSO));
-			logger.info("Pessoa excluída: " + pessoa);
+			//personService.delete(person.getId());
+			model.addAttribute("mensagem",new MessageTO("Exclusão com sucesso: " + person.toString(), MessaType.SUCESSO));
+			logger.info("Pessoa excluída: " + person);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));			
 		}		
-		return "pessoas";
-	}
+		return "redirect:pessoas/pessoas";
+	}*/
 	
 				
 	private Person searchByEmail(String email) throws AtonBOException {

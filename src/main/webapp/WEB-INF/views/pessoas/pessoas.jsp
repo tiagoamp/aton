@@ -90,10 +90,10 @@
 								<input type="hidden" id ="acao" name="acao">
 								<input type="hidden" id ="identificador" name="identificador">
 								<c:forEach items="${listofpeople}" var="person">
-									<li class="list-group-item">				
-										&nbsp;&nbsp; <a href="javascript:carregarAcoes('consultar',${person.id},'cadastropessoa');" title="Consultar"><span class="glyphicon glyphicon-eye-open"></span></a>
-										&nbsp;&nbsp; <a href="javascript:carregarAcoes('alterar',${person.id},'cadastropessoa');" title="Alterar"><span class="glyphicon glyphicon-edit"></span></a> 
-										&nbsp;&nbsp; <a href="javascript:carregarAcoes('excluir',${person.id},'cadastropessoa');" title="Excluir"><span class="glyphicon glyphicon-remove-circle"></span></a>
+									<li class="list-group-item">
+										&nbsp;&nbsp; <a href="pessoas/cadastro?acao=consultar&identificador=${person.id}" title="Consultar"><span class="glyphicon glyphicon-eye-open"></span></a>
+										&nbsp;&nbsp; <a href="pessoas/cadastro?acao=alterar&identificador=${person.id}" title="Alterar"><span class="glyphicon glyphicon-edit"></span></a> 
+										&nbsp;&nbsp; <a href="pessoas/cadastro?acao=excluir&identificador=${person.id}" title="Excluir"><span class="glyphicon glyphicon-remove-circle"></span></a>
 										&nbsp;&nbsp;&nbsp;&nbsp;
 										<c:out value="${person.name}" /> - 
 										<c:out value="${person.email}" /> - 

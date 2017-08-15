@@ -13,7 +13,7 @@ import br.com.tiagoamp.aton.model.TypeOfAcquisition;
 public class TestHelper {
 	
 	public static Person getPersonForTest() {
-		Person person = new Person("TEST@TESTEMAIL.COM", "NAME FOR TESTS", "11-1111-1111", Role.ADMINISTRATOR);
+		Person person = new Person("TEST@TESTEMAIL.COM", "NAME FOR TESTS", "11-1111-1111", Role.ADMINISTRADOR);
 		person.setPassword("1234");
 		return person;
 	}
@@ -39,7 +39,7 @@ public class TestHelper {
 		book.setSubtitle("Subtitle of Book for Tests");
 		book.setTargetAudience("Adults");
 		book.setTitle("Title of Book For Tests");
-		book.setTypeOfAcquisition(TypeOfAcquisition.DONATION);
+		book.setTypeOfAcquisition(TypeOfAcquisition.DOACAO);
 		book.setRegisterer(getPersonForTest());
 		return book;
 	}

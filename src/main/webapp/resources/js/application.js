@@ -1,7 +1,7 @@
 // RADIO BUTTON DE EXIBICAO DE SENHA DEPENDENDO DO PERFIL
 $(document).ready(function() {
     $('input[type=radio][name=role]').change(function() {
-        if (this.value == 'READER') {
+        if (this.value == 'LEITOR') {
         	$('#formCadPessoas').find('#tSenha').removeClass("required");
         	$('#formCadPessoas').find('#tSenha').text("");
             document.getElementById("divSenha").style.display = "none";            
@@ -26,9 +26,9 @@ $(document).ready(function() {
 });
 
 // SETANDO PARAMETROS FORM DE ACOES
-function carregarAcoes(pacao, pid, paction){
+/*function carregarAcoes(pacao, pid, paction){
 	var f = document.getElementById('formAcoes');
-    f.method="post";
+    f.method="get";
     f.acao.value = pacao;
     f.identificador.value = pid;
     f.action = paction;
@@ -42,4 +42,4 @@ function carregarExclusao(pacao, pid, paction){
     f.identificador.value = pid;
     f.action = paction;
     f.submit();
-}
+}*/

@@ -1,11 +1,11 @@
 package br.com.tiagoamp.aton.model.to;
 
-public class AutorizacaoResultadoTO {
+public class AuthorizerResultTO {
 	
-	public AutorizacaoResultadoTO() {		
+	public AuthorizerResultTO() {		
 	}
 	
-	public AutorizacaoResultadoTO(String urlRedirect, String msgErro) {
+	public AuthorizerResultTO(String urlRedirect, String msgErro) {
 		this.urlRedirect = urlRedirect;
 		this.msgErro = msgErro;
 	}

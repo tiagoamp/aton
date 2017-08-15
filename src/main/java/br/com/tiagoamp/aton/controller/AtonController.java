@@ -62,7 +62,7 @@ public class AtonController {
 		try {
 			List<Person> list = personService.getAll();
 			if (list.isEmpty()) {
-				Person person = new Person("admin@email.com", "System Administrator", null, Role.ADMINISTRATOR);
+				Person person = new Person("admin@email.com", "System Administrator", null, Role.ADMINISTRADOR);
 				person.setPassword(DigestUtils.sha1Hex("admin"));
 				personService.insert(person);
 			}				
@@ -293,7 +293,7 @@ public class AtonController {
 			result.reject("dataAquisicaoFormatada", "Campo obrigatório não preenchido: Data de Aquisição.");
 			hasErrors = true;
 		}
-		if (book.getTypeOfAcquisition() == TypeOfAcquisition.PURCHASE && !book.getDonorName().isEmpty()) {
+		if (book.getTypeOfAcquisition() == TypeOfAcquisition.COMPRA && !book.getDonorName().isEmpty()) {
 			result.reject("tipoAquisicao", "Tipo de aquisição 'COMPRA' não permite cadastro de doador.");
 			hasErrors = true;
 		}

@@ -56,7 +56,7 @@ public class LoginController {
 			}
 			// checking credentials
 			person.setPassword(DigestUtils.sha1Hex(person.getPassword()));
-			if (personFromDB.getPassword().equals(person.getPassword()) && personFromDB.getRole() != Role.READER) {
+			if (personFromDB.getPassword().equals(person.getPassword()) && personFromDB.getRole() != Role.LEITOR) {
 				// creating obj 'user' not managed without password attribute setted for security reasons, obj will be setted in session
 				User user = new User(personFromDB.getEmail(), personFromDB.getName(), personFromDB.getRole());
 				session.setAttribute("usuario", user);
