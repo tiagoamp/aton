@@ -1,12 +1,14 @@
 package br.com.tiagoamp.aton;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import br.com.tiagoamp.aton.model.Author;
 import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Borrowing;
-import br.com.tiagoamp.aton.model.Role;
 import br.com.tiagoamp.aton.model.Person;
+import br.com.tiagoamp.aton.model.Role;
 import br.com.tiagoamp.aton.model.Status;
 import br.com.tiagoamp.aton.model.TypeOfAcquisition;
 
@@ -20,7 +22,12 @@ public class TestHelper {
 		
 	public static Book getBookForTest() {
 		Book book = new Book();
-		book.setAuthorsName(Arrays.asList("Author Name 01", "Author Name 02"));
+		Author author1 = new Author("Author Name 01");
+		Author author2 = new Author("Author Name 02");
+		List<Author> list = new ArrayList<>();
+		list.add(author1);
+		list.add(author2);
+		book.setAuthors(list);
 		book.setClassification("Internal classification for tests");
 		book.setComments("Comments...");
 		book.setCoverImage("path/to/img.jpg");

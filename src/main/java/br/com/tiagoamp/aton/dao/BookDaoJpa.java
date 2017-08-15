@@ -16,6 +16,7 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import br.com.tiagoamp.aton.model.Author;
 import br.com.tiagoamp.aton.model.Book;
 
 public class BookDaoJpa implements BookDAO {
@@ -69,14 +70,14 @@ public class BookDaoJpa implements BookDAO {
 	}
 
 	@Override
-	public List<Book> findByFields(String title, String authorsNameInline, String isbn, String classification,	String targetAudience) throws SQLException {
+	public List<Book> findByFields(String title, String authorName, String isbn, String classification,	String targetAudience) throws SQLException {
 		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 		CriteriaQuery<Book> query = criteriaBuilder.createQuery(Book.class);
 		
 		Root<Book> root = query.from(Book.class);
 		Path<String> titlePath = root.<String>get("title");
 		
-		Path<String> authorPath = root.<String>get("authorsNameInline");		
+		//Path<String> authorPath = root.<String>get("authorsNameInline");		
 		Path<String> isbnPath = root.<String>get("isbn");
 		Path<String> classificationPath = root.<String>get("classification");
 		Path<String> targetPath = root.<String>get("targetAudience");
@@ -86,10 +87,10 @@ public class BookDaoJpa implements BookDAO {
 			Predicate titleLike = criteriaBuilder.like(titlePath, "%" + title + "%");
 			predicates.add(titleLike);
 		}
-		if (authorsNameInline != null && !authorsNameInline.isEmpty()) {
+		/*if (authorsNameInline != null && !authorsNameInline.isEmpty()) {
 			Predicate authorLike = criteriaBuilder.like(authorPath, "%" + authorsNameInline + "%");
 			predicates.add(authorLike);
-		}
+		}*/
 		if (isbn != null && !isbn.isEmpty()) {
 			Predicate isbnEqual = criteriaBuilder.equal(isbnPath, isbn);
 			predicates.add(isbnEqual);
@@ -104,8 +105,14 @@ public class BookDaoJpa implements BookDAO {
 		}
 		query.where((Predicate[]) predicates.toArray(new Predicate[0]));
 		
-		TypedQuery<Book> typedQuery = em.createQuery(query);				
-		return typedQuery.getResultList();
+		TypedQuery<Book> typedQuery = em.createQuery(query);
+		
+		List<Book> result = typedQuery.getResultList(); 
+		if (authorName != null && !authorName.isEmpty()) {
+			result = filterByAuthorNameLike(result, authorName);
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -115,18 +122,11 @@ public class BookDaoJpa implements BookDAO {
 
 	@Override
 	public List<Book> findByAuthorNameLike(String authorName) throws SQLException {
-		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-		CriteriaQuery<Book> query = criteriaBuilder.createQuery(Book.class);
-		
-		Root<Book> root = query.from(Book.class);
-		Path<String> authorPath = root.<String>get("authorsNameInline");	
-		Predicate authorLike = criteriaBuilder.like(authorPath, "%" + authorName + "%");		
-		query.where(authorLike);
-		
-		TypedQuery<Book> typedQuery = em.createQuery(query);				
-		return typedQuery.getResultList();
+		List<Book> list = this.findAll();
+		List<Book> result = filterByAuthorNameLike(list, authorName);
+		return result.size() > 0 ? result : null;
 	}
-
+	
 	@Override
 	public List<Book> findByTitleLike(String title) throws SQLException {
 		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
@@ -144,6 +144,18 @@ public class BookDaoJpa implements BookDAO {
 	@Override
 	public java.nio.file.Path createCapaLivro(MultipartFile mFile, String fileName) throws IOException {
 		throw new RuntimeException("Not implemented yet!!!");
+	}
+	
+	private List<Book> filterByAuthorNameLike(List<Book> list, String authorName) {
+		List<Book> result = new ArrayList<>();
+		for (Book book : list) {
+			for(Author author : book.getAuthors()) {
+				if (author.getName().contains(authorName)) {
+					result.add(book);
+				}
+			}
+		}
+		return result.size() > 0 ? result : null;
 	}
 
 }

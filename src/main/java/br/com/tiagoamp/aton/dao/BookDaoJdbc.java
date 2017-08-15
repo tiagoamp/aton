@@ -69,7 +69,7 @@ public class BookDaoJdbc implements BookDAO {
 		person.setId(rs.getInt("ID_PESSOA_CADASTRADORA"));
 		book.setRegisterer(person);
 		book.setStatus(Status.valueOf(rs.getString("SITUACAO")));
-		book.setAuthorsNameInline(rs.getString("AUTOR"));
+		//book.setAuthors(rs.getObject("AUTOR"));
 		book.setNumberOfCopies(rs.getInt("QTD_EXEMPLARES"));
 		book.setNumberAvailable(rs.getInt("QTD_DISPONIVEIS"));
 		return book;
@@ -102,7 +102,7 @@ public class BookDaoJdbc implements BookDAO {
 			pstmt.setString(14, book.getDonorName().toUpperCase());
 			pstmt.setObject(15, book.getRegisterer() != null ? book.getRegisterer().getId() : null);
 			pstmt.setObject(16, book.getStatus() != null ? book.getStatus().toString() : null );
-			pstmt.setString(17, book.getAuthorsNameInline().toUpperCase());
+			pstmt.setString(17, book.getAuthors().get(0).getName());
 			pstmt.setInt(18, book.getNumberOfCopies());
 			pstmt.setInt(19, book.getNumberAvailable());
 			pstmt.executeUpdate();
@@ -145,7 +145,7 @@ public class BookDaoJdbc implements BookDAO {
 			pstmt.setString(14, livro.getDonorName().toUpperCase());
 			pstmt.setInt(15, livro.getRegisterer() != null ? livro.getRegisterer().getId() : 0);
 			pstmt.setString(16, livro.getStatus().toString());
-			pstmt.setString(17, livro.getAuthorsNameInline().toUpperCase());
+			pstmt.setString(17, livro.getAuthors().get(0).getName());
 			pstmt.setInt(18, livro.getNumberOfCopies());
 			pstmt.setInt(19, livro.getNumberAvailable());
 			pstmt.setInt(20, livro.getId());

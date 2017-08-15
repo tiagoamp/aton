@@ -7,12 +7,19 @@
 
 		<class>br.com.tiagoamp.aton.model.Person</class>
 		<class>br.com.tiagoamp.aton.model.Book</class>
+		<class>br.com.tiagoamp.aton.model.Author</class>
 		<class>br.com.tiagoamp.aton.model.Borrowing</class>
 		
 		<properties>
 			<!-- Propriedades JDBC -->
 			<property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC" />
+			
+			
+			<!-- <property name="javax.persistence.jdbc.url" value="jdbc:sqlite:database/AtonDB.db" /> -->
 			<property name="javax.persistence.jdbc.url" value="jdbc:sqlite:database/AtonDB.db" />
+			<!-- FIX THIS !! -->
+			
+						
 			<property name="javax.persistence.jdbc.user" value="" />
             <property name="javax.persistence.jdbc.password" value="" />
 
@@ -30,6 +37,7 @@
 
 		<class>br.com.tiagoamp.aton.model.Person</class>
 		<class>br.com.tiagoamp.aton.model.Book</class>
+		<class>br.com.tiagoamp.aton.model.Author</class>
 		<class>br.com.tiagoamp.aton.model.Borrowing</class>
 		
 		<properties>

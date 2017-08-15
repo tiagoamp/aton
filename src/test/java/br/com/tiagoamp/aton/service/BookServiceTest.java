@@ -110,12 +110,12 @@ public class BookServiceTest {
 	@Test
 	public void testFindByFields_shouldReturnValidOutput() throws SQLException, AtonBOException {
 		List<Book> list = new ArrayList<>();
-		when(daoMock.findByFields(book.getTitle(), book.getAuthorsNameInline(), book.getIsbn(), book.getClassification(), book.getTargetAudience())).thenReturn(list);
+		when(daoMock.findByFields(book.getTitle(), book.getAuthors().get(0).getName(), book.getIsbn(), book.getClassification(), book.getTargetAudience())).thenReturn(list);
 		
-		list = service.findByFields(book.getTitle(), book.getAuthorsNameInline(), book.getIsbn(), book.getClassification(), book.getTargetAudience());
+		list = service.findByFields(book.getTitle(), book.getAuthors().get(0).getName(), book.getIsbn(), book.getClassification(), book.getTargetAudience());
 		
 		assertNotNull(list);
-		verify(daoMock).findByFields(book.getTitle(), book.getAuthorsNameInline(), book.getIsbn(), book.getClassification(), book.getTargetAudience());
+		verify(daoMock).findByFields(book.getTitle(), book.getAuthors().get(0).getName(), book.getIsbn(), book.getClassification(), book.getTargetAudience());
 	}
 
 	@Test
@@ -131,7 +131,7 @@ public class BookServiceTest {
 
 	@Test
 	public void testFindByAuthorName_shouldReturnValidOutput() throws SQLException, AtonBOException {
-		String author = book.getAuthorsNameInline();
+		String author = book.getAuthors().get(0).getName();
 		List<Book> list = new ArrayList<>();
 		when(daoMock.findByAuthorNameLike(author)).thenReturn(list);
 		

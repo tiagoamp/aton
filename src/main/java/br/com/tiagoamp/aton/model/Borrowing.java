@@ -44,15 +44,15 @@ public class Borrowing implements Comparable<Borrowing> {
 	@JoinColumn(name="ID_PERSON")
     private Person person;
     
-    @Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
     @Column(name="DATE_BORROWING")
     private Date dateOfBorrowing;
     
-    @Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
     @Column(name="DATE_SCHEDULED_RETURN")
     private Date dateOfScheduledReturn;
     
-    @Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
     @Column(name="DATE_RETURN")
     private Date dateOfReturn;
     

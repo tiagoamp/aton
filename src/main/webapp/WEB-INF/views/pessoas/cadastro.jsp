@@ -29,23 +29,6 @@
 	    <!-- MENSAGENS -->
 	    <jsp:include page = "../comum/messages.jsp" />
 	        
-	    <%-- <c:if test="${acao eq 'excluir'}">
-	    	<form id="formExclusao" action="exclusao" method="post">
-	    		<!-- <input type="hidden" id ="acao" name="acao" value="excluir"> -->
-				<input type="hidden" id ="identificador" name="identificador" value="${person.id}">
-	    		<div class="panel panel-default" style="margin: 10px;">
-		    		<div class="panel-body" align="center">
-		    			<button type="button" class="btn btn-default btn-lg">
-							<span class="glyphicon glyphicon-trash"></span> Excluir
-						</button>
-						<button type="button" class="btn btn-default btn-lg" onClick="location.href='../pessoas'">
-							<span class="glyphicon glyphicon-remove"></span> Cancelar
-						</button>
-					</div>
-				</div>
-			</form>
-		</c:if> --%>
-	        
 	    <div class="panel panel-default">
 			<div class="panel-heading">
 		    	<h3 class="panel-title">Cadastro de Pessoas</h3>

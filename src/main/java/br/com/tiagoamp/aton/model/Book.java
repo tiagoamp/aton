@@ -1,10 +1,10 @@
 package br.com.tiagoamp.aton.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -16,9 +16,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name="BOOKS")
@@ -49,7 +49,8 @@ public class Book implements Comparable<Book> {
 	@Column(name="SUBTITLE")
     private String subtitle;
     
-    @Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern="dd/MM/yyyy")
+    @Temporal(TemporalType.TIMESTAMP)    
     @Column(name="DATE_REGISTRATION")
 	private Date dateOfRegistration;
     
@@ -81,6 +82,7 @@ public class Book implements Comparable<Book> {
     @Column(name="TYPE_ACQUISITION")
     private TypeOfAcquisition typeOfAcquisition;
     
+    @DateTimeFormat(pattern="dd/MM/yyyy")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="DATE_ACQUISITION")
     private Date dateOfAcquisition;
@@ -105,19 +107,20 @@ public class Book implements Comparable<Book> {
     @JoinColumn(name="ID_REGISTERER")
     private Person registerer;
     
-    @Transient
-    private List<String> authorsName;
-    
-    @Column(name="AUTHORS")
-    private String authorsNameInline;
-    
+    @ElementCollection
+    private List<Author> authors;
+         
         
     @Override
     public String toString() {
     	StringBuilder sb = new StringBuilder(title);
-    	if (authorsName !=  null) {
+    	if (authors !=  null) {
     		sb.append(" - ");
-    		sb.append(authorsNameInline);
+    		int i = 0;
+    		for (i = 0; i < (authors.size()-1); i++) {
+				sb.append(authors.get(i).getName() + " ; ");
+			}
+			sb.append(authors.get(i).getName());  // last one without ';'
     	}
     	return sb.toString();
     }
@@ -132,23 +135,6 @@ public class Book implements Comparable<Book> {
     	return obj instanceof Book && ((Book)obj).getIsbn().equals(isbn);
     }
     
-    private void synchronizeAuthorsNameInFields() {
-    	if (authorsNameInline == null && authorsName != null) {
-    		StringBuilder sb = new StringBuilder();
-			int i;
-			for (i = 0; i < (authorsName.size()-1); i++) {
-				sb.append(authorsName.get(i) + " ; ");
-			}
-			sb.append(authorsName.get(i));  // last one without ';'
-			authorsNameInline = sb.toString().toUpperCase();
-    	} else if (authorsName == null && authorsNameInline != null) {
-    		authorsName = new ArrayList<>();
-			String[] authorSplit = authorsNameInline.split(";");
-			for (int i = 0; i < authorSplit.length; i++) {
-				authorsName.add(authorSplit[i].trim().toUpperCase());
-			}
-    	}
-    }
     
     public Integer getId() {
 		return id;
@@ -275,21 +261,12 @@ public class Book implements Comparable<Book> {
 	}
 	public void setNumberAvailable(Integer numberAvailable) {
 		this.numberAvailable = numberAvailable;
+	}	
+	public List<Author> getAuthors() {
+		return authors;
 	}
-	
-	public List<String> getAuthorsName() {
-		return authorsName;
+	public void setAuthors(List<Author> list) {
+		this.authors = list;
 	}
-	public void setAuthorsName(List<String> authorsName) {
-		this.authorsName = authorsName;
-		synchronizeAuthorsNameInFields();
-	}
-	public String getAuthorsNameInline() {
-		return authorsNameInline;
-    }
-    public void setAuthorsNameInline(String authorsNameInline) {
-		this.authorsNameInline = authorsNameInline.toUpperCase();
-		synchronizeAuthorsNameInFields();
-	}
-    
+	    
 }

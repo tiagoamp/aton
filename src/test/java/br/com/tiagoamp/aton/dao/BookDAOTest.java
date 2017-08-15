@@ -106,7 +106,7 @@ public class BookDAOTest {
 	public void testFindByFields_allFieldsMatches_shouldReturnValidOutput() throws SQLException {
 		Book book = insertBookInDataBaseForTests();
 		
-		List<Book> list = bookDao.findByFields(book.getTitle(), book.getAuthorsNameInline(), book.getIsbn(), book.getClassification(), book.getTargetAudience());
+		List<Book> list = bookDao.findByFields(book.getTitle(), book.getAuthors().get(0).getName(), book.getIsbn(), book.getClassification(), book.getTargetAudience());
 		assertTrue(!list.isEmpty());
 		assertTrue(list.size() == 1);
 	}
@@ -121,10 +121,10 @@ public class BookDAOTest {
 	}
 	
 	@Test
-	public void testFindByFields_byAuthor_shouldReturnValidOutput() throws SQLException {
+	public void testFindByFields_byAuthorName_shouldReturnValidOutput() throws SQLException {
 		Book book = insertBookInDataBaseForTests();
 		
-		List<Book> list = bookDao.findByFields(null, book.getAuthorsNameInline(), null, null, null);
+		List<Book> list = bookDao.findByFields(null, book.getAuthors().get(0).getName(), null, null, null);
 		assertTrue(!list.isEmpty());
 		assertTrue(list.size() == 1);
 	}
@@ -169,7 +169,7 @@ public class BookDAOTest {
 	@Test
 	public void testFindByAuthorNameLike_shouldReturnValidOutput() throws SQLException {
 		Book book = insertBookInDataBaseForTests();
-		String partialAuthorName = book.getAuthorsNameInline().substring(0,6);
+		String partialAuthorName = book.getAuthors().get(0).getName().substring(0,6);
 		
 		List<Book> list = bookDao.findByAuthorNameLike(partialAuthorName);
 		assertNotNull("Must return entity by partial 'author name'." , list);
