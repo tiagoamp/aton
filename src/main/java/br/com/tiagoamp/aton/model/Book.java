@@ -26,7 +26,7 @@ public class Book implements Comparable<Book> {
 	
 	public Book() {
 		this.dateOfRegistration = new Date();
-		this.status = Status.AVAILABLE;
+		this.status = Status.DISPONIVEL;
 		this.typeOfAcquisition = TypeOfAcquisition.DOACAO;
 		this.numberOfCopies = 1;
 		this.numberAvailable = 1;

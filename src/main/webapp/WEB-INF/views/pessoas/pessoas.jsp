@@ -15,8 +15,7 @@
 	
 	<div class="margemPadrao">
 	
-		<!-- Begin page content -->
-	    <div>
+		<div>
 	      <p class="lead"><strong>Gestão de Pessoas</strong></p>      
 	    </div>
 	    
@@ -86,9 +85,7 @@
 			  	<div class="panel-body">
 			  		<div class="form-group">
 						<div class="list-group">
-							<form id="formAcoes">
-								<input type="hidden" id ="acao" name="acao">
-								<input type="hidden" id ="identificador" name="identificador">
+							<form id="formAcoes">								
 								<c:forEach items="${listofpeople}" var="person">
 									<li class="list-group-item">
 										&nbsp;&nbsp; <a href="pessoas/cadastro?acao=consultar&identificador=${person.id}" title="Consultar"><span class="glyphicon glyphicon-eye-open"></span></a>

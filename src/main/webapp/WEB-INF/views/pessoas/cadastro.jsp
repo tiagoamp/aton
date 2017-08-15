@@ -17,8 +17,7 @@
 	
 	<div class="margemPadrao">
 	
-		<!-- Begin page content -->
-	    <div>
+		<div>
 	      <p class="lead">Pessoas</p>      
 	    </div>
 	    

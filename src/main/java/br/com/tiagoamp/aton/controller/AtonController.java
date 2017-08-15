@@ -79,10 +79,10 @@ public class AtonController {
 					
 	@RequestMapping("livros")
 	public String pageLivros() {
-	    return "livros";
+	    return "livros/livros";
 	}
 	
-	@RequestMapping("cadastrolivro")
+	/*@RequestMapping("cadastrolivro")
 	public String cadastrarLivro(HttpServletRequest request,  
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
@@ -143,7 +143,7 @@ public class AtonController {
 		
 	@RequestMapping(value="livrocadastrado", method = RequestMethod.POST)
 	public String salvarLivro(@Valid Book book, BindingResult result, Model model, HttpServletRequest request
-			/*@, RequestParam(value="file", required=false) MultipartFile pFile*/) {
+			@, RequestParam(value="file", required=false) MultipartFile pFile) {
 		boolean hasErrors = false;
 		if(result.hasErrors()) {
 			hasErrors = true;
@@ -178,18 +178,18 @@ public class AtonController {
 		//MultipartFile mFile = pFile;
 		try {
 				//FIXME : Implementar e refatorar gravação de figura de capa do livro (  shame on me  :-(   )
-			/*if (!mFile.isEmpty()) {  // capa do livro
+			if (!mFile.isEmpty()) {  // capa do livro
 				Path path = service.inserirFotoCapaLivro(mFile, livro.getIsbn());
 				livro.setPathFotoCapa(path);
-			}*/			
+			}			
 			if (book.getId() == null) {
 				book.setNumberAvailable(book.getNumberOfCopies());
 				bookService.insert(book); // insert				
 			} else {
-				/*if (livro.getPathFotoCapa() == null) {
+				if (livro.getPathFotoCapa() == null) {
 					Livro l = service.consultarLivro(livro.getId());
 					if (l.getPathFotoCapa() != null) livro.setPathFotoCapa(l.getPathFotoCapa());	
-				}*/				
+				}				
 					//FIXME Implementar e refatorar gravação de figura de capa do livro
 				bookService.update(book); // update
 			}
@@ -241,11 +241,11 @@ public class AtonController {
 			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));			
 		}		
 		return "livros";
-	}
+	}*/
 	
 	@RequestMapping("emprestimos")
 	public String pageEmprestimos() {
-	    return "emprestimos";
+	    return "emprestimos/emprestimos";
 	}
 
 	@RequestMapping("emprestimolivro")

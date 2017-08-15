@@ -42,7 +42,7 @@ public class TestHelper {
 		book.setPublishingCity("São Paulo");
 		book.setPublishingCompany("Editors Test");
 		book.setPublishingYear(2000);
-		book.setStatus(Status.AVAILABLE);
+		book.setStatus(Status.DISPONIVEL);
 		book.setSubtitle("Subtitle of Book for Tests");
 		book.setTargetAudience("Adults");
 		book.setTitle("Title of Book For Tests");

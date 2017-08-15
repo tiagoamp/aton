@@ -84,11 +84,12 @@ public class PersonController {
 			model.addAttribute("person", person);			
 		} else {
 			try {
-				// digest da senha
+				// password digest
 				if (person.getPassword() != null && !person.getPassword().isEmpty()) {
 					person.setPassword(DigestUtils.sha1Hex(person.getPassword()));
 				}
-				// manut pessoas
+				
+				// crud action
 				if (person.getId() == null) {
 					personService.insert(person); 
 				} else {
@@ -118,8 +119,7 @@ public class PersonController {
 	        @RequestParam(value="tList", required=false) String pList,
 	        Model model){
 		List<Person> list = new ArrayList<>();
-		try {
-			
+		try {			
 			if (pEmail != null && !pEmail.isEmpty()) {
 				Person p = searchByEmail(pEmail);
 				if (p != null) list.add(p);
@@ -143,45 +143,23 @@ public class PersonController {
 		return "pessoas/pessoas";				
 	}
 		
-		
-	/*@RequestMapping("exclusao")
-	public String excluirPessoa(HttpServletRequest request,  
-	        @RequestParam(value="acao", required=false) String pAcao, 
-	        @RequestParam(value="identificador", required=false) String pId, 
-	        Model model) {		
-		Person person;
-		try {		
-			person = personService.findById(Integer.parseInt(pId));
-			if (person == null) {
-				throw new AtonBOException("Erro na exclusão de pessoa: Identificador inválido!");
-			}
-			//personService.delete(person.getId());
-			model.addAttribute("mensagem",new MessageTO("Exclusão com sucesso: " + person.toString(), MessaType.SUCESSO));
-			logger.info("Pessoa excluída: " + person);
-		} catch (AtonBOException e) {
-			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));			
-		}		
-		return "redirect:pessoas/pessoas";
-	}*/
-	
-				
+					
 	private Person searchByEmail(String email) throws AtonBOException {
 		return personService.findByEmail(email.trim().toUpperCase());
 	}
 	
 	private List<Person> searchByRoleOrName(String param) throws AtonBOException {
-		List<Person> lista = new ArrayList<>();
+		List<Person> list = new ArrayList<>();
 		param = param.trim().toUpperCase();
 		for (Role role : Role.values()) {  // role
 			if (role.toString().equals(param)) {
-				lista = personService.findByFields(null, null, Role.valueOf(param));
+				list = personService.findByFields(null, null, Role.valueOf(param));
 			}
 		}
-		if (lista.isEmpty()) {  // name
-			lista = personService.findByName(param);
+		if (list.isEmpty()) {  // name
+			list = personService.findByName(param);
 		}
-		return lista;
+		return list;
 	}
 					
 }

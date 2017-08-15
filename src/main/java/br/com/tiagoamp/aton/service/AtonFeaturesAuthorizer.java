@@ -13,11 +13,14 @@ import br.com.tiagoamp.aton.model.to.AuthorizerResultTO;
 public class AtonFeaturesAuthorizer {
 
 	/**
-	 * Regras de autorização para Livros.
+	 * Authorization rules for 'book'.
+	 * 
+	 * Only 'Administrador' and 'Bibliotecário' can insert/update/delete/borrow a book.
+	 * Anyone can view a book record.
 	 * 
 	 * @param user
 	 * @param action
-	 * @return AutorizacaoResultadoTO
+	 * @return AuthorizerResultTO
 	 */
 	public static AuthorizerResultTO authorizeBook(User user, String action) {
 		AuthorizerResultTO to = null;
@@ -32,7 +35,7 @@ public class AtonFeaturesAuthorizer {
 	/**
 	 * Authorization rules for 'person'.
 	 * 
-	 * Only Administrator and Librarian can insert/update/delete/view person records.
+	 * Only 'Administrador' and 'Bibliotecário' can insert/update/delete/view person records.
 	 * 
 	 * @param user
 	 * @param action
