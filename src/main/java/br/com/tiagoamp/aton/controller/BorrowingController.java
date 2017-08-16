@@ -94,7 +94,7 @@ public class BorrowingController {
 						
 	}
 		
-	@RequestMapping(value="emprestimolivro", method=RequestMethod.POST)
+	/*@RequestMapping(value="emprestimolivro", method=RequestMethod.POST)
 	public String carregarEmprestimoLivro(HttpServletRequest request,  
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
@@ -113,7 +113,7 @@ public class BorrowingController {
 		Borrowing borrowing = new Borrowing(book, new Person(), new Date(), null, null);
 		model.addAttribute("borrowing", borrowing);
 		return "emprestimos/emprestimolivro";
-	}
+	}*/
 	
 	
 	
