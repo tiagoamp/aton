@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -65,8 +66,14 @@ public class BookDaoJpa implements BookDAO {
 	@Override
 	public Book findByIsbn(String isbn) throws SQLException {
 		Query query = em.createQuery("SELECT b from Book b WHERE b.isbn = :pIsbn");
-		query.setParameter("pIsbn", isbn);		
-		return (Book) query.getSingleResult();
+		query.setParameter("pIsbn", isbn);
+		Book book;
+		try {
+			book = (Book) query.getSingleResult(); 
+		} catch (NoResultException nre) {
+			book = null;
+		}		
+		return book;
 	}
 
 	@Override
@@ -77,7 +84,6 @@ public class BookDaoJpa implements BookDAO {
 		Root<Book> root = query.from(Book.class);
 		Path<String> titlePath = root.<String>get("title");
 		
-		//Path<String> authorPath = root.<String>get("authorsNameInline");		
 		Path<String> isbnPath = root.<String>get("isbn");
 		Path<String> classificationPath = root.<String>get("classification");
 		Path<String> targetPath = root.<String>get("targetAudience");
@@ -87,10 +93,6 @@ public class BookDaoJpa implements BookDAO {
 			Predicate titleLike = criteriaBuilder.like(titlePath, "%" + title + "%");
 			predicates.add(titleLike);
 		}
-		/*if (authorsNameInline != null && !authorsNameInline.isEmpty()) {
-			Predicate authorLike = criteriaBuilder.like(authorPath, "%" + authorsNameInline + "%");
-			predicates.add(authorLike);
-		}*/
 		if (isbn != null && !isbn.isEmpty()) {
 			Predicate isbnEqual = criteriaBuilder.equal(isbnPath, isbn);
 			predicates.add(isbnEqual);
@@ -145,6 +147,7 @@ public class BookDaoJpa implements BookDAO {
 	public java.nio.file.Path createCapaLivro(MultipartFile mFile, String fileName) throws IOException {
 		throw new RuntimeException("Not implemented yet!!!");
 	}
+	
 	
 	private List<Book> filterByAuthorNameLike(List<Book> list, String authorName) {
 		List<Book> result = new ArrayList<>();
