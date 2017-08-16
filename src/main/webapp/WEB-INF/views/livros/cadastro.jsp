@@ -33,125 +33,118 @@
 		    	<h3 class="panel-title">Cadastro de Livros</h3>
 		  	</div>
 		  	<div class="panel-body">
-		  		<form:form id="formCadLivros" method="POST" cssClass="navbar" action="cadastro" modelAttribute="book">
+		  		<form:form id="formCadLivros" method="POST" cssClass="form-horizontal" action="cadastro" modelAttribute="book">
 		  			<form:hidden path="id" />
-		  			<div class="panel panel-default">
-						<div class="panel-body">
-					    	<div class="form-group">
-			    				<div class="input-group">
-									<span class="input-group-addon" id="basic-addon1">ISBN</span> 
-									<form:input path="isbn" cssClass="form-control required" placeholder="Digite o isbn igual registrado no livro" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}" />			
-								</div>
-				  			</div>
-					  		<div class="form-group">
-				    			<div class="input-group">
-									<span class="input-group-addon" id="basic-addon1">Título</span> 
-									<form:input path="titulo" cssClass="form-control required" placeholder="Digite o título do livro" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}" />			
-								</div>
-				  			</div>
-				  			<div class="form-group">
-				    			<div class="input-group">
-									<span class="input-group-addon" id="basic-addon1">Sub-Título</span>
-									<form:input path="subtitulo" cssClass="form-control required" placeholder="Digite o sub-título do livro, se houver" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}" />						
-								</div>
-							</div>  								
-							<div class="form-group">
-				    			<div class="input-group">
-									<span class="input-group-addon" id="basic-addon1">Autor(es)</span>
-									<form:input path="autoresAgrupados" cssClass="form-control required" placeholder="Digite o(s) autor(es) separados por ';' (ponto-e-vírgula)" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}" />		
-								</div>
-							</div>	
-				  		</div>
+		  			<div class="form-group">
+					    <label for="tIsbn" class="col-sm-2 control-label">ISBN</label>
+					    <div class="col-sm-3">
+					      <form:input path="isbn" cssClass="form-control required" id="tIsbn" placeholder="Digite o isbn igual ao registrado no livro" readony="${acao eq 'consultar' or acao eq 'excluir'}" />
+					    </div>
+					    <c:if test="${acao eq 'consultar' or acao eq 'excluir'}">
+							<label for="tDateOfRegistration" class="col-sm-2 control-label">Data do cadastro</label>
+							<div class="col-sm-3">
+								<form:input path="dateOfRegistration" cssClass="form-control required" id="tDateOfRegistration" readonly="true" />			
+							</div>
+						</c:if>
 					</div>
-		  			<div class="panel panel-default">
-						<div class="panel-body">
-							<div class="form-group">
-			    				<div class="input-group">
-									<span class="input-group-addon" id="basic-addon1">Editora</span> 
-									<form:input path="editora" cssClass="form-control required" placeholder="Digite a editora do livro" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
-								</div>
-							</div>
-							<div class="form-group">
-			    				<div class="input-group">
-									<span class="input-group-addon" id="basic-addon1">Local de Publicação</span> 
-									<form:input path="localPublicacao" cssClass="form-control required" placeholder="Digite o local de publicação do livro" aria-describedby="basic-addon1" size="40" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
-								</div>
-							</div>
-							<div class="form-group">
-			    				<div class="input-group navbar-left">
-									<span class="input-group-addon" id="basic-addon1">Ano de Publicação</span> 
-									<form:input path="anoPublicacao" cssClass="form-control required" placeholder="Digite o ano de publicação do livro" aria-describedby="basic-addon1" size="30" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
-									<span class="input-group-addon" id="basic-addon1">Número de Páginas</span> 
-									<form:input path="nroPaginas" cssClass="form-control required" placeholder="Digite o nro de páginas do livro" aria-describedby="basic-addon1" size="30" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
-								</div>							
-							</div>
-							&nbsp;						
-							<div class="form-group">
-								<div class="input-group navbar-left">
-									<span class="input-group-addon" id="basic-addon1">Gênero</span> 
-									<form:input path="genero" cssClass="form-control required" placeholder="Digite o gênero do livro" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
-									<span class="input-group-addon" id="basic-addon1">Classificação</span> 
-									<form:input path="classificacao" cssClass="form-control required" placeholder="Digite a classificação do livro" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
-								</div>
-							</div>
-							&nbsp;
-							<div class="form-group">
-			    				<div class="input-group">
-									<span class="input-group-addon" id="basic-addon1">Público Alvo</span> 
-									<form:input path="publicoAlvo" cssClass="form-control required" placeholder="Digite o público alvo do livro" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
-								</div>
-							</div>															
+					<div class="form-group">
+				    	<label for="tTitle" class="col-sm-2 control-label">Título</label>
+				    	<div class="col-sm-8">
+				    		<form:input path="title" cssClass="form-control required" id="tTitle" placeholder="Digite o título do livro" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />
+				    	</div>
+		  			</div>
+		  			<div class="form-group">
+		  				<label for="tSubtitle" class="col-sm-2 control-label">Sub-Título</label>
+		  				<div class="col-sm-8">
+		  					<form:input path="subtitle" cssClass="form-control required" id="tSubtitle" placeholder="Digite o sub-título do livro, se houver" readolny="${acao eq 'consultar' or acao eq 'excluir'}" />						
+						</div>
+					</div>  
+					<div class="form-group">
+		  				<label for="tAuthor" class="col-sm-2 control-label">Autor(es)</label>
+						<div class="col-sm-8">
+							<form:input path="authorsNameInline" cssClass="form-control required" id="tAuthor" placeholder="Digite o(s) autor(es) separados por ';' (ponto-e-vírgula)" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />						
 						</div>
 					</div>
-					<div class="panel panel-default">
-						<div class="panel-body">
-							<div class="form-group">
-			    				<div class="input-group navbar-left">
-									<span class="input-group-addon" id="basic-addon1">Exemplares</span> 
-									<form:input path="qtdExemplares" cssClass="form-control required" placeholder="Digite a quantidade de exemplares do livro." aria-describedby="basic-addon1" size="30" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
-									<c:if test="${acao eq 'consultar' or acao eq 'excluir' or acao eq 'alterar'}">
-										<span class="input-group-addon" id="basic-addon1">Disponível</span> 
-										<form:input path="qtdDisponiveis" cssClass="form-control required" placeholder="Digite a quantidade de exemplares disponíveis do livro" aria-describedby="basic-addon1" size="30" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
-									</c:if>
-								</div>							
-							</div>
-							&nbsp;
-							<div class="form-group">
-			    				<div class="input-group">
-									<span class="input-group-addon" id="basic-addon1">Data de Aquisição</span> 
-									<form:input path="dataAquisicaoFormatada" cssClass="form-control required" placeholder="Digite a data de aquisição do livro no formato 'dd/mm/aaaa' " aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}" />								
-								</div>
-							</div>
-							<div class="panel panel-default">
-								<div class="panel-heading">Tipo de Aquisição</div>
-								<div class="panel-body">
-									<div class="input-group">
-										<span class="input-group-addon"><form:radiobutton path="tipoAquisicao" value="DOACAO" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/> DOAÇÃO </span>
-										<span class="input-group-addon"><form:radiobutton path="tipoAquisicao" value="COMPRA" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/> COMPRA </span>
-									</div><!-- /input-group -->
-								</div>
-							</div>
-							<div class="form-group">
-								<div id="divDoador" class="form-group" style="display: block;">
-			    					<div class="input-group">
-										<span class="input-group-addon" id="basic-addon1">Nome do Doador</span> 
-										<form:input path="nomeDoador" cssClass="form-control required" placeholder="Digite o nome do doador do livro, se for o caso" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
-									</div>
-								</div>
-							</div>
+					<div class="form-group">
+		  				<label for="tPublishing" class="col-sm-2 control-label">Editora</label>
+						<div class="col-sm-3">
+							<form:input path="publishingCompany" cssClass="form-control required" id="tPublishing" placeholder="Digite a editora do livro" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />			
 						</div>
-					</div>		
-					<div class="panel panel-default">
-						<div class="panel-body">
-							<div class="form-group">
-			    				<div class="input-group">
-									<span class="input-group-addon" id="basic-addon1">Observações</span> 
-									<form:input path="observacoes" cssClass="form-control required" placeholder="Digite alguma informação complementar do livro, se houver" aria-describedby="basic-addon1" size="50" disabled="${acao eq 'consultar' or acao eq 'excluir'}"/>
-								</div>
-							</div>											
+						<label for="tPublishingCity" class="col-sm-2 control-label">Local de Publicação</label>
+						<div class="col-sm-3">
+							<form:input path="publishingCity" cssClass="form-control required" id="tPublishingCity" placeholder="Digite o local de publicação do livro" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />			
+						</div>
+					</div>					
+					<div class="form-group">
+		  				<label for="tPublishingYear" class="col-sm-2 control-label">Ano de Publicação</label>
+						<div class="col-sm-3">
+							<form:input path="publishingYear" cssClass="form-control required" id="tPublishingYear" placeholder="Digite o ano de publicação do livro" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />			
+						</div>
+						<label for="tNumberOfPages" class="col-sm-2 control-label">Número de Páginas</label>
+						<div class="col-sm-3">
+							<form:input path="numberOfPages" cssClass="form-control required" id="tNumberOfPages" placeholder="Digite o nro de páginas do livro" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />			
 						</div>
 					</div>
-							
+					<div class="form-group">
+		  				<label for="tGenre" class="col-sm-2 control-label">Gênero</label>
+						<div class="col-sm-3">
+							<form:input path="genre" cssClass="form-control required" id="tGenre" placeholder="Digite o gênero do livro" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />			
+						</div>
+						<label for="tClassification" class="col-sm-2 control-label">Classificação</label>
+						<div class="col-sm-3">
+							<form:input path="classification" cssClass="form-control required" id="tClassification" placeholder="Digite a classificação do livro" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />			
+						</div>
+					</div>
+					<div class="form-group">
+		  				<label for="tTargetAudience" class="col-sm-2 control-label">Público Alvo</label>
+						<div class="col-sm-3">
+							<form:input path="targetAudience" cssClass="form-control required" id="tTargetAudience" placeholder="Digite o público alvo do livro" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />			
+						</div>
+						<label for="tDateOfAcquisition" class="col-sm-2 control-label">Data de Aquisição</label>
+						<div class="col-sm-3">
+							<form:input path="dateOfAcquisition" cssClass="form-control required" id="tDateOfAcquisition" placeholder="Digite a data de aquisição (formato 'dd/mm/aaaa')" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />			
+						</div>
+					</div>
+					<div class="form-group">
+		  				<label for="tNumberOfCopies" class="col-sm-2 control-label">Exemplares</label>
+						<div class="col-sm-3">
+							<form:input path="numberOfCopies" cssClass="form-control required" id="tNumberOfCopies" placeholder="Digite a quantidade de exemplares do livro" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />			
+						</div>
+						<c:if test="${acao eq 'consultar' or acao eq 'excluir' or acao eq 'alterar'}">
+							<label for="tNumberAvailable" class="col-sm-2 control-label">Disponível</label>
+							<div class="col-sm-3">
+								<form:input path="numberAvailable" cssClass="form-control required" id="tNumberAvailable" placeholder="Digite a quantidade de exemplares disponíveis" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />			
+							</div>
+						</c:if>
+					</div>
+					<div class="form-group">
+					    <label for="tTypeOfAcquisition" class="col-sm-2 control-label">Tipo de Aquisição</label>
+					    <div class="col-sm-8">
+					      <div class="radio">
+							  <label>
+							    <form:radiobutton path="typeOfAcquisition" value="DOACAO" disabled="${acao eq 'consultar'}" /> DOAÇÃO
+							  </label>
+						  </div>
+						  <div class="radio">
+							  <label>
+							    <form:radiobutton path="typeOfAcquisition" value="COMPRA" disabled="${acao eq 'consultar'}" /> COMPRA
+							  </label>
+						  </div>
+					    </div>
+					</div>
+					<div class="form-group" id="divDoador">
+		  				<label for="tDonorName" class="col-sm-2 control-label">Nome do Doador</label>
+						<div class="col-sm-8">
+							<form:input path="donorName" cssClass="form-control required" id="tDonorName" placeholder="Digite o nome do doador do livro, se for o caso" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />						
+						</div>
+					</div>
+					<div class="form-group">
+		  				<label for="tComments" class="col-sm-2 control-label">Observações</label>
+						<div class="col-sm-8">
+							<form:input path="comments" cssClass="form-control required" id="tComments" placeholder="Digite alguma informaçao complementar do livro, se houver" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />						
+						</div>
+					</div>
+													
 					<!-- BOTOES -->
 					<c:if test="${acao != 'consultar' && acao != 'excluir'}">
 						<div class="form-group">
@@ -184,7 +177,7 @@
 						<button type="button" class="btn btn-default" onClick="location.href='../livros'">
 							<span class="glyphicon glyphicon-triangle-left"></span> Voltar
 						</button>
-					</c:if>	
+					</c:if> 
 							
 				</form:form>
 							

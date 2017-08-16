@@ -37,25 +37,25 @@
 		  			<form:hidden path="id" />
 		  			<div class="form-group">
 					    <label for="tEmail" class="col-sm-2 control-label">E-mail</label>
-					    <div class="col-sm-10">
+					    <div class="col-sm-8">
 					      <form:input path="email" cssClass="form-control required" id="tEmail" placeholder="Digite o e-mail" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />
 					    </div>
 					</div>
 					<div class="form-group">
 					    <label for="tNome" class="col-sm-2 control-label">Nome</label>
-					    <div class="col-sm-10">
+					    <div class="col-sm-8">
 					      <form:input path="name" cssClass="form-control required" id="tNome" placeholder="Digite o nome" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />
 					    </div>
 					</div>
 					<div class="form-group">
 					    <label for="tNome" class="col-sm-2 control-label">Telefone</label>
-					    <div class="col-sm-10">
+					    <div class="col-sm-8">
 					      <form:input path="phone" cssClass="form-control" id="tTelefone" placeholder="Digite o telefone" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />
 					    </div>
 					</div>
 					<div class="form-group">
 					    <label for="tPerfil" class="col-sm-2 control-label">Perfil</label>
-					    <div class="col-sm-10">
+					    <div class="col-sm-8">
 					      <div class="radio">
 							  <label>
 							    <form:radiobutton path="role" value="LEITOR" disabled="${acao eq 'consultar'}" /> LEITOR
@@ -77,7 +77,7 @@
 					<c:if test="${acao != 'consultar' && acao != 'excluir'}">
 						<div class="form-group" id="divSenha">
 						    <label for="tSenha" class="col-sm-2 control-label">Senha</label>
-						    <div class="col-sm-10">
+						    <div class="col-sm-8">
 						      <form:password id="tSenha" path="password" cssClass="form-control required" placeholder="Digite a senha (somente para perfis administrador e bibliotecário)" />
 						    </div>
 						</div>						

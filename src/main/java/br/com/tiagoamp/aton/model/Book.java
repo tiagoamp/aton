@@ -1,5 +1,6 @@
 package br.com.tiagoamp.aton.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,7 +31,7 @@ public class Book implements Comparable<Book> {
 		this.status = Status.DISPONIVEL;
 		this.typeOfAcquisition = TypeOfAcquisition.DOACAO;
 		this.numberOfCopies = 1;
-		this.numberAvailable = 1;
+		this.numberAvailable = numberOfCopies;
 	}
 		
 	
@@ -109,10 +111,14 @@ public class Book implements Comparable<Book> {
     
     @ElementCollection
     private List<Author> authors;
+    
+    @Transient
+    private String authorsNameInline;
          
         
     @Override
     public String toString() {
+    	if (title == null) return "Untitled book";
     	StringBuilder sb = new StringBuilder(title);
     	if (authors !=  null) {
     		sb.append(" - ");
@@ -267,6 +273,18 @@ public class Book implements Comparable<Book> {
 	}
 	public void setAuthors(List<Author> list) {
 		this.authors = list;
+	}
+	public String getAuthorsNameInline() {
+		return authorsNameInline;
+	}
+	public void setAuthorsNameInline(String authorsNameInline) {
+		this.authorsNameInline = authorsNameInline;
+		
+		authors = new ArrayList<>();
+		String[] strSplit = authorsNameInline.split(";");
+		for (int i = 0; i < strSplit.length; i++) {
+			authors.add(new Author(strSplit[i].trim()));
+		}
 	}
 	    
 }

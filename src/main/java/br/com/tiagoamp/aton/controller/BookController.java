@@ -42,10 +42,10 @@ public class BookController {
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
 	        Model model) {
-		Book livro = new Book();
+		Book book = new Book();
 		if (pId != null && !pId.isEmpty()) {
 			try {		
-				livro = bookService.findById(Integer.parseInt(pId));				 				
+				book = bookService.findById(Integer.parseInt(pId));				 				
 			} catch (AtonBOException e) {
 				logger.error("Erro: " + e);
 				model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
@@ -58,7 +58,7 @@ public class BookController {
 			model.addAttribute("mensagem",new MessageTO("Confirma exclusão com os dados abaixo?", MessaType.ALERTA));
 		}
 				
-		model.addAttribute("livro", livro);
+		model.addAttribute("book", book);
 	    return "livros/cadastro";
 	}
 	
@@ -97,7 +97,7 @@ public class BookController {
 		
 		if (hasErrors) {
 			book.setTypeOfAcquisition(null);
-			model.addAttribute("livro", book);
+			model.addAttribute("book", book);
 		}
 		
 		try {						
@@ -116,7 +116,7 @@ public class BookController {
 			logger.info("Livro cadastrado/alterado/deletado: " + book);
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
-			model.addAttribute("livro", book);
+			model.addAttribute("book", book);
 			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 		}		
 		
