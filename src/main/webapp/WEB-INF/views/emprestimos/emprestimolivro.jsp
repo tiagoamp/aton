@@ -73,12 +73,12 @@
 								    <h3 class="panel-title"><strong>Seleção de Leitor</strong></h3>
 								  </div>
 								  <div class="panel-body">
-								    	<form id="formConsultaPessoas" class="form-inline" method="POST" action="consultapessoaemprestimo" role="search">
+								    	<form id="formConsultaPessoas" class="form-inline" method="POST" action="../emprestimos/consultapessoaemprestimo" role="search">
 											<input type="hidden" id ="tIdBook" name="tIdBook" value=${borrowing.book.id}>
 											<div class="row col-md-6" align="center">								  				
 										  		<div class="form-group" >
 												    <label for="tEmailSearch">Consulta por E-mail:</label>
-												    <input type="text" name="tEmail" class="form-control" id="tEmailSearch" placeholder="Digite o e-mail do leitor">
+												    <input type="text" name="tEmail" class="form-control" size="40" id="tEmailSearch" placeholder="Digite o e-mail do leitor">
 												</div>
 												<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Buscar </button>
 											</div>		
@@ -86,7 +86,7 @@
 											<div class="row col-md-6" align="center">					
 												<div class="form-group">
 												    <label for="tFieldsSearch">Consulta por Dados:</label>
-												    <input type="text" name="tFields" class="form-control" id="tFieldsSearch" placeholder="Digite o nome ou perfil da pessoa">
+												    <input type="text" name="tFields" class="form-control" size="40" id="tFieldsSearch" placeholder="Digite o nome ou perfil da pessoa">
 												</div>
 												<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Buscar </button>
 											</div>											 
@@ -95,29 +95,32 @@
 										
 										<!-- LISTAGEM -->
 									    <c:if test="${not empty listofpeople}">
-										    <div class="panel panel-default">
-												<div class="panel-heading">
-											    	<h3 class="panel-title">Resultado da Pesquisa</h3>
-											  	</div>
-											  	<div class="panel-body">
-											  		<div class="form-group">
-														<div class="list-group">
-															<form id="formAcoes">
-																<input type="hidden" id ="acao" name="acao">
-																<input type="hidden" id ="identificador" name="identificador">
-																<input type="hidden" id ="idLivro" name="idLivro" value=${borrowing.book.id}>
-																<c:forEach items="${listofpeople}" var="person">
-																	<li class="list-group-item">				
-																		&nbsp;&nbsp; <a href="javascript:carregarAcoes('selecionar',${person.id},'emprestimoselecionarpessoa');" title="Selecionar"><span class="glyphicon glyphicon-open" aria-hidden="true"></span></a>
-																		&nbsp;&nbsp;&nbsp;&nbsp;
-																		<c:out value="${person.name}" /> - 
-																		<c:out value="${person.email}" />							
-																	</li>
-																</c:forEach>
-															</form>
+									    	<p/><br/><p/><br/>
+									    	<div class="row margemPadrao">
+											    <div class="panel panel-default">
+													<div class="panel-heading">
+												    	<h3 class="panel-title">Resultado da Pesquisa</h3>
+												  	</div>
+												  	<div class="panel-body">
+												  		<div class="form-group">
+															<div class="list-group">
+																<form id="formAcoes">
+																	<input type="hidden" id ="acao" name="acao">
+																	<input type="hidden" id ="identificador" name="identificador">
+																	<input type="hidden" id ="idLivro" name="idLivro" value=${borrowing.book.id}>
+																	<c:forEach items="${listofpeople}" var="person">
+																		<li class="list-group-item">				
+																			&nbsp;&nbsp; <a href="javascript:carregarAcoes('selecionar',${person.id},'emprestimoselecionarpessoa');" title="Selecionar"><span class="glyphicon glyphicon-open" aria-hidden="true"></span></a>
+																			&nbsp;&nbsp;&nbsp;&nbsp;
+																			<c:out value="${person.name}" /> - 
+																			<c:out value="${person.email}" />							
+																		</li>
+																	</c:forEach>
+																</form>
+															</div>
 														</div>
-													</div>
-											  	</div>
+												  	</div>
+												</div>
 											</div>
 										</c:if>
 								  </div>
@@ -159,7 +162,7 @@
 								<button type="submit" class="btn btn-default">
 									<span class="glyphicon glyphicon-ok"></span> Emprestar
 								</button>
-								<button type="button" class="btn btn-default" onClick="location.href='livros'">
+								<button type="button" class="btn btn-default" onClick="location.href='../livros'">
 									<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancelar
 								</button>
 							</div>

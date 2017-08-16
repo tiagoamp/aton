@@ -93,6 +93,30 @@ public class BorrowingController {
 		return "emprestimos/emprestimos";
 						
 	}
+	
+	@RequestMapping(value = "consultapessoaemprestimo", method = RequestMethod.POST)
+	public String consultarPessoaParaEmprestimo(HttpServletRequest request,  
+	        @RequestParam(value="tEmail", required=false) String pEmail, 
+	        @RequestParam(value="tFields", required=false) String pFields,
+	        @RequestParam(value="tIdBook", required=false) String pBookId,
+	        Model model){
+		List<Person> list = new ArrayList<>();
+		Book book = null;
+		try {
+			book = bookService.findById(Integer.parseInt(pBookId)); // recarregando livro
+			list = this.pesquisarPessoasPorParametros(pEmail, pFields); 
+			if (list.isEmpty()) {
+				model.addAttribute("mensagem",new MessageTO("Consulta sem resultados!", MessaType.ERRO));
+			}
+			model.addAttribute("listofpeople", list);
+		} catch (AtonBOException e) {
+			logger.error("Erro: " + e);
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
+		}				
+		Borrowing borrowing = new Borrowing(book, new Person(), new Date(), null, null);
+		model.addAttribute("borrowing", borrowing);
+		return "emprestimos/emprestimolivro";
+	}
 		
 	/*@RequestMapping(value="emprestimolivro", method=RequestMethod.POST)
 	public String carregarEmprestimoLivro(HttpServletRequest request,  
@@ -114,33 +138,7 @@ public class BorrowingController {
 		model.addAttribute("borrowing", borrowing);
 		return "emprestimos/emprestimolivro";
 	}*/
-	
-	
-	
-	@RequestMapping(value = "consultapessoaemprestimo", method = RequestMethod.POST)
-	public String consultarPessoaParaEmprestimo(HttpServletRequest request,  
-	        @RequestParam(value="tEmail", required=false) String pEmail, 
-	        @RequestParam(value="tDados", required=false) String pDados,
-	        @RequestParam(value="tIdLivro", required=false) String pIdLivro,
-	        Model model){
-		List<Person> lista = new ArrayList<>();
-		Book livro = null;
-		try {
-			livro = bookService.findById(Integer.parseInt(pIdLivro)); // recarregando livro
-			lista = this.pesquisarPessoasPorParametros(pEmail, pDados); 
-			if (lista.isEmpty()) {
-				throw new AtonBOException("Consulta sem resultados!");
-			}
-			model.addAttribute("listapessoas", lista);
-		} catch (AtonBOException e) {
-			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
-		}				
-		Borrowing emprestimo = new Borrowing(livro, new Person(), new Date(), null, null);
-		model.addAttribute("emprestimo", emprestimo);
-		return "emprestimos/emprestimolivro";
-	}
-	
+		
 	@RequestMapping(value = "emprestimoselecionarpessoa", method = RequestMethod.POST)
 	public String selecionarPessoaParaEmprestimo(HttpServletRequest request,  
 	        @RequestParam(value="acao", required=false) String pAcao, 
@@ -165,33 +163,27 @@ public class BorrowingController {
 		return "emprestimos/emprestimolivro";	
 	}
 	
+	
 	private List<Person> pesquisarPessoasPorParametros(String email, String param) throws AtonBOException {
-		List<Person> lista = new ArrayList<>();
-		if (email != null && !email.isEmpty()) { // CAMPO DE PESQ EMAIL PREENCHIDO
-			// pesquisa por e-mail
+		List<Person> list = new ArrayList<>();
+		if (email != null && !email.isEmpty()) { // E-MAIL
 			Person p = personService.findByEmail(email.trim().toUpperCase());
-			if (p != null)
-				lista.add(p);
-		} else { // CAMPO DE PESQ DADOS PREENCHIDO
+			if (p != null) list.add(p);
+		} else {  // FIELDS
 			if (param != null && !param.isEmpty()) {
 				param = param.trim().toUpperCase();
-				// pesquisa por perfil
-				for (Role perfil : Role.values()) {
-					if (perfil.toString().equals(param))
-						lista = personService.findByFields(null, null, Role.valueOf(param));
+				for (Role role : Role.values()) {
+					if (role.toString().equals(param))
+						list = personService.findByFields(null, null, role);
 				}
-				if (lista.isEmpty()) {
-					// pesquisa por telefone
-					lista = personService.findByFields(null, param, null);
-					if (lista.isEmpty()) {
-						// pesquisa por nome aproximado
-						lista = personService.findByName(param);
-					}
+				if (list.isEmpty()) {
+					list = personService.findByName(param);
 				}
 			}
 		}
-		return lista;
+		return list;
 	}
+	
 	
 	@RequestMapping(value="livroemprestado", method = RequestMethod.POST)
 	public String emprestarLivro(@Valid Borrowing borrowing, BindingResult result, Model model, HttpServletRequest request) {
