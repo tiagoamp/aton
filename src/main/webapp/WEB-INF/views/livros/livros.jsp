@@ -88,14 +88,14 @@
 							<form id="formAcoes">								
 								<c:forEach items="${listofbooks}" var="book">
 									<li class="list-group-item">
-										&nbsp;&nbsp; <a href="livros/cadastro?acao=consultar&identificador=${livro.id}" title="Consultar"><span class="glyphicon glyphicon-eye-open"></span></a>
-										&nbsp;&nbsp; <a href="livros/cadastro?acao=alterar&identificador=${livro.id}" title="Alterar"><span class="glyphicon glyphicon-edit"></span></a> 
-										&nbsp;&nbsp; <a href="livros/cadastro?acao=excluir&identificador=${livro.id}" title="Excluir"><span class="glyphicon glyphicon-remove-circle"></span></a>
+										&nbsp;&nbsp; <a href="livros/cadastro?acao=consultar&identificador=${book.id}" title="Consultar"><span class="glyphicon glyphicon-eye-open"></span></a>
+										&nbsp;&nbsp; <a href="livros/cadastro?acao=alterar&identificador=${book.id}" title="Alterar"><span class="glyphicon glyphicon-edit"></span></a> 
+										&nbsp;&nbsp; <a href="livros/cadastro?acao=excluir&identificador=${book.id}" title="Excluir"><span class="glyphicon glyphicon-remove-circle"></span></a>
 										&nbsp;&nbsp;&nbsp;&nbsp;
 											
 										<c:out value="${book.isbn}" /> - 
-										<c:out value="${book.titulo}" /> <%-- - 
-										<c:out value="${book.autoresAgrupados}" /> - --%>
+										<c:out value="${book.title}" />  - 
+										<c:out value="${book.authorsNameInline}" /> - 
 										<c:if test="${book.status == 'DISPONIVEL'}">
 											<span class="label label-success"><c:out value="${book.status}" /></span>
 										</c:if>

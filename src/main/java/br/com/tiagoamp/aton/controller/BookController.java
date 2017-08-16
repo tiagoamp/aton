@@ -1,7 +1,5 @@
 package br.com.tiagoamp.aton.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -72,24 +70,16 @@ public class BookController {
 			if(result.hasErrors()) {
 				hasErrors = true;
 			}
-			if (!book.getDateOfAcquisition().toString().isEmpty()) {
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				try {
-					book.setDateOfAcquisition(sdf.parse(book.getDateOfAcquisition().toString()));
-				} catch (ParseException e) {
-					result.reject("dataAquisicao", "Data de Aquisição em formato inválido.");
-					hasErrors = true;
-				}
-			} else {
-				result.reject("dataAquisicaoFormatada", "Campo obrigatório não preenchido: Data de Aquisição.");
+			if (book.getDateOfAcquisition().toString().isEmpty()) {				
+				result.reject("dateOfAcquisition", "Campo obrigatório não preenchido: Data de Aquisição.");
 				hasErrors = true;
 			}
 			if (book.getTypeOfAcquisition() == TypeOfAcquisition.COMPRA && !book.getDonorName().isEmpty()) {
-				result.reject("tipoAquisicao", "Tipo de aquisição 'COMPRA' não permite cadastro de doador.");
+				result.reject("typeOfAcquisition", "Tipo de aquisição 'COMPRA' não permite cadastro de doador.");
 				hasErrors = true;
 			}
 			if (book.getNumberAvailable() > book.getNumberOfCopies()) {
-				result.reject("qtdExemplares", "Quantidade de exemplares disponíveis deve ser menor que quantidade total.");
+				result.reject("numberOfCopies", "Quantidade de exemplares disponíveis deve ser menor que quantidade total.");
 				model.addAttribute("acao","alterar");
 				hasErrors = true;
 			}

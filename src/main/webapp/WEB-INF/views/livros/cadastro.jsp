@@ -38,7 +38,7 @@
 		  			<div class="form-group">
 					    <label for="tIsbn" class="col-sm-2 control-label">ISBN</label>
 					    <div class="col-sm-3">
-					      <form:input path="isbn" cssClass="form-control required" id="tIsbn" placeholder="Digite o isbn igual ao registrado no livro" readony="${acao eq 'consultar' or acao eq 'excluir'}" />
+					      <form:input path="isbn" cssClass="form-control required" id="tIsbn" placeholder="Digite o isbn igual ao registrado no livro" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />
 					    </div>
 					    <c:if test="${acao eq 'consultar' or acao eq 'excluir'}">
 							<label for="tDateOfRegistration" class="col-sm-2 control-label">Data do cadastro</label>
@@ -56,7 +56,7 @@
 		  			<div class="form-group">
 		  				<label for="tSubtitle" class="col-sm-2 control-label">Sub-Título</label>
 		  				<div class="col-sm-8">
-		  					<form:input path="subtitle" cssClass="form-control required" id="tSubtitle" placeholder="Digite o sub-título do livro, se houver" readolny="${acao eq 'consultar' or acao eq 'excluir'}" />						
+		  					<form:input path="subtitle" cssClass="form-control required" id="tSubtitle" placeholder="Digite o sub-título do livro, se houver" readonly="${acao eq 'consultar' or acao eq 'excluir'}" />						
 						</div>
 					</div>  
 					<div class="form-group">
@@ -183,10 +183,8 @@
 							
 				<c:if test="${acao eq 'consultar' && book.status == 'DISPONIVEL'}">
 					<form id="formAcoes">
-						<input type="hidden" id ="acao" name="acao">
-						<input type="hidden" id ="identificador" name="identificador">
-						<button type="button" class="btn btn-default" onClick="javascript:carregarAcoes('emprestar',${book.id},'emprestimolivro');" >
-							<span class="glyphicon glyphicon-home" aria-hidden="true"></span> Emprestar Livro
+						<button type="button" class="btn btn-default" onClick="location.href='livros/emprestimo?acao=emprestar&identificador=${book.id}" >
+							<span class="glyphicon glyphicon-home"></span> Emprestar Livro
 						</button>
 					</form>					
 				</c:if>
