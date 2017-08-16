@@ -142,6 +142,26 @@ public class Book implements Comparable<Book> {
     }
     
     
+    private void syncronizeAuthorsFields() {
+    	if (authors != null && authorsNameInline == null) {
+    		StringBuilder sb = new StringBuilder();
+        	int i = 0;
+        	for (i = 0; i < (authors.size()-1); i++) {
+    			sb.append(authors.get(i).getName() + " ; ");
+    		}
+    		sb.append(authors.get(i).getName());  // last one without ';'
+    		authorsNameInline = sb.toString();
+        	
+    	} else if (authorsNameInline != null && authors == null) {
+    		authors = new ArrayList<>();
+    		String[] strSplit = authorsNameInline.split(";");
+    		for (int i = 0; i < strSplit.length; i++) {
+    			authors.add(new Author(strSplit[i].trim()));
+    		}
+    	}
+    }
+    
+    
     public Integer getId() {
 		return id;
 	}
@@ -269,22 +289,20 @@ public class Book implements Comparable<Book> {
 		this.numberAvailable = numberAvailable;
 	}	
 	public List<Author> getAuthors() {
+		syncronizeAuthorsFields();
 		return authors;
 	}
 	public void setAuthors(List<Author> list) {
 		this.authors = list;
+		syncronizeAuthorsFields();		
 	}
 	public String getAuthorsNameInline() {
+		syncronizeAuthorsFields();
 		return authorsNameInline;
 	}
 	public void setAuthorsNameInline(String authorsNameInline) {
 		this.authorsNameInline = authorsNameInline;
-		
-		authors = new ArrayList<>();
-		String[] strSplit = authorsNameInline.split(";");
-		for (int i = 0; i < strSplit.length; i++) {
-			authors.add(new Author(strSplit[i].trim()));
-		}
+		syncronizeAuthorsFields();		
 	}
 	    
 }

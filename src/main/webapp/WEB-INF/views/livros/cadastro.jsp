@@ -172,21 +172,24 @@
 							</div>
 						</div>
 					</c:if>
-					
-					<c:if test="${acao eq 'consultar'}">
-						<button type="button" class="btn btn-default" onClick="location.href='../livros'">
-							<span class="glyphicon glyphicon-triangle-left"></span> Voltar
-						</button>
-					</c:if> 
 							
 				</form:form>
-							
-				<c:if test="${acao eq 'consultar' && book.status == 'DISPONIVEL'}">
-					<form id="formAcoes">
-						<button type="button" class="btn btn-default" onClick="location.href='livros/emprestimo?acao=emprestar&identificador=${book.id}" >
-							<span class="glyphicon glyphicon-home"></span> Emprestar Livro
-						</button>
-					</form>					
+				
+				<c:if test="${acao eq 'consultar'}">
+					<form id="formAcoesEmprestar" action="emprestimolivro" method="POST">
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="button" class="btn btn-default" onClick="location.href='../livros'">
+								<span class="glyphicon glyphicon-triangle-left"></span> Voltar
+							</button>
+							<c:if test="${book.status == 'DISPONIVEL'}">
+								<input type="hidden" name="identificador" value="${book.id}" />
+								<input type="hidden" name="acao" value="emprestar" />
+								<button type="submit" class="btn btn-default" >
+									<span class="glyphicon glyphicon-home"></span> Emprestar Livro
+								</button>													
+							</c:if>
+						</div>
+					</form>
 				</c:if>
 										
 		  	</div>

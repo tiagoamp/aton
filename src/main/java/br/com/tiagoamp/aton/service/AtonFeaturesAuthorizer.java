@@ -24,11 +24,12 @@ public class AtonFeaturesAuthorizer {
 	 */
 	public static AuthorizerResultTO authorizeBook(User user, String action) {
 		AuthorizerResultTO to = null;
-		if (action == null || action.equals("alterar") || action.equals("excluir") || action.equals("emprestar") ) { // ADMIN
+		if ( action == null || action.equals("alterar") || action.equals("excluir") || action.equals("emprestar") ) { // ADMIN
 			if (user.getRole() != Role.ADMINISTRADOR && user.getRole() != Role.BIBLIOTECARIO) {
 				to = new AuthorizerResultTO("livros", "Ação autorizada somente para perfil 'Administrador' e 'Bibliotecário'.");
 			}
 		}
+		
 		return to;
 	}
 	

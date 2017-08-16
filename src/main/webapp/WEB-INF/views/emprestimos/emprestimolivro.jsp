@@ -6,12 +6,12 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <html>
 	<head>
-		<jsp:include page = "../comum/header.jsp" />		
+		<jsp:include page = "../comum/subheader.jsp" />		
 	</head>
 	
 <body>
 
-	<jsp:include page = "../comum/menu.jsp" />
+	<jsp:include page = "../comum/submenu.jsp" />
 	
 	<!-- Begin page content -->
     <div class="" style="margin: 10px;">

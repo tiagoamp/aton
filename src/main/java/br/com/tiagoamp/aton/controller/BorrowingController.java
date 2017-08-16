@@ -93,10 +93,8 @@ public class BorrowingController {
 		return "emprestimos/emprestimos";
 						
 	}
-	
-	
-	
-	@RequestMapping("emprestimolivro")
+		
+	@RequestMapping(value="emprestimolivro", method=RequestMethod.POST)
 	public String carregarEmprestimoLivro(HttpServletRequest request,  
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
@@ -112,10 +110,12 @@ public class BorrowingController {
 			}
 			model.addAttribute("acao",pAcao);
 		}		
-		Borrowing emprestimo = new Borrowing(book, new Person(), new Date(), null, null);
-		model.addAttribute("emprestimo", emprestimo);
+		Borrowing borrowing = new Borrowing(book, new Person(), new Date(), null, null);
+		model.addAttribute("borrowing", borrowing);
 		return "emprestimos/emprestimolivro";
 	}
+	
+	
 	
 	@RequestMapping(value = "consultapessoaemprestimo", method = RequestMethod.POST)
 	public String consultarPessoaParaEmprestimo(HttpServletRequest request,  
@@ -245,27 +245,6 @@ public class BorrowingController {
 		}	
 		return "livros";
 	}
-	
-	
-	
-	
-	@RequestMapping("listaemprestimos")
-	public String listarEmprestimos(HttpServletRequest request, Model model) {
-		List<Borrowing> lista = new ArrayList<>();
-		try {		
-			lista = borrowService.getAll();
-			if (lista.isEmpty()) {
-				model.addAttribute("mensagem",new MessageTO("Consulta sem resultados!", MessaType.ERRO));
-			}
-			Collections.sort(lista);			
-			model.addAttribute("listaemprestimos", lista);
-		} catch (AtonBOException e) {
-			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));			
-		}		
-	    return "emprestimos/emprestimos";
-	}
-	
 	
 	@RequestMapping("devolucaolivro")
 	public String DevolverLivro(HttpServletRequest request,  

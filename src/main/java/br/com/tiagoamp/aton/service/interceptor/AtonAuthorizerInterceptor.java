@@ -20,21 +20,30 @@ public class AtonAuthorizerInterceptor extends HandlerInterceptorAdapter {
 		User user = (User) request.getSession().getAttribute("usuario");
 		
 		// PAGES QUE PRECISAM DE AUTENTICAÇÃO
-		if ( uri.endsWith("pessoas") || uri.endsWith("livrocadastrado") || uri.endsWith("emprestimos") || uri.endsWith("emprestimolivro") ) { 
+		if ( uri.endsWith("pessoas") || uri.endsWith("livrocadastrado") || uri.endsWith("emprestimos") ) { 
 			if (user == null) {
 				response.sendRedirect("autorizacao");				
 				return false;
 			}
 		} else if (uri.endsWith("livros/cadastro")) { // MANUT LIVROS
+			String action = request.getParameter("acao");
+			
+			if (action != null && !action.equals("consultar")) {
+				if (user == null) {
+					response.sendRedirect("../autorizacao");				
+					return false;
+				}
+				AuthorizerResultTO autTO = AtonFeaturesAuthorizer.authorizeBook(user, action);
+				if (autTO != null) {
+					if (autTO.getMsgErro() != null) request.setAttribute("mensagem", new MessageTO(autTO.getMsgErro(), MessaType.ERRO));
+					RequestDispatcher rd = request.getRequestDispatcher(autTO.getUrlRedirect());
+					rd.forward(request, response);
+					return false;
+				}
+			} 
+		} else if (uri.endsWith("emprestimolivro")) {	
 			if (user == null) {
 				response.sendRedirect("../autorizacao");				
-				return false;
-			}
-			AuthorizerResultTO autTO = AtonFeaturesAuthorizer.authorizeBook(user, request.getParameter("acao"));
-			if (autTO != null) {
-				if (autTO.getMsgErro() != null) request.setAttribute("mensagem", new MessageTO(autTO.getMsgErro(), MessaType.ERRO));
-				RequestDispatcher rd = request.getRequestDispatcher(autTO.getUrlRedirect());
-				rd.forward(request, response);
 				return false;
 			}
 		} else if (uri.contains("pessoas/cadastro")) { // MANUT PESSOAS

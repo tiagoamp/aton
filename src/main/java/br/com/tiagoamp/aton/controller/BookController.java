@@ -2,6 +2,7 @@ package br.com.tiagoamp.aton.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Book;
+import br.com.tiagoamp.aton.model.Borrowing;
 import br.com.tiagoamp.aton.model.MessaType;
+import br.com.tiagoamp.aton.model.Person;
 import br.com.tiagoamp.aton.model.TypeOfAcquisition;
 import br.com.tiagoamp.aton.model.to.MessageTO;
 import br.com.tiagoamp.aton.service.BookService;
@@ -141,6 +144,27 @@ public class BookController {
 		}
 		
 		return "livros/livros";		
+	}
+	
+	@RequestMapping(value="emprestimolivro", method=RequestMethod.POST)
+	public String carregarEmprestimoLivro(HttpServletRequest request,  
+	        @RequestParam(value="acao", required=false) String pAcao, 
+	        @RequestParam(value="identificador", required=false) String pId, 
+	        Model model) {		
+		Book book = new Book();				
+		if (pId != null && !pId.isEmpty()) {
+			try {		
+				book = bookService.findById(Integer.parseInt(pId));				 				
+			} catch (AtonBOException e) {
+				logger.error("Erro: " + e);
+				model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
+				return "livros/livros";
+			}
+			model.addAttribute("acao",pAcao);
+		}		
+		Borrowing borrowing = new Borrowing(book, new Person(), new Date(), null, null);
+		model.addAttribute("borrowing", borrowing);
+		return "emprestimos/emprestimolivro";
 	}
 	
 	
