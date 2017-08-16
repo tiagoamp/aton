@@ -116,7 +116,6 @@ public class PersonController {
 	public String pesquisarPessoas(HttpServletRequest request,  
 	        @RequestParam(value="tEmail", required=false) String pEmail, 
 	        @RequestParam(value="tFields", required=false) String pFields,
-	        @RequestParam(value="tList", required=false) String pList,
 	        Model model){
 		List<Person> list = new ArrayList<>();
 		try {			

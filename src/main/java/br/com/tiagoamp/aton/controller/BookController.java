@@ -116,8 +116,7 @@ public class BookController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String pesquisarLivro(HttpServletRequest request,  
 	        @RequestParam(value="tISBN", required=false) String pIsbn, 
-	        @RequestParam(value="tFields", required=false) String pFields, 
-	        @RequestParam(value="tList", required=false) String pList,
+	        @RequestParam(value="tFields", required=false) String pFields,
 	        Model model){
 		List<Book> list = new ArrayList<>();
 		try {

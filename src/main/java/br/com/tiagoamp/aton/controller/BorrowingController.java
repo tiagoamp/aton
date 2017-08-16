@@ -7,14 +7,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,68 +22,81 @@ import org.springframework.web.bind.annotation.RequestParam;
 import br.com.tiagoamp.aton.model.AtonBOException;
 import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Borrowing;
+import br.com.tiagoamp.aton.model.MessaType;
 import br.com.tiagoamp.aton.model.Person;
 import br.com.tiagoamp.aton.model.Role;
-import br.com.tiagoamp.aton.model.MessaType;
-import br.com.tiagoamp.aton.model.TypeOfAcquisition;
 import br.com.tiagoamp.aton.model.to.MessageTO;
 import br.com.tiagoamp.aton.service.BookService;
 import br.com.tiagoamp.aton.service.BorrowingService;
 import br.com.tiagoamp.aton.service.PersonService;
 
 @Controller
-public class AtonController {
+@RequestMapping("emprestimos")
+public class BorrowingController {
 	
-	public AtonController() {
+	public BorrowingController() {
 		personService = new PersonService();
 		bookService = new BookService();
 		borrowService = new BorrowingService();
 	}
 	
-	Logger logger = Logger.getLogger(AtonController.class);
+	Logger logger = Logger.getLogger(BorrowingController.class);
 	
 	private PersonService personService;
 	private BookService bookService;
 	private BorrowingService borrowService;
 	
-	@RequestMapping("/aton")
-	public String pageInicial() {
-		return "aton";
-	}
 	
-	@RequestMapping("initializeAndDeleteThisEntry")
-	public String pageInitialize() {
-		//TODO: Delete this method after initializing the application
+	@RequestMapping(method = RequestMethod.POST)
+	public String pesquisarEmprestimo(HttpServletRequest request,  
+	        @RequestParam(value="tBook", required=false) String pBook, 
+	        @RequestParam(value="tPerson", required=false) String pPerson,
+	        @RequestParam(value="fAbertos", required=false) String pAbertos,
+	        Model model){
+		List<Borrowing> list = new ArrayList<>();
 		
-		try {
-			List<Person> list = personService.getAll();
+		try {			
+			if (pBook != null && !pBook.isEmpty()) {
+				pBook = pBook.trim().toUpperCase();
+				List<Book> books = new ArrayList<>();
+				books.addAll(bookService.findByTitle(pBook));
+				books.addAll(bookService.findByAuthorName(pBook));
+				for (Book b : books) {
+					list = borrowService.findByFields(b.getId(), null, null, null);
+				}
+			} else if (pPerson != null && !pPerson.isEmpty()) {
+				pPerson = pPerson.trim().toUpperCase();
+				List<Person> people = new ArrayList<>();
+				people.addAll(personService.findByName(pPerson));
+				for (Person p: people) {
+					list = borrowService.findByFields(null, p.getId(), null, null);
+				}
+			} else if (pBook == null && pPerson == null) {
+				if (pAbertos == null) {
+					list = borrowService.getAll();
+				} else {
+					list = borrowService.getOpenBorrowings();
+				}				
+			}
+			
 			if (list.isEmpty()) {
-				Person person = new Person("admin@email.com", "System Administrator", null, Role.ADMINISTRADOR);
-				person.setPassword(DigestUtils.sha1Hex("admin"));
-				personService.insert(person);
-			}				
+				model.addAttribute("mensagem",new MessageTO("Consulta sem resultados!", MessaType.ERRO));				
+			}
+			
+			Collections.sort(list);
+			model.addAttribute("listofborrowing", list);			
 		} catch (AtonBOException e) {
-			e.printStackTrace();
+			logger.error("Erro: " + e);
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 		}
-	    return "aton";
+		
+		return "emprestimos/emprestimos";
+						
 	}
 	
-	@RequestMapping("pessoas")
-	public String pagePessoas() {
-	    return "pessoas/pessoas";
-	}
-					
-	@RequestMapping("livros")
-	public String pageLivros() {
-	    return "livros/livros";
-	}	
-		
-	@RequestMapping("emprestimos")
-	public String pageEmprestimos() {
-	    return "emprestimos/emprestimos";
-	}
-
-	/*@RequestMapping("emprestimolivro")
+	
+	
+	@RequestMapping("emprestimolivro")
 	public String carregarEmprestimoLivro(HttpServletRequest request,  
 	        @RequestParam(value="acao", required=false) String pAcao, 
 	        @RequestParam(value="identificador", required=false) String pId, 
@@ -237,44 +246,8 @@ public class AtonController {
 		return "livros";
 	}
 	
-	@RequestMapping(value = "consultaemprestimo", method = RequestMethod.POST)
-	public String consultarEmprestimo(HttpServletRequest request,  
-	        @RequestParam(value="tLivro", required=false) String pLivro, 
-	        @RequestParam(value="tPessoa", required=false) String pPessoa, 
-	        Model model){
-		List<Borrowing> lista = new ArrayList<>();
-		try {
-			if (pLivro != null && !pLivro.isEmpty()) { // CAMPO DE PESQ LIVRO PREENCHIDO
-				pLivro = pLivro.trim().toUpperCase();
-				List<Book> books = new ArrayList<>();
-				books.addAll(bookService.findByTitle(pLivro));
-				books.addAll(bookService.findByAuthorName(pLivro));
-				for (int i = 0; i < books.size(); i++) {
-					Book livro = books.get(i);
-					lista = borrowService.findByFields(livro.getId(), null, null, null);
-				}
-			} else { // CAMPO DE LEITOR(PESSOA) PREENCHIDO
-				if (pPessoa != null && !pPessoa.isEmpty()) {
-					pPessoa = pPessoa.trim().toUpperCase();
-					List<Person> people = new ArrayList<>();
-					people.addAll(personService.findByName(pPessoa));
-					for (int i = 0; i < people.size(); i++) {
-						Person pessoa = people.get(i);
-						lista = borrowService.findByFields(null, pessoa.getId(), null, null);
-					}
-				}
-			}
-			if (lista.isEmpty()) {
-				throw new AtonBOException("Consulta sem resultados!");
-			}
-			Collections.sort(lista);
-			model.addAttribute("listaemprestimos", lista);
-		} catch (AtonBOException e) {
-			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
-		}
-		return "emprestimos";		
-	}
+	
+	
 	
 	@RequestMapping("listaemprestimos")
 	public String listarEmprestimos(HttpServletRequest request, Model model) {
@@ -282,7 +255,7 @@ public class AtonController {
 		try {		
 			lista = borrowService.getAll();
 			if (lista.isEmpty()) {
-				throw new AtonBOException("Consulta sem resultados!");
+				model.addAttribute("mensagem",new MessageTO("Consulta sem resultados!", MessaType.ERRO));
 			}
 			Collections.sort(lista);			
 			model.addAttribute("listaemprestimos", lista);
@@ -290,25 +263,9 @@ public class AtonController {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));			
 		}		
-	    return "emprestimos";
+	    return "emprestimos/emprestimos";
 	}
 	
-	@RequestMapping("listaemprestimosabertos")
-	public String listarEmprestimosEmAberto(HttpServletRequest request, Model model) {
-		List<Borrowing> lista = new ArrayList<>();
-		try {		
-			lista = borrowService.getOpenBorrowings();
-			if (lista.isEmpty()) {
-				throw new AtonBOException("Consulta sem resultados!");
-			}
-			Collections.sort(lista);			
-			model.addAttribute("listaemprestimos", lista);
-		} catch (AtonBOException e) {
-			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));			
-		}		
-	    return "emprestimos";
-	}
 	
 	@RequestMapping("devolucaolivro")
 	public String DevolverLivro(HttpServletRequest request,  
@@ -335,16 +292,6 @@ public class AtonController {
 		}		
 		model.addAttribute("emprestimo", emprestimo);
 		return "emprestimos";
-	}*/
-	
-	@RequestMapping("autorizacao")
-	public String pageAutorizacao() {
-	    return "autorizacao";
 	}
-	
-	@RequestMapping("sobre")
-	public String pageSobre() {
-		return "sobre";
-	}
-			
+		
 }

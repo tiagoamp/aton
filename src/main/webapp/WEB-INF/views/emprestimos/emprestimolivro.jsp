@@ -33,12 +33,11 @@
 						<!-- BOX DE LIVRO -->
 						<div class="col-sm-6 col-md-6">
 							<div class="thumbnail">
-								<%-- <img src="${emprestimo.livro.pathFotoCapa}" alt="[Sem capa cadastrada]" width="180px" height="200px"> --%>
 								<div class="caption">
-									<h4>Título: ${emprestimo.livro.titulo}</h4>
-									<p>${emprestimo.livro.subtitulo}</p>
-									<p>ISBN: ${emprestimo.livro.isbn}</p>
-									<p>Autores: ${emprestimo.livro.autoresAgrupados}</p>
+									<h4>Título: ${borrowing.book.title}</h4>
+									<p>${borrowing.book.subtitle}</p>
+									<p>ISBN: ${borrowing.book.isbn}</p>
+									<p>Autores: ${borrowing.book.authorsNameInline}</p>
 								</div>
 							</div>
 						</div>
@@ -51,7 +50,7 @@
 										<h3 class="panel-title">Pesquisa de Leitor</h3>
 									</div>			
 									<form id="formConsultaPessoas" class="navbar-form navbar-left" method="POST" action="consultapessoaemprestimo" role="search">
-										<input type="hidden" id ="tIdLivro" name="tIdLivro" value=${emprestimo.livro.id}>
+										<input type="hidden" id ="tIdLivro" name="tIdLivro" value=${borrowing.book.id}>
 										<div class="col-lg-12">																		
 											<div class="input-group">
 												<span class="input-group-addon" id="basic-addon1">Consulta por E-mail</span>
@@ -89,13 +88,13 @@
 														<form id="formAcoes">
 															<input type="hidden" id ="acao" name="acao">
 															<input type="hidden" id ="identificador" name="identificador">
-															<input type="hidden" id ="idLivro" name="idLivro" value=${emprestimo.livro.id}>
-															<c:forEach items="${listapessoas}" var="pessoa">
+															<input type="hidden" id ="idLivro" name="idLivro" value=${borrowing.book.id}>
+															<c:forEach items="${listofpeople}" var="person">
 																<li class="list-group-item">				
-																	&nbsp;&nbsp; <a href="javascript:carregarAcoes('selecionar',${pessoa.id},'emprestimoselecionarpessoa');" title="Selecionar"><span class="glyphicon glyphicon-open" aria-hidden="true"></span></a>
+																	&nbsp;&nbsp; <a href="javascript:carregarAcoes('selecionar',${person.id},'emprestimoselecionarpessoa');" title="Selecionar"><span class="glyphicon glyphicon-open" aria-hidden="true"></span></a>
 																	&nbsp;&nbsp;&nbsp;&nbsp;
-																	<c:out value="${pessoa.nome}" /> - 
-																	<c:out value="${pessoa.email}" />							
+																	<c:out value="${person.name}" /> - 
+																	<c:out value="${person.email}" />							
 																</li>
 															</c:forEach>
 														</form>
@@ -112,28 +111,28 @@
 					
 					<!-- BOX DE EMPRESTIMO -->
 				<strong> 
-					<form:errors path="emprestimo.*" element="div" cssClass="alert alert-danger error" />
+					<form:errors path="borrowing.*" element="div" cssClass="alert alert-danger error" />
 				</strong>
-				<form:form id="formEmpLivros" method="POST" cssClass="navbar" action="livroemprestado" modelAttribute="emprestimo">
+				<form:form id="formEmpLivros" method="POST" cssClass="navbar" action="livroemprestado" modelAttribute="borrowing">
 		  				<form:hidden path="id" />
-		  				<form:hidden path="livro.id" />
-		  				<form:hidden path="pessoa.id" />
+		  				<form:hidden path="book.id" />
+		  				<form:hidden path="person.id" />
 		  				<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon" id="basic-addon1">Leitor selecionado</span>
-								<form:input path="pessoa.nome" cssClass="form-control required" placeholder="Selecione o leitor" aria-describedby="basic-addon1" size="50" disabled="true" />
+								<form:input path="person.name" cssClass="form-control required" placeholder="Selecione o leitor" aria-describedby="basic-addon1" size="50" disabled="true" />
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon" id="basic-addon1">Data do Empréstimo</span>
-								<form:input path="dataEmprestimoFormatada" cssClass="form-control required" placeholder="Digite a data do emprestimo" aria-describedby="basic-addon1" size="20" disabled="false" />
+								<form:input path="dateOfBorrowing" cssClass="form-control required" placeholder="Digite a data do emprestimo" aria-describedby="basic-addon1" size="20" disabled="false" />
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon" id="basic-addon1">Data da Devolução Prevista</span>
-								<form:input path="dataDevolucaoProgramadaFormatada" cssClass="form-control required" placeholder="Digite a data de devolução" aria-describedby="basic-addon1" size="20" disabled="false" />
+								<form:input path="dateOfScheduledReturn" cssClass="form-control required" placeholder="Digite a data de devolução" aria-describedby="basic-addon1" size="20" disabled="false" />
 							</div>
 						</div>
 						
