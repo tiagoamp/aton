@@ -48,6 +48,14 @@ public class BorrowingService {
 		}
 	}
 	
+	public void returnBorrowedBook(Borrowing borrowing) throws AtonBOException {
+		borrowing.setDateOfReturn(new Date());
+		this.update(borrowing);
+		Book book = borrowing.getBook();
+		book.setNumberAvailable(book.getNumberAvailable() + 1);
+		bookService.update(book);
+	}
+	
 	public void delete(int id) throws AtonBOException {
 		try {
 			dao.delete(id);

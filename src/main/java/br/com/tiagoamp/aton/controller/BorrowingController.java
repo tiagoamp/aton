@@ -1,7 +1,5 @@
 package br.com.tiagoamp.aton.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -52,7 +50,23 @@ public class BorrowingController {
 	        @RequestParam(value="tBook", required=false) String pBook, 
 	        @RequestParam(value="tPerson", required=false) String pPerson,
 	        @RequestParam(value="fAbertos", required=false) String pAbertos,
+	        @RequestParam(value="identificador", required=false) String pId,
 	        Model model){
+		
+		if (pId != null && !pId.isEmpty()) {  // return of borrowing
+			Borrowing borrowing = null;
+			try {		
+				borrowing = borrowService.findById(Integer.parseInt(pId));
+				borrowService.returnBorrowedBook(borrowing);
+				model.addAttribute("mensagem",new MessageTO("Devolução com sucesso: " + borrowing.toString(), MessaType.SUCESSO));
+				logger.info("Emprestimo devolvido: " + borrowing);
+			} catch (AtonBOException e) {
+				logger.error("Erro: " + e);
+				model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));				
+			}
+			return "emprestimos/emprestimos";
+		}
+		
 		List<Borrowing> list = new ArrayList<>();
 		
 		try {			
@@ -103,7 +117,7 @@ public class BorrowingController {
 		List<Person> list = new ArrayList<>();
 		Book book = null;
 		try {
-			book = bookService.findById(Integer.parseInt(pBookId)); // recarregando livro
+			book = bookService.findById(Integer.parseInt(pBookId)); // retrieving book
 			list = this.pesquisarPessoasPorParametros(pEmail, pFields); 
 			if (list.isEmpty()) {
 				model.addAttribute("mensagem",new MessageTO("Consulta sem resultados!", MessaType.ERRO));
@@ -183,9 +197,29 @@ public class BorrowingController {
 		}
 		return "emprestimos/emprestimolivro";
 	}
-	
 		
-		
+	//@RequestMapping(method=RequestMethod.GET)
+	/*public String devolverLivro(HttpServletRequest request,  
+	        @RequestParam(value="acao", required=false) String pAcao, 
+	        @RequestParam(value="identificador", required=false) String pId, 
+	        Model model) {		
+		Borrowing borrowing = null;				
+		if (pId != null && !pId.isEmpty()) {
+			try {		
+				borrowing = borrowService.findById(Integer.parseInt(pId));
+				borrowService.returnBorrowedBook(borrowing);
+				model.addAttribute("mensagem",new MessageTO("Devolução com sucesso: " + borrowing.toString(), MessaType.SUCESSO));
+				logger.info("Emprestimo devolvido: " + borrowing);
+			} catch (AtonBOException e) {
+				logger.error("Erro: " + e);
+				model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
+				return "emprestimos";
+			}
+			//model.addAttribute("acao",pAcao);
+		}		
+		model.addAttribute("borrowing", borrowing);
+		return "emprestimos/emprestimos";
+	}*/
 	
 	private List<Person> pesquisarPessoasPorParametros(String email, String param) throws AtonBOException {
 		List<Person> list = new ArrayList<>();
@@ -212,35 +246,5 @@ public class BorrowingController {
 		calendar.add(Calendar.DAY_OF_MONTH, 10);
 		return new Date(calendar.getTimeInMillis());
 	}
-	
-	
-	
-	
-	@RequestMapping("devolucaolivro")
-	public String DevolverLivro(HttpServletRequest request,  
-	        @RequestParam(value="acao", required=false) String pAcao, 
-	        @RequestParam(value="identificador", required=false) String pId, 
-	        Model model) {		
-		Borrowing emprestimo = null;				
-		if (pId != null && !pId.isEmpty()) {
-			try {		
-				emprestimo = borrowService.findById(Integer.parseInt(pId));
-				emprestimo.setDateOfReturn(new Date());
-				borrowService.update(emprestimo);
-				Book livro = emprestimo.getBook();
-				livro.setNumberAvailable(livro.getNumberAvailable() + 1);
-				bookService.update(livro);
-				model.addAttribute("mensagem",new MessageTO("Devolução com sucesso: " + emprestimo.toString(), MessaType.SUCESSO));
-				logger.info("Emprestimo devolvido: " + emprestimo);
-			} catch (AtonBOException e) {
-				logger.error("Erro: " + e);
-				model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
-				return "emprestimos";
-			}
-			model.addAttribute("acao",pAcao);
-		}		
-		model.addAttribute("emprestimo", emprestimo);
-		return "emprestimos";
-	}
-		
+			
 }

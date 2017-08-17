@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -88,24 +89,24 @@
 			  	<div class="panel-body">
 			  		<div class="form-group">
 						<div class="list-group">
-							<form id="formAcoes">
-								<input type="hidden" id ="acao" name="acao">
-								<input type="hidden" id ="identificador" name="identificador">
+							<form id="formDevolucao" method="POST" action="emprestimos">
+								<input type="hidden" name="identificador" />
 								<c:forEach items="${listofborrowing}" var="borrowing">
 									<li class="list-group-item">				
 										&nbsp;&nbsp;
 										<c:if test="${empty borrowing.dateOfReturn}">
-											<a href="javascript:carregarAcoes('devolver',${borrowing.id},'devolucaolivro');" title="Devolver"><span class="glyphicon glyphicon-transfer" ></span></a> 
+											<%-- <a href="emprestimos/devolucao?id=${borrowing.id}" title="Devolver"><span class="glyphicon glyphicon-transfer" ></span></a> --%>
+											<a href="#" title="Devolver" onclick="document.getElementById('formDevolucao').identificador.value=${borrowing.id}; document.getElementById('formDevolucao').submit();"><span class="glyphicon glyphicon-transfer" ></span></a>											 
 										</c:if>
 										<c:if test="${not empty borrowing.dateOfReturn}">
 											<span class="glyphicon glyphicon-transfer"></span> 
 										</c:if>									
 										&nbsp;&nbsp;&nbsp;&nbsp;
-										<strong>Data:</strong> <c:out value="${borrowing.dateOfBorrowing}" /> -
+										<strong>Data:</strong> <fmt:formatDate value="${borrowing.dateOfBorrowing}" pattern="dd/MM/yyyy"/> -
 										<strong>Livro:</strong> <c:out value="${borrowing.book.title}" /> - 
 										<strong>Leitor:</strong> <c:out value="${borrowing.person.name}" />	-									 
-										<strong>Devolução: </strong> Progr: <c:out value="${borrowing.dateOfScheduledReturn}" /> - 
-										Realizada: <c:out value="${borrowing.dateOfReturn}" /> - 
+										<strong>Devolução: </strong> Progr: <fmt:formatDate value="${borrowing.dateOfScheduledReturn}" pattern="dd/MM/yyyy"/> - 
+										Realizada: <fmt:formatDate value="${borrowing.dateOfReturn}" pattern="dd/MM/yyyy"/> - 
 										<c:if test="${not borrowing.overdue}">
 											<span class="label label-success">Sem atraso</span>
 										</c:if>

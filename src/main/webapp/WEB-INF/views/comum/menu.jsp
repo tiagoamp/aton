@@ -23,8 +23,10 @@
 	      	<li><a href="#"></a></li>	
 	      	<c:if test="${empty usuario}"> 
 	      		<li><a href="login">Login</a></li>
-	      	</c:if>       
-	        <li><a href="logout">Logout</a></li>	        
+	      	</c:if>
+	      	<c:if test="${not empty usuario}">       
+	        	<li><a href="logout">Logout</a></li>
+	        </c:if>	        
 	      </ul>
 	      
 	      <c:if test="${empty usuario}">
