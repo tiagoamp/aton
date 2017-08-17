@@ -14,6 +14,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Entity
 @Table(name="BORROWING")
 public class Borrowing implements Comparable<Borrowing> {
@@ -44,14 +46,17 @@ public class Borrowing implements Comparable<Borrowing> {
 	@JoinColumn(name="ID_PERSON")
     private Person person;
     
+	@DateTimeFormat(pattern="dd/MM/yyyy")
 	@Temporal(TemporalType.TIMESTAMP)
     @Column(name="DATE_BORROWING")
     private Date dateOfBorrowing;
     
+	@DateTimeFormat(pattern="dd/MM/yyyy")
 	@Temporal(TemporalType.TIMESTAMP)
     @Column(name="DATE_SCHEDULED_RETURN")
     private Date dateOfScheduledReturn;
     
+	@DateTimeFormat(pattern="dd/MM/yyyy")
 	@Temporal(TemporalType.TIMESTAMP)
     @Column(name="DATE_RETURN")
     private Date dateOfReturn;

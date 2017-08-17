@@ -122,11 +122,8 @@ public class Book implements Comparable<Book> {
     	StringBuilder sb = new StringBuilder(title);
     	if (authors !=  null) {
     		sb.append(" - ");
-    		int i = 0;
-    		for (i = 0; i < (authors.size()-1); i++) {
-				sb.append(authors.get(i).getName() + " ; ");
-			}
-			sb.append(authors.get(i).getName());  // last one without ';'
+    		
+			sb.append(authorsNameInline);
     	}
     	return sb.toString();
     }

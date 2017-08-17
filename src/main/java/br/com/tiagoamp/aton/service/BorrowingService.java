@@ -8,7 +8,9 @@ import br.com.tiagoamp.aton.dao.BorrowingDAO;
 import br.com.tiagoamp.aton.dao.BorrowingDaoJpa;
 import br.com.tiagoamp.aton.dao.JPAUtil;
 import br.com.tiagoamp.aton.model.AtonBOException;
+import br.com.tiagoamp.aton.model.Book;
 import br.com.tiagoamp.aton.model.Borrowing;
+import br.com.tiagoamp.aton.model.Status;
 
 /**
  * CRUD and services for 'Borrowing'.
@@ -18,15 +20,21 @@ import br.com.tiagoamp.aton.model.Borrowing;
 public class BorrowingService {
 	
 	public BorrowingService() {		
-		this.dao = new BorrowingDaoJpa(new JPAUtil().getMyEntityManager());		
+		this.dao = new BorrowingDaoJpa(new JPAUtil().getMyEntityManager());
+		this.bookService = new BookService();
 	}
 	
 	private BorrowingDAO dao;
+	private BookService bookService;
 	
 	
 	public void insert(Borrowing borrowing) throws AtonBOException {
 		try {
-			dao.create(borrowing);			
+			dao.create(borrowing);
+			Book book = borrowing.getBook();
+			book.setNumberAvailable(book.getNumberAvailable() - 1);
+			if (book.getNumberAvailable() == 0) book.setStatus(Status.EMPRESTADO);
+			bookService.update(book);			
 		} catch (SQLException e) {
 			throw new AtonBOException("Erro no acesso ao banco de dados!", e);
 		}
@@ -86,6 +94,12 @@ public class BorrowingService {
 	}
 	public void setDao(BorrowingDAO dao) {
 		this.dao = dao;
+	}
+	public BookService getBookService() {
+		return bookService;
+	}
+	public void setBookService(BookService bookService) {
+		this.bookService = bookService;
 	}
 
 }

@@ -94,7 +94,7 @@ public class BorrowingController {
 						
 	}
 	
-	@RequestMapping(value = "consultapessoaemprestimo", method = RequestMethod.POST)
+	@RequestMapping(value = "consultapessoa", method = RequestMethod.POST)
 	public String consultarPessoaParaEmprestimo(HttpServletRequest request,  
 	        @RequestParam(value="tEmail", required=false) String pEmail, 
 	        @RequestParam(value="tFields", required=false) String pFields,
@@ -112,57 +112,80 @@ public class BorrowingController {
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
-		}				
-		Borrowing borrowing = new Borrowing(book, new Person(), new Date(), null, null);
+		}
+		Borrowing borrowing = new Borrowing(book, new Person(), new Date(), getSuggestedReturnDate(new Date()), null);
 		model.addAttribute("borrowing", borrowing);
 		return "emprestimos/emprestimolivro";
 	}
-		
-	/*@RequestMapping(value="emprestimolivro", method=RequestMethod.POST)
-	public String carregarEmprestimoLivro(HttpServletRequest request,  
-	        @RequestParam(value="acao", required=false) String pAcao, 
-	        @RequestParam(value="identificador", required=false) String pId, 
-	        Model model) {		
-		Book book = new Book();				
-		if (pId != null && !pId.isEmpty()) {
-			try {		
-				book = bookService.findById(Integer.parseInt(pId));				 				
-			} catch (AtonBOException e) {
-				logger.error("Erro: " + e);
-				model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
-				return "livros";
-			}
-			model.addAttribute("acao",pAcao);
-		}		
-		Borrowing borrowing = new Borrowing(book, new Person(), new Date(), null, null);
-		model.addAttribute("borrowing", borrowing);
-		return "emprestimos/emprestimolivro";
-	}*/
-		
-	@RequestMapping(value = "emprestimoselecionarpessoa", method = RequestMethod.POST)
+	
+	@RequestMapping("selecionarpessoa")
 	public String selecionarPessoaParaEmprestimo(HttpServletRequest request,  
 	        @RequestParam(value="acao", required=false) String pAcao, 
-	        @RequestParam(value="identificador", required=false) String pId,
-	        @RequestParam(value="idLivro", required=false) String pIdLivro,
+	        @RequestParam(value="identificador", required=false) String pPersonId,
+	        @RequestParam(value="book", required=false) String pBookId,
 	        Model model){
-		Book livro = null;
-		Person pessoa = null;
+		Book book = null;
+		Person person = null;
 		try {
-			livro = bookService.findById(Integer.parseInt(pIdLivro)); 
-			pessoa = personService.findById(Integer.parseInt(pId)); 			
+			book = bookService.findById(Integer.parseInt(pBookId)); 
+			person = personService.findById(Integer.parseInt(pPersonId)); 			
 		} catch (AtonBOException e) {
 			logger.error("Erro: " + e);
 			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
 		}
-		// Regra da data sugerida de devolução ==> D + 10
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DAY_OF_MONTH, 10);
-		
-		Borrowing emprestimo = new Borrowing(livro, pessoa, new Date(), new Date(calendar.getTimeInMillis()), null);
-		model.addAttribute("emprestimo", emprestimo);
+		Borrowing borrowing = new Borrowing(book, person, new Date(), getSuggestedReturnDate(new Date()), null);
+		model.addAttribute("borrowing", borrowing);
 		return "emprestimos/emprestimolivro";	
 	}
 	
+	@RequestMapping(value="livroemprestado", method = RequestMethod.POST)
+	public String emprestarLivro(@Valid Borrowing borrowing, BindingResult result, Model model, HttpServletRequest request) {
+		boolean hasErrors = false;
+		if(result.hasErrors()) {
+			hasErrors = true;
+		}
+		try { // retrieving book and person
+			borrowing.setBook(bookService.findById(borrowing.getBook().getId()));
+			if (borrowing.getPerson() == null || borrowing.getPerson().getId() == null) {
+				model.addAttribute("mensagem",new MessageTO("Pessoa não selecionada para empréstimo do livro!", MessaType.ERRO));
+				model.addAttribute("borrowing", borrowing);
+				return "emprestimos/emprestimolivro";
+			}
+			borrowing.setPerson(personService.findById(borrowing.getPerson().getId()));			
+		} catch (AtonBOException e) {
+			logger.error("Erro: " + e);
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
+			model.addAttribute("borrowing", borrowing);
+			return "emprestimos/emprestimolivro";
+		}
+		if (borrowing.getDateOfBorrowing().toString().isEmpty()) {
+			result.reject("dateOfBorrowing", "Campo obrigatório não preenchido: Data de Empréstimo.");
+			hasErrors = true;
+		} else if (borrowing.getDateOfScheduledReturn().toString().isEmpty()) {
+			result.reject("dateOfScheduledReturn", "Campo obrigatório não preenchido: Data de Devolução.");
+			hasErrors = true;
+		}
+		if (hasErrors) {
+			model.addAttribute("borrowing", borrowing);
+			return "emprestimos/emprestimolivro";
+		}
+		
+		try {			
+			borrowService.insert(borrowing);
+			model.addAttribute("mensagem",new MessageTO("Empréstimo realizado com sucesso: " + borrowing.toString(), MessaType.SUCESSO));
+			model.addAttribute("mode", "consulta");
+			logger.info("Emprestimo cadastrado: " + borrowing);
+		} catch (AtonBOException e) {
+			logger.error("Erro: " + e);
+			model.addAttribute("borrowing", borrowing);
+			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
+			return "emprestimos/emprestimolivro";
+		}
+		return "emprestimos/emprestimolivro";
+	}
+	
+		
+		
 	
 	private List<Person> pesquisarPessoasPorParametros(String email, String param) throws AtonBOException {
 		List<Person> list = new ArrayList<>();
@@ -184,59 +207,14 @@ public class BorrowingController {
 		return list;
 	}
 	
-	
-	@RequestMapping(value="livroemprestado", method = RequestMethod.POST)
-	public String emprestarLivro(@Valid Borrowing borrowing, BindingResult result, Model model, HttpServletRequest request) {
-		boolean hasErrors = false;
-		if(result.hasErrors()) {
-			hasErrors = true;
-		}
-		try { // recuperando livro e pessoa
-			borrowing.setBook(bookService.findById(borrowing.getBook().getId()));
-			if (borrowing.getPerson() == null || borrowing.getPerson().getId() == null) throw new AtonBOException("Pessoa não selecionada para empréstimo do livro!");
-			borrowing.setPerson(personService.findById(borrowing.getPerson().getId()));			
-		} catch (AtonBOException e) {
-			logger.error("Erro: " + e);
-			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
-			model.addAttribute("emprestimo", borrowing);
-			return "emprestimos/emprestimolivro";
-		}
-		if (borrowing.getDateOfBorrowing().toString().isEmpty()) {
-			result.reject("dataEmprestimoFormatada", "Campo obrigatório não preenchido: Data de Empréstimo.");
-			hasErrors = true;
-		} else if (borrowing.getDateOfScheduledReturn().toString().isEmpty()) {
-			result.reject("dataDevolucaoProgramadaFormatada", "Campo obrigatório não preenchido: Data de Devolução.");
-			hasErrors = true;
-		} else {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			try {
-				borrowing.setDateOfBorrowing(sdf.parse(borrowing.getDateOfBorrowing().toString()));
-				borrowing.setDateOfScheduledReturn(sdf.parse(borrowing.getDateOfScheduledReturn().toString()));
-			} catch (ParseException e) {
-				result.reject("dataEmprestimoFormatada", "Data de Empréstimo ou Devolução em formato inválido.");
-				hasErrors = true;
-			}
-		} 
-		if (hasErrors) {
-			model.addAttribute("emprestimo", borrowing);
-			return "emprestimos/emprestimolivro";
-		}
-		
-		try {			
-			borrowService.insert(borrowing);
-			Book book = borrowing.getBook();
-			book.setNumberAvailable(book.getNumberAvailable() - 1);
-			bookService.update(book);			
-			model.addAttribute("mensagem",new MessageTO("Gravação com sucesso: " + borrowing.toString(), MessaType.SUCESSO));
-			logger.info("Emprestimo cadastrado: " + borrowing);
-		} catch (AtonBOException e) {
-			logger.error("Erro: " + e);
-			model.addAttribute("emprestimo", borrowing);
-			model.addAttribute("mensagem",new MessageTO(e.getBusinessMessage(), MessaType.ERRO));
-			return "emprestimos/emprestimolivro";
-		}	
-		return "livros";
+	private Date getSuggestedReturnDate(Date initialDate) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_MONTH, 10);
+		return new Date(calendar.getTimeInMillis());
 	}
+	
+	
+	
 	
 	@RequestMapping("devolucaolivro")
 	public String DevolverLivro(HttpServletRequest request,  

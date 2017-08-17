@@ -24,6 +24,8 @@ public class BorrowingServiceTest {
 
 	@Mock
 	private BorrowingDAO daoMock;
+	@Mock
+	private BookService bookServiceMock;
 	
 	@TestSubject
 	private BorrowingService service;
@@ -36,6 +38,7 @@ public class BorrowingServiceTest {
 		MockitoAnnotations.initMocks(this);		
 		service = new BorrowingService();		
 		service.setDao(daoMock);
+		service.setBookService(bookServiceMock);
 		borrow = TestHelper.getBorrowingForTest();
 		borrow.setId(1);
 	}

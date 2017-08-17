@@ -73,14 +73,15 @@
 								    <h3 class="panel-title"><strong>Seleção de Leitor</strong></h3>
 								  </div>
 								  <div class="panel-body">
-								    	<form id="formConsultaPessoas" class="form-inline" method="POST" action="../emprestimos/consultapessoaemprestimo" role="search">
+								    	<form id="formConsultaPessoas" class="form-inline" method="POST" action="../emprestimos/consultapessoa" role="search">
 											<input type="hidden" id ="tIdBook" name="tIdBook" value=${borrowing.book.id}>
 											<div class="row col-md-6" align="center">								  				
 										  		<div class="form-group" >
 												    <label for="tEmailSearch">Consulta por E-mail:</label>
 												    <input type="text" name="tEmail" class="form-control" size="40" id="tEmailSearch" placeholder="Digite o e-mail do leitor">
 												</div>
-												<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Buscar </button>
+												<button type="submit" class="btn btn-default">
+													<span class="glyphicon glyphicon-search" ></span> Buscar </button>
 											</div>		
 											<p/>
 											<div class="row col-md-6" align="center">					
@@ -104,19 +105,14 @@
 												  	<div class="panel-body">
 												  		<div class="form-group">
 															<div class="list-group">
-																<form id="formAcoes">
-																	<input type="hidden" id ="acao" name="acao">
-																	<input type="hidden" id ="identificador" name="identificador">
-																	<input type="hidden" id ="idLivro" name="idLivro" value=${borrowing.book.id}>
-																	<c:forEach items="${listofpeople}" var="person">
-																		<li class="list-group-item">				
-																			&nbsp;&nbsp; <a href="javascript:carregarAcoes('selecionar',${person.id},'emprestimoselecionarpessoa');" title="Selecionar"><span class="glyphicon glyphicon-open" aria-hidden="true"></span></a>
-																			&nbsp;&nbsp;&nbsp;&nbsp;
-																			<c:out value="${person.name}" /> - 
-																			<c:out value="${person.email}" />							
-																		</li>
-																	</c:forEach>
-																</form>
+																<c:forEach items="${listofpeople}" var="person">
+																	<li class="list-group-item">				
+																		&nbsp;&nbsp; <a href="selecionarpessoa?acao=selecionar&identificador=${person.id}&book=${borrowing.book.id}" title="Selecionar"><span class="glyphicon glyphicon-open"></span></a>
+																		&nbsp;&nbsp;&nbsp;&nbsp;
+																		<c:out value="${person.name}" /> - 
+																		<c:out value="${person.email}" />							
+																	</li>
+																</c:forEach>
 															</div>
 														</div>
 												  	</div>
@@ -134,7 +130,7 @@
 						<form:errors path="borrowing.*" element="div" cssClass="alert alert-danger error" />
 					</strong>
 					
-					<form:form id="formEmpLivros" method="POST" cssClass="form-horizontal margemPadrao" action="livroemprestado" modelAttribute="borrowing">
+					<form:form id="formEmpLivros" method="POST" cssClass="form-horizontal margemPadrao" action="../emprestimos/livroemprestado" modelAttribute="borrowing">
 			  				<form:hidden path="id" />
 			  				<form:hidden path="book.id" />
 			  				<form:hidden path="person.id" />
@@ -147,25 +143,34 @@
 		  					<div class="form-group">
 				  				<label for="tDateBorrow" class="col-sm-2 control-label">Data do Empréstimo</label>
 								<div class="col-sm-3">
-									<form:input path="dateOfBorrowing" cssClass="form-control required" id="tDateBorrow" placeholder="Digite a data do empréstimo" />			
+									<form:input path="dateOfBorrowing" cssClass="form-control required" id="tDateBorrow" placeholder="Digite a data do empréstimo" readonly="${mode eq 'consulta'}" />												
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="tDateReturn" class="col-sm-2 control-label">Data da Devolução prevista</label>
 								<div class="col-sm-3">
-									<form:input path="dateOfScheduledReturn" cssClass="form-control required" id="tDateReturn" placeholder="Digite a data da devolução" />			
+									<form:input path="dateOfScheduledReturn" cssClass="form-control required" id="tDateReturn" placeholder="Digite a data da devolução" readonly="${mode eq 'consulta'}" />			
 								</div>
 							</div>
 			  										
 							<!-- BOTOES -->
-							<div class="row" align="center">
-								<button type="submit" class="btn btn-default">
-									<span class="glyphicon glyphicon-ok"></span> Emprestar
-								</button>
-								<button type="button" class="btn btn-default" onClick="location.href='../livros'">
-									<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancelar
-								</button>
-							</div>
+							<c:if test="${mode != 'consulta'}">
+								<div class="row" align="center">
+									<button type="submit" class="btn btn-default">
+										<span class="glyphicon glyphicon-ok"></span> Emprestar
+									</button>
+									<button type="button" class="btn btn-default" onClick="location.href='../livros'">
+										<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancelar
+									</button>
+								</div>
+							</c:if>
+							<c:if test="${mode eq 'consulta'}">
+								<div class="row" align="center">
+									<button type="button" class="btn btn-default" onClick="location.href='../livros'">
+										<span class="glyphicon glyphicon-triangle-left"></span> Voltar
+									</button>
+								</div>
+							</c:if>
 													
 						</form:form>
 												
