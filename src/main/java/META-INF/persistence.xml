@@ -1,0 +1,59 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+	version="2.0">
+
+	<persistence-unit name="PU_ATON">
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+		<class>br.com.tiagoamp.aton.model.Person</class>
+		<class>br.com.tiagoamp.aton.model.Book</class>
+		<class>br.com.tiagoamp.aton.model.Author</class>
+		<class>br.com.tiagoamp.aton.model.Borrowing</class>
+		
+		<properties>
+			<!-- Propriedades JDBC -->
+			<property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC" />
+			
+			
+			<!-- <property name="javax.persistence.jdbc.url" value="jdbc:sqlite:database/AtonDB.db" /> -->
+			<property name="javax.persistence.jdbc.url" value="jdbc:sqlite:database/AtonDB.db" />
+			<!-- FIX THIS !! -->
+			
+						
+			<property name="javax.persistence.jdbc.user" value="" />
+            <property name="javax.persistence.jdbc.password" value="" />
+
+			<!-- Configurações específicas do Hibernate -->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.SQLiteDialect" />
+			<!-- property name="dialect" value="org.hibernate.dialect.SQLiteDialect" /> -->
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />			
+		</properties>		
+	</persistence-unit>
+	
+	<persistence-unit name="PU_ATON_TESTS">
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+		<class>br.com.tiagoamp.aton.model.Person</class>
+		<class>br.com.tiagoamp.aton.model.Book</class>
+		<class>br.com.tiagoamp.aton.model.Author</class>
+		<class>br.com.tiagoamp.aton.model.Borrowing</class>
+		
+		<properties>
+			<!-- Propriedades JDBC -->
+			<property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:sqlite:database/AtonDBtest.db" />
+			<property name="javax.persistence.jdbc.user" value="" />
+            <property name="javax.persistence.jdbc.password" value="" />
+
+			<!-- Configurações específicas do Hibernate -->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.SQLiteDialect" />
+			<!-- property name="dialect" value="org.hibernate.dialect.SQLiteDialect" /> -->
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />			
+		</properties>		
+	</persistence-unit>
+
+</persistence>

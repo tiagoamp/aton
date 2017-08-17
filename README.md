@@ -7,16 +7,14 @@ Foi desenvolvido para atender uma necessidade de um grupo de pessoas, mas implem
 
 Contribuições e evoluções são bem-vindas, é uma versão inicial com várias necessidades de ajustes!  :-)
 
+-----------------------------------------------
+
+Para inicializar o banco de dados: http://server:port/aton/initializeAndDeleteThisEntry
+IMPORTANTE: Deletar o método 'initializeAndDeleteThisEntry' do Controller após esta inicialização!
+
 ------------------------------------------------
 
 Aton - Simple Library Management System
 
-
 ------------------------------------------------
 
-
-Usuário inicial do sistema para login / Initial user :
-
-User e-mail = admin@email.com
-password = admin
-role = ADMINISTRADOR
