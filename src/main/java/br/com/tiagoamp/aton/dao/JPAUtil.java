@@ -6,8 +6,8 @@ import javax.persistence.Persistence;
 
 public class JPAUtil {
 	
-	public final String PERSISTENCE_UNIT_NAME = "PU_ATON";
-	public final String PERSISTENCE_UNIT_NAME_TESTS = "PU_ATON_TESTS";
+	public static final String PERSISTENCE_UNIT_NAME = "PU_ATON";
+	public static final String PERSISTENCE_UNIT_NAME_TESTS = "PU_ATON_TESTS";
 	
 	private EntityManagerFactory emf;
 		

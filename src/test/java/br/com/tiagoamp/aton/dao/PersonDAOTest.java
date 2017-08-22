@@ -9,6 +9,12 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -163,7 +169,7 @@ public class PersonDAOTest {
 			dao = new PersonDaoJdbc();
 			((PersonDaoJdbc)dao).setURL_DB("jdbc:sqlite:" + ((PersonDaoJdbc)dao).getPATH_DB() + "atondbtests");			
 		} else if(type.equals("jpa")) {
-			dao = new PersonDaoJpa(new JPAUtil().getMyTestsEntityManager());
+			dao = new PersonDaoJpa(new JPAUtil().getMyTestsEntityManager());			
 		}	
 	}
 	
